@@ -6,15 +6,7 @@ import {
   View
 } from 'react-native';
 
-import firebase from 'react-native-firebase'
-
 export default class App extends Component {
-
-  componentDidMount() {
-    firebase.database().ref().push({
-      hello: 'world'
-    })
-  }
 
   render() {
     return (
