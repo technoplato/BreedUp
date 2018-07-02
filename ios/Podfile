@@ -7,6 +7,7 @@ target 'BreedUp' do
 
   # Pods for BreedUp
   pod 'Firebase/Core'
+  pod 'Firebase/Database'
   
 
 end
