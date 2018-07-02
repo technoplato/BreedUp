@@ -1,24 +1,32 @@
 import React, { Component } from 'react';
 import {
-  Platform,
   StyleSheet,
   Text,
   View
 } from 'react-native';
 
-export default class App extends Component {
+import {createStackNavigator} from 'react-navigation'
+
+class HomeScreen extends Component {
 
   render() {
     return (
       <View style={styles.container}>
         <Text style={styles.welcome}>
-          Welcome to React Native IN THE HOUSE!
-        </Text>
-        <Text style={styles.instructions}>
-          To get started, edit App.js
+          Home Screen
         </Text>
       </View>
     );
+  }
+}
+
+const RootStack = createStackNavigator({
+  Home: HomeScreen
+})
+
+export default class App extends Component {
+  render() {
+    return <RootStack />
   }
 }
 
