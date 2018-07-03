@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { StyleSheet, Button, Text, View } from "react-native";
+import Camera from './src/Camera'
 
 import { createStackNavigator } from "react-navigation";
 
@@ -13,8 +14,8 @@ class HomeScreen extends Component {
       <View style={styles.container}>
         <Text style={styles.welcome}>Home Screen</Text>
         <Button
-          onPress={() => this.props.navigation.navigate('Details')}
-          title="Go to details" />
+          onPress={() => this.props.navigation.navigate('Camera')}
+          title="Go to Camera NOW" />
       </View>
     );
   }
@@ -44,7 +45,8 @@ class DetailsScreen extends Component {
 const RootStack = createStackNavigator(
   {
     Home: HomeScreen,
-    Details: DetailsScreen
+    Details: DetailsScreen,
+    Camera: Camera
   },
   {
     initialRouteName: "Home"
