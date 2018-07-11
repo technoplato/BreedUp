@@ -7,7 +7,9 @@ import {
   Button,
   Image
 } from "react-native";
+
 import { RNCamera } from "react-native-camera";
+import ImagePicker from "react-native-image-picker";
 
 import firebase from "react-native-firebase";
 
@@ -166,24 +168,83 @@ export default class Camera extends React.Component {
       <View style={styles.container}>
         {this.renderCamera()}
         <Text>{this.state.photoUri || "Take a picture to display URI"}</Text>
+        <Text>
+          {(this.state.avatarSource && this.state.avatarSource.uri) ||
+            "Choose a picture to display URI"}
+        </Text>
         <Image
           style={styles.thumb}
           source={{ isStatic: true, uri: this.state.photoUri }}
         />
+
+        <Image
+          style={styles.thumb}
+          source={{
+            isStatic: true,
+            uri: this.state.avatarSource && this.state.avatarSource.uri
+          }}
+        />
         <Button
           onPress={() => {
-            this.uploadImage();
+            this.uploadImage(this.state.photoUri);
           }}
           title="Upload to Firebase Storage!"
+        />
+
+        <Button
+          onPress={() => {
+            this.uploadImage(this.state.avatarSource.uri);
+          }}
+          title="Upload Library Image to Firebase Storage!"
+        />
+        <Button
+          onPress={() => {
+            this.pickImage();
+          }}
+          title="Pick an image to upload"
         />
       </View>
     );
   }
 
-  uploadImage = () => {
-    const imagePath = this.state.photoUri;
+  pickImage = () => {
+    var options = {
+      title: "Select Avatar",
+      customButtons: [{ name: "fb", title: "Choose Photo from Facebook" }],
+      storageOptions: {
+        skipBackup: true,
+        path: "images"
+      }
+    };
 
-    if (!imagePath) {
+    ImagePicker.launchImageLibrary(options, response => {
+      console.log("Response = ", response);
+
+      if (response.didCancel) {
+        console.log("User cancelled image picker");
+      } else if (response.error) {
+        console.log("ImagePicker Error: ", response.error);
+      } else if (response.customButton) {
+        console.log("User tapped custom button: ", response.customButton);
+      } else {
+        let source = { uri: response.uri };
+        console.log("ImagePicker selected: ", source.uri);
+        // You can also display the image using data:
+        // let source = { uri: 'data:image/jpeg;base64,' + response.data };
+
+        this.setState({
+          avatarSource: source
+        });
+      }
+    });
+  };
+
+  uploadLibraryImage = libraryImageUri => {
+    this.uploadImage(libraryImageUri);
+  };
+
+  uploadImage = imageUri => {
+    if (!imageUri) {
       this.setState({
         errorMsg: "Please snap a photo before attempting to upload."
       });
@@ -193,7 +254,7 @@ export default class Camera extends React.Component {
       const testRef = storageRef.child("test.jpg");
 
       testRef
-        .put(imagePath)
+        .put(imageUri)
         .then(snapshot => {
           console.log("snapshot", snapshot);
           return snapshot.downloadURL;
