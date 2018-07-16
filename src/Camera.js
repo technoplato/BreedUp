@@ -1,39 +1,19 @@
 import React from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-  Button,
-  Image
-} from "react-native";
+import { StyleSheet, View, Button, Dimensions } from "react-native";
 
 import { RNCamera } from "react-native-camera";
-import ImagePicker from "react-native-image-picker";
 
-import firebase from "react-native-firebase";
+import ImagePicker from "react-native-image-picker";
 
 export default class Camera extends React.Component {
   state = {
     flash: "off",
     zoom: 0,
     autoFocus: "on",
-    depth: 0,
     type: "back",
     whiteBalance: "auto",
-    ratio: "16:9",
-    ratios: [],
-    photoId: 1,
-    photos: [],
-    photoUri: "",
-    errorMsg: ""
+    ratio: "16:9"
   };
-
-  constructor(props) {
-    super(props);
-
-    this.uploadImage = this.uploadImage.bind(this);
-  }
 
   getRatios = async function() {
     const ratios = await this.camera.getSupportedRatios();
@@ -43,30 +23,6 @@ export default class Camera extends React.Component {
   toggleFacing() {
     this.setState({
       type: this.state.type === "back" ? "front" : "back"
-    });
-  }
-
-  toggleFlash() {
-    this.setState({
-      flash: flashModeOrder[this.state.flash]
-    });
-  }
-
-  setRatio(ratio) {
-    this.setState({
-      ratio
-    });
-  }
-
-  toggleWB() {
-    this.setState({
-      whiteBalance: wbOrder[this.state.whiteBalance]
-    });
-  }
-
-  setFocusDepth(depth) {
-    this.setState({
-      depth
     });
   }
 
@@ -90,76 +46,28 @@ export default class Camera extends React.Component {
         ref={ref => {
           this.camera = ref;
         }}
-        style={{
-          flex: 0.5
-        }}
+        style={styles.camera}
         type={this.state.type}
         flashMode={this.state.flash}
         autoFocus={this.state.autoFocus}
         zoom={this.state.zoom}
         whiteBalance={this.state.whiteBalance}
         ratio={this.state.ratio}
-        focusDepth={this.state.depth}
         permissionDialogTitle={"Permission to use camera"}
         permissionDialogMessage={
           "We need your permission to use your camera phone"
         }
-      >
-        <View
-          style={{
-            flex: 0.5,
-            backgroundColor: "transparent",
-            flexDirection: "row",
-            justifyContent: "space-around"
-          }}
-        >
-          <TouchableOpacity
-            style={styles.flipButton}
-            onPress={this.toggleFacing.bind(this)}
-          >
-            <Text style={styles.flipText}> FLIP </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.flipButton}
-            onPress={this.toggleFlash.bind(this)}
-          >
-            <Text style={styles.flipText}> FLASH: {this.state.flash} </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.flipButton}
-            onPress={this.toggleWB.bind(this)}
-          >
-            <Text style={styles.flipText}> WB: {this.state.whiteBalance} </Text>
-          </TouchableOpacity>
-        </View>
-        <View
-          style={{
-            flex: 0.4,
-            backgroundColor: "transparent",
-            flexDirection: "row",
-            alignSelf: "flex-end"
-          }}
-        />
-        <View
-          style={{
-            flex: 0.1,
-            backgroundColor: "transparent",
-            flexDirection: "row",
-            alignSelf: "flex-end"
-          }}
-        >
-          <TouchableOpacity
-            style={[
-              styles.flipButton,
-              styles.picButton,
-              { flex: 0.3, alignSelf: "flex-end" }
-            ]}
-            onPress={this.takePicture.bind(this)}
-          >
-            <Text style={styles.flipText}> SNAP </Text>
-          </TouchableOpacity>
-        </View>
-      </RNCamera>
+      />
+    );
+  }
+
+  renderButtons() {
+    return (
+      <View style={styles.buttonContainer}>
+        <Button title="FLIP" onPress={this.toggleFacing.bind(this)} />
+        <Button title="SNAP" onPress={this.takePicture.bind(this)} />
+        <Button title="PICK" onPress={this.pickImage.bind(this)} />
+      </View>
     );
   }
 
@@ -167,57 +75,13 @@ export default class Camera extends React.Component {
     return (
       <View style={styles.container}>
         {this.renderCamera()}
-        <Text>{this.state.photoUri || "Take a picture to display URI"}</Text>
-        <Text>
-          {(this.state.avatarSource && this.state.avatarSource.uri) ||
-            "Choose a picture to display URI"}
-        </Text>
-        <Image
-          style={styles.thumb}
-          source={{ isStatic: true, uri: this.state.photoUri }}
-        />
-
-        <Image
-          style={styles.thumb}
-          source={{
-            isStatic: true,
-            uri: this.state.avatarSource && this.state.avatarSource.uri
-          }}
-        />
-        <Button
-          onPress={() => {
-            this.uploadImage(this.state.photoUri);
-          }}
-          title="Upload to Firebase Storage!"
-        />
-
-        <Button
-          onPress={() => {
-            this.uploadImage(this.state.avatarSource.uri);
-          }}
-          title="Upload Library Image to Firebase Storage!"
-        />
-        <Button
-          onPress={() => {
-            this.pickImage();
-          }}
-          title="Pick an image to upload"
-        />
+        {this.renderButtons()}
       </View>
     );
   }
 
   pickImage = () => {
-    var options = {
-      title: "Select Avatar",
-      customButtons: [{ name: "fb", title: "Choose Photo from Facebook" }],
-      storageOptions: {
-        skipBackup: true,
-        path: "images"
-      }
-    };
-
-    ImagePicker.launchImageLibrary(options, response => {
+    ImagePicker.launchImageLibrary(null, response => {
       console.log("Response = ", response);
 
       if (response.didCancel) {
@@ -229,84 +93,36 @@ export default class Camera extends React.Component {
       } else {
         let source = { uri: response.uri };
         console.log("ImagePicker selected: ", source.uri);
-        // You can also display the image using data:
-        // let source = { uri: 'data:image/jpeg;base64,' + response.data };
 
-        this.setState({
-          avatarSource: source
-        });
+        // TODO call through to onPictureUri from props
+        // this.setState({
+        //   avatarSource: source
+        // });
       }
     });
-  };
-
-  uploadLibraryImage = libraryImageUri => {
-    this.uploadImage(libraryImageUri);
-  };
-
-  uploadImage = imageUri => {
-    if (!imageUri) {
-      this.setState({
-        errorMsg: "Please snap a photo before attempting to upload."
-      });
-    } else {
-      const storageRef = firebase.storage().ref();
-
-      const testRef = storageRef.child("test.jpg");
-
-      testRef
-        .put(imageUri)
-        .then(snapshot => {
-          console.log("snapshot", snapshot);
-          return snapshot.downloadURL;
-        })
-        .then(url => console.log("URL --->", url));
-    }
   };
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 10,
+    width: Dimensions.get("window").width,
     backgroundColor: "orange"
+  },
+  camera: {
+    flex: 1
+  },
+  buttonContainer: {
+    padding: 24,
+    width: "100%",
+    justifyContent: "center",
+    flexDirection: "row"
+  },
+  button: {
+    padding: 12
   },
   thumb: {
     height: 100,
     width: 100
-  },
-  navigation: {
-    flex: 1
-  },
-  flipButton: {
-    flex: 0.3,
-    height: 40,
-    marginHorizontal: 2,
-    marginBottom: 10,
-    marginTop: 20,
-    borderRadius: 8,
-    borderColor: "white",
-    borderWidth: 1,
-    padding: 5,
-    alignItems: "center",
-    justifyContent: "center"
-  },
-  flipText: {
-    color: "white",
-    fontSize: 15
-  },
-  item: {
-    margin: 4,
-    backgroundColor: "indianred",
-    height: 35,
-    width: 80,
-    borderRadius: 5,
-    alignItems: "center",
-    justifyContent: "center"
-  },
-  picButton: {
-    backgroundColor: "darkseagreen"
-  },
-  row: {
-    flexDirection: "row"
   }
 });
