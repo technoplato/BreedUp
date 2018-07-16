@@ -12,7 +12,7 @@ console.disableYellowBox = ["Unable to symbolicate"];
 
 class HomeScreen extends Component {
   static navigationOptions = {
-    title: "Home"
+    title: "Upload Image"
   };
 
   constructor(props) {
@@ -25,47 +25,44 @@ class HomeScreen extends Component {
     };
 
     this.uploadImage = this.uploadImage.bind(this);
+    this.onNewPhotoUri = this.onNewPhotoUri.bind(this);
+    this.pickImage = this.pickImage.bind(this);
   }
 
-  toggleCamera = (args, vargs) => {
-    console.log(this.state);
+  enableCamera = (args, vargs) => {
     this.setState({
-      camera: !this.state.camera
+      camera: true
+    });
+  };
+
+  disableCamera = (args, vargs) => {
+    this.setState({
+      camera: false
     });
   };
 
   renderHome() {
     return (
       <View style={styles.container}>
-        <Text style={styles.welcome}>Home Screen</Text>
+        <Button
+          title="Use Camera"
+          onPress={() => this.enableCamera("args", "vargs")}
+        />
+
+        <Button title="Pick Image" onPress={() => this.pickImage()} />
+
         <Text>{this.state.photoUri || "Take a picture to display URI"}</Text>
-        <Text>
-          {(this.state.avatarSource && this.state.avatarSource.uri) ||
-            "Choose a picture to display URI"}
-        </Text>
+
         <Image
           style={styles.thumb}
           source={{ isStatic: true, uri: this.state.photoUri }}
         />
-        <Image
-          style={styles.thumb}
-          source={{
-            isStatic: true,
-            uri: this.state.avatarSource && this.state.avatarSource.uri
-          }}
-        />
+
         <Button
           onPress={() => {
             this.uploadImage(this.state.photoUri);
           }}
-          title="Upload to Firebase Storage!"
-        />
-
-        <Button
-          onPress={() => {
-            this.uploadImage(this.state.avatarSource.uri);
-          }}
-          title="Upload Library Image to Firebase Storage!"
+          title="Upload Image!"
         />
       </View>
     );
@@ -76,17 +73,38 @@ class HomeScreen extends Component {
 
     return (
       <View style={styles.container}>
-        <Button
-          title="Toggle camera"
-          onPress={() => this.toggleCamera("args", "vargs")}
-        />
-        {camera ? <Camera /> : this.renderHome()}
+        {camera ? (
+          <Camera onNewPhotoUri={this.onNewPhotoUri} />
+        ) : (
+          this.renderHome()
+        )}
       </View>
     );
   }
 
+  pickImage = () => {
+    ImagePicker.launchImageLibrary(null, response => {
+      if (response.didCancel) {
+        console.log("User cancelled image picker");
+      } else if (response.error) {
+        console.log("ImagePicker Error: ", response.error);
+      } else if (response.customButton) {
+        console.log("User tapped custom button: ", response.customButton);
+      } else {
+        this.onNewPhotoUri(response.uri);
+      }
+    });
+  };
+
+  onNewPhotoUri = newUri => {
+    console.log(newUri);
+    if (newUri) {
+      this.setState({ photoUri: newUri });
+      this.disableCamera();
+    }
+  };
+
   uploadImage = imageUri => {
-    console.log("upload");
     if (!imageUri) {
       this.setState({
         errorMsg: "Please snap a photo before attempting to upload."
@@ -106,28 +124,6 @@ class HomeScreen extends Component {
     }
   };
 }
-
-pickImage = () => {
-  ImagePicker.launchImageLibrary(null, response => {
-    console.log("Response = ", response);
-
-    if (response.didCancel) {
-      console.log("User cancelled image picker");
-    } else if (response.error) {
-      console.log("ImagePicker Error: ", response.error);
-    } else if (response.customButton) {
-      console.log("User tapped custom button: ", response.customButton);
-    } else {
-      let source = { uri: response.uri };
-      console.log("ImagePicker selected: ", source.uri);
-
-      // TODO call through to onPictureUri from props
-      // this.setState({
-      //   avatarSource: source
-      // });
-    }
-  });
-};
 
 const RootStack = createStackNavigator(
   {
@@ -151,5 +147,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center"
+  },
+  thumb: {
+    height: 100,
+    width: 100
   }
 });

@@ -33,9 +33,7 @@ export default class Camera extends React.Component {
           quality: 0.01
         })
         .then(data => {
-          this.setState({
-            photoUri: data.uri
-          });
+          this.props.onNewPhotoUri(data.uri);
         });
     }
   };
@@ -82,8 +80,6 @@ export default class Camera extends React.Component {
 
   pickImage = () => {
     ImagePicker.launchImageLibrary(null, response => {
-      console.log("Response = ", response);
-
       if (response.didCancel) {
         console.log("User cancelled image picker");
       } else if (response.error) {
@@ -91,13 +87,7 @@ export default class Camera extends React.Component {
       } else if (response.customButton) {
         console.log("User tapped custom button: ", response.customButton);
       } else {
-        let source = { uri: response.uri };
-        console.log("ImagePicker selected: ", source.uri);
-
-        // TODO call through to onPictureUri from props
-        // this.setState({
-        //   avatarSource: source
-        // });
+        this.props.onNewPhotoUri(response.uri);
       }
     });
   };
@@ -120,9 +110,5 @@ const styles = StyleSheet.create({
   },
   button: {
     padding: 12
-  },
-  thumb: {
-    height: 100,
-    width: 100
   }
 });
