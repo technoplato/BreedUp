@@ -1,9 +1,9 @@
 import React from "react";
-import { StyleSheet, View, Button, Dimensions } from "react-native";
-
+import { View, Button } from "react-native";
 import { RNCamera } from "react-native-camera";
-
 import ImagePicker from "react-native-image-picker";
+
+import styles from "./CameraStyle";
 
 export default class Camera extends React.Component {
   state = {
@@ -92,23 +92,3 @@ export default class Camera extends React.Component {
     });
   };
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    width: Dimensions.get("window").width,
-    backgroundColor: "orange"
-  },
-  camera: {
-    flex: 1
-  },
-  buttonContainer: {
-    padding: 24,
-    width: "100%",
-    justifyContent: "center",
-    flexDirection: "row"
-  },
-  button: {
-    padding: 12
-  }
-});
