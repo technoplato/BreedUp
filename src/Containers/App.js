@@ -1,10 +1,10 @@
-import React, { Component } from "react";
-import RootStack from "../Navigation/AppNavigation";
+import React, { Component } from 'react'
+import RootStack from '../Navigation/AppNavigation'
 
 class App extends Component {
   render() {
-    return <RootStack />;
+    return <RootStack />
   }
 }
 
-export default App;
+export default App
