@@ -1,4 +1,4 @@
-import { createStackNavigator } from 'react-navigation'
+import { createSwitchNavigator } from 'react-navigation'
 
 import ChooseImage from '../Containers/ChooseImage'
 import FeedScreen from '../Containers/FeedScreen'
@@ -7,10 +7,10 @@ import Login from '../Containers/Login'
 import SignUp from '../Containers/SignUp'
 import Fiddling from '../Containers/Fiddling'
 
-const RootStack = createStackNavigator(
+const RootStack = createSwitchNavigator(
   {
     ChooseImage: ChooseImage,
-    FeedScreen,
+    Main: FeedScreen,
     Loading: Loading,
     Login: Login,
     SignUp: SignUp,
