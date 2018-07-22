@@ -1,6 +1,7 @@
 import React from 'react'
 import { Button, View, Text } from 'react-native'
 import firebase from 'react-native-firebase'
+import Card from 'react-native-elements'
 
 import styles from './FeedScreenStyles'
 
