@@ -7,7 +7,7 @@ import styles from './LoadingStyles'
 
 export default class Loading extends React.Component {
   componentDidMount() {
-    firebase.auth().onAuthStateChanged(user => {
+    this.authStateUnsubscribe = firebase.auth().onAuthStateChanged(user => {
       console.log('Loading: onAuthStateChanged')
       this.props.navigation.navigate(user ? 'Main' : 'SignUp')
     })
@@ -16,6 +16,7 @@ export default class Loading extends React.Component {
   componentWillUnmount() {
     // TODO - when should the listener for auth be removed? Should it be added to App?
     console.log('componentWillUnmount')
+    this.authStateUnsubscribe()
   }
 
   render() {
