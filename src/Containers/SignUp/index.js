@@ -1,6 +1,6 @@
 import React from 'react'
-import { Text, TextInput, View, Alert, Button } from 'react-native'
-// import { Button } from 'react-native-elements'
+import { Text, TextInput, View, Alert } from 'react-native'
+import { Button } from 'react-native-elements'
 import firebase from 'react-native-firebase'
 
 import styles from './SignUpStyles'
