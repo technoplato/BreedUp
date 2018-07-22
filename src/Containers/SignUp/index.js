@@ -52,7 +52,7 @@ export default class SignUp extends React.Component {
             displayName: username
           })
         })
-        .then(() => this.props.navigation.navigate('Placeholder'))
+        .then(() => this.props.navigation.navigate('ChooseImage'))
         .catch(error => {
           this.setState({ errorMsg: error.message })
         })
@@ -101,6 +101,7 @@ export default class SignUp extends React.Component {
           placeholder="Email"
           autoCapitalize="none"
           style={styles.textInput}
+          keyboardType={'email-address'}
           onChangeText={email => this.setState({ email })}
           value={this.state.email}
         />
