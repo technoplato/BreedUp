@@ -12,8 +12,9 @@ export default class Main extends React.Component {
     this.setState({ currentUser })
   }
 
-  handleLogout() {
+  handleLogout = () => {
     firebase.auth().signOut()
+    this.props.navigation.navigate('SignUp')
   }
 
   render() {
