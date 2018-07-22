@@ -1,7 +1,7 @@
 import React from 'react'
-import { Button, View, Text } from 'react-native'
+import { View, Image, Text } from 'react-native'
 import firebase from 'react-native-firebase'
-import Card from 'react-native-elements'
+import { Card, Button, ListItem, Icon } from 'react-native-elements'
 
 import styles from './FeedScreenStyles'
 
@@ -19,6 +19,28 @@ export default class Main extends React.Component {
   }
 
   render() {
+    const users = [
+      {
+        name: 'brynn',
+        avatar: 'https://s3.amazonaws.com/uifaces/faces/twitter/brynn/128.jpg'
+      },
+      {
+        name: 'brynn',
+        avatar: 'https://s3.amazonaws.com/uifaces/faces/twitter/brynn/128.jpg'
+      },
+      {
+        name: 'brynn',
+        avatar: 'https://s3.amazonaws.com/uifaces/faces/twitter/brynn/128.jpg'
+      },
+      {
+        name: 'brynn',
+        avatar: 'https://s3.amazonaws.com/uifaces/faces/twitter/brynn/128.jpg'
+      },
+      {
+        name: 'brynn',
+        avatar: 'https://s3.amazonaws.com/uifaces/faces/twitter/brynn/128.jpg'
+      }
+    ]
     const { currentUser } = this.state
 
     console.log(currentUser)
@@ -27,6 +49,29 @@ export default class Main extends React.Component {
       <View style={styles.container}>
         <Text>Hi {currentUser && currentUser.displayName}!</Text>
         <Button title="Log Out" onPress={this.handleLogout} />
+
+        <Card
+          title="Card"
+          image={{
+            uri: 'https://s3.amazonaws.com/uifaces/faces/twitter/brynn/128.jpg'
+          }}
+        >
+          <Text style={{ marginBottom: 10 }}>
+            The idea with React Native Elements is more about component
+            structure than actual design.
+          </Text>
+          <Button
+            icon={<Icon name="code" color="#ffffff" />}
+            backgroundColor="#03A9F4"
+            buttonStyle={{
+              borderRadius: 0,
+              marginLeft: 0,
+              marginRight: 0,
+              marginBottom: 0
+            }}
+            title="VIEW NOW"
+          />
+        </Card>
       </View>
     )
   }
