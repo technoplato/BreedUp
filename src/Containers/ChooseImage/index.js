@@ -6,9 +6,14 @@ import firebase from 'react-native-firebase'
 import Camera from '../../Components/Camera'
 import styles from './ChooseImageStyles'
 
+/*
+ * TODO - I'm going to hard code this screen as the onboarding choose image screen.
+ * 
+ * However, it should be modularized and used in multiple different locations, namely the Profile AND here.
+ */
 export default class ChooseImage extends Component {
   static navigationOptions = {
-    title: 'Upload Image'
+    title: 'Upload Profile Image'
   }
 
   constructor(props) {
@@ -108,7 +113,11 @@ export default class ChooseImage extends Component {
     } else {
       const storageRef = firebase.storage().ref()
 
-      const testRef = storageRef.child('test.jpg')
+      console.table(firebase.auth().currentUser)
+
+      const id = firebase.auth().currentUser.uid
+
+      const testRef = storageRef.child(id).child('profile-img')
 
       testRef
         .put(imageUri)
@@ -116,7 +125,16 @@ export default class ChooseImage extends Component {
           console.log('snapshot', snapshot)
           return snapshot.downloadURL
         })
-        .then(url => console.log('URL --->', url))
+        .then(url => {
+          return firebase
+            .database()
+            .ref()
+            .child('users')
+            .child(id)
+            .child('profile-img')
+            .set(url)
+        })
+        .then(profileImgSet => this.props.navigation.navigate('Main'))
     }
   }
 }
