@@ -31,7 +31,7 @@ export default class Login extends React.Component {
         console.log(data)
       })
 
-      .then(() => this.props.navigation.navigate('Placeholder'))
+      .then(() => this.props.navigation.navigate('FeedScreen'))
       .catch(error => this.setState({ errorMsg: error.message }))
   }
 
@@ -77,6 +77,7 @@ export default class Login extends React.Component {
           style={styles.textInput}
           autoCapitalize="none"
           placeholder="Email"
+          keyboardType={'email-address'}
           onChangeText={email => this.setState({ email })}
           value={this.state.email}
         />
@@ -100,10 +101,7 @@ export default class Login extends React.Component {
           onPress={() => {
             const { email, password } = this.state
 
-            this.props.navigation.navigate('SignUp', {
-              email,
-              password
-            })
+            this.props.navigation.navigate('SignUp', { email, password })
           }}
         />
         <Button
