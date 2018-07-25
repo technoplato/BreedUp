@@ -1,9 +1,17 @@
 import React from 'react'
-import { Text, TextInput, View, Alert } from 'react-native'
+import {
+  Text,
+  TextInput,
+  View,
+  Alert,
+  ImageBackground,
+  Image
+} from 'react-native'
 import { Button } from 'react-native-elements'
 import firebase from 'react-native-firebase'
 
 import styles from './SignUpStyles'
+import { Images } from '../../Themes'
 
 export default class SignUp extends React.Component {
   state = { email: '', password: '', username: '', errorMsg: null }
@@ -90,7 +98,10 @@ export default class SignUp extends React.Component {
 
   render() {
     return (
-      <View style={styles.container}>
+      <ImageBackground
+        source={Images.onboardingBackground}
+        style={styles.container}
+      >
         <Text style={styles.headerText}>Breed Up</Text>
         {this.state.errorMsg && (
           <Text style={{ color: 'white', padding: 24 }}>
@@ -146,7 +157,7 @@ export default class SignUp extends React.Component {
         <View style={styles.topBar}>
           <View style={styles.headerImage} />
         </View>
-      </View>
+      </ImageBackground>
     )
   }
 }
