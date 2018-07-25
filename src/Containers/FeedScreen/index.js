@@ -1,8 +1,9 @@
 import React from 'react'
-import { View, Image, Text } from 'react-native'
+import { View, Text, FlatList } from 'react-native'
 import firebase from 'react-native-firebase'
-import { Card, Button, ListItem, Icon } from 'react-native-elements'
+import { Button } from 'react-native-elements'
 
+import { FeedList } from '../../Components/FeedList'
 import styles from './FeedScreenStyles'
 
 export default class Main extends React.Component {
@@ -10,7 +11,52 @@ export default class Main extends React.Component {
 
   componentDidMount() {
     const { currentUser } = firebase.auth()
-    this.setState({ currentUser })
+    this.setState({
+      currentUser: currentUser,
+      posts: []
+    })
+
+    this.loadFeedForUser()
+  }
+
+  loadFeedForUser = () => {
+    firebase
+      .database()
+      .ref()
+      .child('posts')
+      .orderByChild('reverse_timestamp')
+      .on('child_added', snap => {
+        posts = this.state.posts
+        if (snap) {
+          posts.unshift(snap.val())
+        }
+
+        this.setState({
+          ...this.props.state,
+          posts: posts,
+          doUpdate: true
+        })
+      })
+  }
+
+  addPost = () => {
+    const ref = firebase
+      .database()
+      .ref()
+      .child('posts')
+      .push()
+
+    ref.set({
+      author: this.state.currentUser.displayName,
+      author_img:
+        'https://firebasestorage.googleapis.com/v0/b/breed-up.appspot.com/o/9sTu43Uw42cGiSMnwroraEDvqfu2%2Fprofile-img?alt=media&token=539cdada-a9b9-41b6-ac22-13cd51698dfd',
+      time_posted: new Date().getTime(),
+      reverse_timestamp: -1 * new Date().getTime(),
+      view_count: 650,
+      text:
+        'My dog is the best dog in the entire world and I want this post to be long enough to be a few lines',
+      key: ref.key
+    })
   }
 
   handleLogout = () => {
@@ -19,59 +65,16 @@ export default class Main extends React.Component {
   }
 
   render() {
-    const users = [
-      {
-        name: 'brynn',
-        avatar: 'https://s3.amazonaws.com/uifaces/faces/twitter/brynn/128.jpg'
-      },
-      {
-        name: 'brynn',
-        avatar: 'https://s3.amazonaws.com/uifaces/faces/twitter/brynn/128.jpg'
-      },
-      {
-        name: 'brynn',
-        avatar: 'https://s3.amazonaws.com/uifaces/faces/twitter/brynn/128.jpg'
-      },
-      {
-        name: 'brynn',
-        avatar: 'https://s3.amazonaws.com/uifaces/faces/twitter/brynn/128.jpg'
-      },
-      {
-        name: 'brynn',
-        avatar: 'https://s3.amazonaws.com/uifaces/faces/twitter/brynn/128.jpg'
-      }
-    ]
     const { currentUser } = this.state
-
-    console.log(currentUser)
 
     return (
       <View style={styles.container}>
         <Text>Hi {currentUser && currentUser.displayName}!</Text>
-        <Button title="Log Out" onPress={this.handleLogout} />
+        <Button title="Add Post" onPress={this.addPost} />
 
-        <Card
-          title="Card"
-          image={{
-            uri: 'https://s3.amazonaws.com/uifaces/faces/twitter/brynn/128.jpg'
-          }}
-        >
-          <Text style={{ marginBottom: 10 }}>
-            The idea with React Native Elements is more about component
-            structure than actual design.
-          </Text>
-          <Button
-            icon={<Icon name="code" color="#ffffff" />}
-            backgroundColor="#03A9F4"
-            buttonStyle={{
-              borderRadius: 0,
-              marginLeft: 0,
-              marginRight: 0,
-              marginBottom: 0
-            }}
-            title="VIEW NOW"
-          />
-        </Card>
+        <FeedList posts={this.state.posts} extraData={this.state} />
+
+        <Button title="Log Out" onPress={this.handleLogout} />
       </View>
     )
   }
