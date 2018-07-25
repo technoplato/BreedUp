@@ -4,7 +4,6 @@ import { Colors } from '../../Themes'
 
 export default StyleSheet.create({
   container: {
-    backgroundColor: Colors.crimson,
     justifyContent: 'center',
     alignItems: 'center',
     flex: 1

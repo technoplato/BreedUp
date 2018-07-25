@@ -1,11 +1,12 @@
 import React from 'react'
-import { Text, TextInput, View, Alert } from 'react-native'
+import { Text, TextInput, View, Alert, ImageBackground } from 'react-native'
 
 import { Button } from 'react-native-elements'
 
 import firebase from 'react-native-firebase'
 
 import styles from './LoginStyles'
+import { Images } from '../../Themes'
 
 export default class Login extends React.Component {
   state = { email: '', password: '', errorMsg: null }
@@ -31,7 +32,7 @@ export default class Login extends React.Component {
         console.log(data)
       })
 
-      .then(() => this.props.navigation.navigate('FeedScreen'))
+      .then(() => this.props.navigation.navigate('Main'))
       .catch(error => this.setState({ errorMsg: error.message }))
   }
 
@@ -66,7 +67,10 @@ export default class Login extends React.Component {
 
   render() {
     return (
-      <View style={styles.container}>
+      <ImageBackground
+        source={Images.onboardingBackground}
+        style={styles.container}
+      >
         <Text style={styles.headerText}>Breed Up</Text>
         {this.state.errorMsg && (
           <Text style={{ color: 'white', padding: 12 }}>
@@ -112,7 +116,7 @@ export default class Login extends React.Component {
         <View style={styles.topBar}>
           <View style={styles.headerImage} />
         </View>
-      </View>
+      </ImageBackground>
     )
   }
 }
