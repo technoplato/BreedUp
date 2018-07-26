@@ -1,7 +1,7 @@
 import { createSwitchNavigator } from 'react-navigation'
 
 import ChooseImage from '../Containers/ChooseImage'
-import FeedScreen from '../Containers/FeedScreen'
+import Feed from './Feed'
 import Loading from '../Containers/Loading'
 import Login from '../Containers/Login'
 import SignUp from '../Containers/SignUp'
@@ -10,7 +10,7 @@ import Fiddling from '../Containers/Fiddling'
 const RootStack = createSwitchNavigator(
   {
     ChooseImage: ChooseImage,
-    Main: FeedScreen,
+    Main: Feed,
     Loading: Loading,
     Login: Login,
     SignUp: SignUp,
