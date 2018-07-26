@@ -62,6 +62,7 @@ export default class FeedList extends React.Component {
       <FeedCard
         liked={!!this.state.likedPosts.get(item.key)}
         onLikePressed={this.onLikePressed}
+        onCommentPressed={this.onCommentPressed}
         item={item}
       />
     )
@@ -110,6 +111,12 @@ export default class FeedList extends React.Component {
         likedPosts.set(key, !wasLiked)
         return { likedPosts }
       })
+    })
+  }
+
+  onCommentPressed = key => {
+    this.props.navigation.navigate('Comments', {
+      key
     })
   }
 }
