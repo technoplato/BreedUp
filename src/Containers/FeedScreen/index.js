@@ -1,9 +1,9 @@
 import React from 'react'
-import { View, Text, FlatList } from 'react-native'
+import { View, Text } from 'react-native'
 import firebase from 'react-native-firebase'
 import { Button } from 'react-native-elements'
 
-import { FeedList } from '../../Components/FeedList'
+import FeedList from '../../Components/FeedList'
 import styles from './FeedScreenStyles'
 
 export default class Main extends React.Component {
@@ -12,31 +12,8 @@ export default class Main extends React.Component {
   componentDidMount() {
     const { currentUser } = firebase.auth()
     this.setState({
-      currentUser: currentUser,
-      posts: []
+      currentUser: currentUser
     })
-
-    this.loadFeedForUser()
-  }
-
-  loadFeedForUser = () => {
-    firebase
-      .database()
-      .ref()
-      .child('posts')
-      .orderByChild('reverse_timestamp')
-      .on('child_added', snap => {
-        posts = this.state.posts
-        if (snap) {
-          posts.unshift(snap.val())
-        }
-
-        this.setState({
-          ...this.props.state,
-          posts: posts,
-          doUpdate: true
-        })
-      })
   }
 
   addPost = () => {
@@ -72,7 +49,7 @@ export default class Main extends React.Component {
         <Text>Hi {currentUser && currentUser.displayName}!</Text>
         <Button title="Add Post" onPress={this.addPost} />
 
-        <FeedList posts={this.state.posts} extraData={this.state} />
+        <FeedList />
 
         <Button title="Log Out" onPress={this.handleLogout} />
       </View>
