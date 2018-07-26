@@ -4,6 +4,7 @@ import { View, Text, Image } from 'react-native'
 import moment from 'moment'
 
 import styles from './FeedCardStyles'
+import { Colors } from '../../Themes'
 
 export default class FeedCard extends React.Component {
   render() {
@@ -53,7 +54,7 @@ export default class FeedCard extends React.Component {
   }
 
   renderButtons = () => {
-    const likeColor = this.props.liked ? 'blue' : 'grey'
+    const likeColor = this.props.liked ? Colors.dogBoneBlue : Colors.grey
 
     return (
       <View style={styles.buttonContainer}>
@@ -71,6 +72,7 @@ export default class FeedCard extends React.Component {
           textStyle={styles.buttonText}
           title="Comment"
           icon={{ name: 'comment', color: 'grey' }}
+          onPress={() => this.props.onCommentPressed(this.props.item.key)}
         />
         <Button
           buttonStyle={styles.button}
