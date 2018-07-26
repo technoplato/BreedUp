@@ -8,12 +8,13 @@ import { Colors } from '../../Themes'
 
 export default class FeedList extends React.Component {
   componentWillMount() {
-    const { uid } = firebase.auth().currentUser
+    const { currentUser } = firebase.auth()
 
     const rootRef = firebase.database().ref()
 
-    this.uid = uid
-    this.likedPostsRef = rootRef.child('users/' + uid + '/likes')
+    this.currentUser = currentUser
+    this.uid = currentUser.uid
+    this.likedPostsRef = rootRef.child('users/' + this.uid + '/likes')
     this.likedPostsUrl = this.likedPostsRef.toString() + '.json?shallow=true'
     this.postsRef = rootRef.child('posts/')
 
@@ -116,7 +117,8 @@ export default class FeedList extends React.Component {
 
   onCommentPressed = key => {
     this.props.navigation.navigate('Comments', {
-      key
+      key,
+      postAuthor: this.currentUser.displayName
     })
   }
 }
