@@ -2,8 +2,12 @@ import React, { Component } from 'react'
 import RootStack from '../Navigation/AppNavigation'
 import moment from 'moment'
 
+import { YellowBox } from 'react-native'
+
 class App extends Component {
   render() {
+    this.configYellowBox()
+
     // Updates moment relative time, not sure where to call this
     // https://momentjs.com/docs/#/customization/relative-time/
     moment.updateLocale('en', {
@@ -20,6 +24,17 @@ class App extends Component {
     })
 
     return <RootStack />
+  }
+
+  configYellowBox = () => {
+    const isMounted = 'Warning: isMounted'
+    const debuggerError = 'Remote debugger is in a background tab which may'
+
+    YellowBox.ignoreWarnings([
+      isMounted,
+      'Unable to symbolicate',
+      debuggerError
+    ])
   }
 }
 
