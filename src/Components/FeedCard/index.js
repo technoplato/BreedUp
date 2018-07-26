@@ -38,7 +38,7 @@ export default class FeedCard extends React.Component {
 
   renderText = () => {
     const { text } = this.props.item
-    return <Text style={styles.text}>{this.props.item.key}</Text>
+    return <Text style={styles.text}>{text}</Text>
   }
 
   renderImage = () => {
