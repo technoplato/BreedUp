@@ -15,7 +15,6 @@ export default class FeedList extends React.Component {
     this.currentUser = currentUser
     this.uid = currentUser.uid
     this.likedPostsRef = rootRef.child('users/' + this.uid + '/likes')
-    this.likedPostsUrl = this.likedPostsRef.toString() + '.json?shallow=true'
     this.postsRef = rootRef.child('posts/')
 
     this.setState({
@@ -117,7 +116,7 @@ export default class FeedList extends React.Component {
 
   onCommentPressed = key => {
     this.props.navigation.navigate('Comments', {
-      key,
+      key: key,
       postAuthor: this.currentUser.displayName
     })
   }
