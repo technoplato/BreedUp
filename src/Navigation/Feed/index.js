@@ -5,5 +5,11 @@ import CommentsScreen from '../../Containers/Comments'
 
 export default createStackNavigator({
   Feed: FeedScreen,
-  Comments: CommentsScreen
+  Comments: {
+    screen: CommentsScreen,
+    
+    navigationOptions: ({ navigation }) => ({
+      title: `${navigation.state.params.postAuthor}'s Post`,
+    })
+  }
 })
