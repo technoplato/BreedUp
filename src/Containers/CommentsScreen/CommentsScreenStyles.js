@@ -6,6 +6,11 @@ export default StyleSheet.create({
   },
   loading: {
     flex: 1,
-    justifyContent: 'flex-start'
+    justifyContent: 'center'
+  },
+  input: {
+    width: '100%',
+    height: 40,
+    padding: 24
   }
 })
