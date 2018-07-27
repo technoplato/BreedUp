@@ -49,7 +49,7 @@ export default class Main extends React.Component {
         <Text>Hi {currentUser && currentUser.displayName}!</Text>
         <Button title="Add Post" onPress={this.addPost} />
 
-        <FeedList />
+        <FeedList navigation={this.props.navigation} />
 
         <Button title="Log Out" onPress={this.handleLogout} />
       </View>
