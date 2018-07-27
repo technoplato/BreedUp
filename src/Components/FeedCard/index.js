@@ -35,7 +35,11 @@ export default class FeedCard extends React.Component {
             </Text>
           </View>
         </View>
-        <Icon name="more-vert" containerStyle={styles.moreButton} />
+        <Icon
+          name="more-vert"
+          containerStyle={styles.moreButton}
+          onPress={this.props.onMorePressed}
+        />
       </View>
     )
   }
