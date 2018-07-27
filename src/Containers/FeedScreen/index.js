@@ -29,7 +29,6 @@ export default class Main extends React.Component {
         'https://firebasestorage.googleapis.com/v0/b/breed-up.appspot.com/o/9sTu43Uw42cGiSMnwroraEDvqfu2%2Fprofile-img?alt=media&token=539cdada-a9b9-41b6-ac22-13cd51698dfd',
       time_posted: new Date().getTime(),
       reverse_timestamp: -1 * new Date().getTime(),
-      view_count: 650,
       text:
         'My dog is the best dog in the entire world and I want this post to be long enough to be a few lines',
       key: ref.key
