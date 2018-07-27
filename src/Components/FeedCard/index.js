@@ -79,6 +79,9 @@ export default class FeedCard extends React.Component {
           textStyle={styles.buttonText}
           title="Share"
           icon={{ name: 'share', color: 'grey' }}
+          onPress={() =>
+            this.props.onSharePressed(this.props.item.key, this.props.item.text)
+          }
         />
       </View>
     )
