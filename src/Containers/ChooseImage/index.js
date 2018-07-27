@@ -117,7 +117,7 @@ export default class ChooseImage extends Component {
 
       const testRef = storageRef.child(id).child('profile-img')
 
-      let storageURL;
+      let storageURL
 
       testRef
         .put(imageUri)
@@ -136,10 +136,10 @@ export default class ChooseImage extends Component {
         })
         .then(() => {
           return firebase.auth().currentUser.updateProfile({
-            photoURL: storageURL,
+            photoURL: storageURL
           })
         })
-        .then(profileImgSet => this.props.navigation.navigate('Main'))
+        .then(profileImgSet => this.props.navigation.navigate('Profile'))
     }
   }
 }
