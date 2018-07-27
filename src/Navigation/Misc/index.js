@@ -6,8 +6,6 @@ import Profile from '../../Containers/Profile'
 import Meetup from '../../Containers/Meetup'
 import AddPost from '../../Containers/AddPost'
 
-//https://github.com/react-navigation/react-navigation/issues/190 <-- follow this
-
 const navigationOptions = ({ navigation }) => ({
   headerLeft: (
     <Icon
@@ -19,21 +17,27 @@ const navigationOptions = ({ navigation }) => ({
   )
 })
 
-const RootStack = createStackNavigator(
-  {
+const ProfileStack = createStackNavigator({
     Profile: {
-      screen: Profile
-    },
-    Meetup: {
-      screen: Meetup
-    },
-    'Add Post': {
-      screen: AddPost
+        screen: Profile,
+        navigationOptions: navigationOptions
     }
-  },
-  {
+})
+
+const MeetupStack = createStackNavigator({
+    Meetup: {
+        screen: Meetup,
+        navigationOptions: navigationOptions
+    }
+})
+
+const AddPostStack = createStackNavigator({
+  AddPost: {
+    screen: AddPost,
     navigationOptions: navigationOptions
   }
-)
+})
 
-export default RootStack
+export {
+    ProfileStack, MeetupStack, AddPostStack
+}
