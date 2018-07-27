@@ -1,5 +1,5 @@
 import React from 'react'
-import { FlatList, ActivityIndicator } from 'react-native'
+import { FlatList, ActivityIndicator, Share } from 'react-native'
 import firebase from 'react-native-firebase'
 
 import FeedCard from '../FeedCard'
@@ -63,6 +63,7 @@ export default class FeedList extends React.Component {
         liked={!!this.state.likedPosts.get(item.key)}
         onLikePressed={this.onLikePressed}
         onCommentPressed={this.onCommentPressed}
+        onSharePressed={this.onSharePressed}
         item={item}
       />
     )
@@ -118,6 +119,15 @@ export default class FeedList extends React.Component {
     this.props.navigation.navigate('Comments', {
       key: key,
       postAuthor: this.currentUser.displayName
+    })
+  }
+
+  onSharePressed = (key, text) => {
+    const url =
+      /* TODO: Proper link on iOS and Android to download link (with deep link for extra points) */ 'https://github.com/lustigdev/BreedUp/issues/37'
+    Share.share({
+      title: 'Breed Up is awesome!',
+      message: `Breed Up is awesome. Download it now! Check out this post.\n\n${text}\n\n${url}`
     })
   }
 }
