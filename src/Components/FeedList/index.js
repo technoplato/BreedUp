@@ -8,13 +8,13 @@ import { Colors } from '../../Themes'
 
 export default class FeedList extends React.Component {
   componentWillMount() {
-    const { uid } = firebase.auth().currentUser
+    const { currentUser } = firebase.auth()
 
     const rootRef = firebase.database().ref()
 
-    this.uid = uid
-    this.likedPostsRef = rootRef.child('users/' + uid + '/likes')
-    this.likedPostsUrl = this.likedPostsRef.toString() + '.json?shallow=true'
+    this.currentUser = currentUser
+    this.uid = currentUser.uid
+    this.likedPostsRef = rootRef.child('users/' + this.uid + '/likes')
     this.postsRef = rootRef.child('posts/')
 
     this.setState({
@@ -62,6 +62,7 @@ export default class FeedList extends React.Component {
       <FeedCard
         liked={!!this.state.likedPosts.get(item.key)}
         onLikePressed={this.onLikePressed}
+        onCommentPressed={this.onCommentPressed}
         item={item}
       />
     )
@@ -110,6 +111,13 @@ export default class FeedList extends React.Component {
         likedPosts.set(key, !wasLiked)
         return { likedPosts }
       })
+    })
+  }
+
+  onCommentPressed = key => {
+    this.props.navigation.navigate('Comments', {
+      key: key,
+      postAuthor: this.currentUser.displayName
     })
   }
 }
