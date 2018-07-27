@@ -21,6 +21,9 @@ export default class FeedCard extends React.Component {
   renderCardHeader = () => {
     const { author, author_img, time_posted, view_count } = this.props.item
     const time_since_post = moment(time_posted).fromNow()
+    /* We add 1 to the view_count here and take care of that on the backend as a hack */
+    const fudgedViewCount = (view_count || 0) + 1
+    const viewCountSuffix = fudgedViewCount == 1 ? 'view' : 'views'
     return (
       <View style={styles.headerContainer}>
         <View style={styles.imageAndTextContainer}>
@@ -28,7 +31,7 @@ export default class FeedCard extends React.Component {
           <View style={styles.postMetadata}>
             <Text>{author}</Text>
             <Text>
-              {time_since_post} | {view_count}
+              {time_since_post} | {fudgedViewCount + ' ' + viewCountSuffix}
             </Text>
           </View>
         </View>

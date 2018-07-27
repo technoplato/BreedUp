@@ -33,10 +33,10 @@ export default class FeedList extends React.Component {
     this.likedPostsRef
       .once('value', snapshot => {
         // The existence of a key here constitues a like. The value is unused.
-        return Object.keys(snapshot.val())
+        return Object.keys(snapshot.val() || {})
       })
       .then(snapshot => {
-        likedKeys = Object.keys(snapshot.val())
+        likedKeys = Object.keys(snapshot.val() || {})
         return this.postsRef
           .orderByChild('reverse_timestamp')
           .once('value', snap => {
@@ -44,7 +44,7 @@ export default class FeedList extends React.Component {
           })
       })
       .then(postsSnap => {
-        const posts = Object.values(postsSnap.val())
+        const posts = Object.values(postsSnap.val() || {})
 
         const likedPosts = new Map(likedKeys.map(key => [key, true]))
 
@@ -53,6 +53,28 @@ export default class FeedList extends React.Component {
           loading: false,
           likedPosts: likedPosts,
           posts: posts
+        })
+
+        // Need to return something here to ensure everything is loaded before
+        // adding another task that consumes memory
+        return true
+      })
+      .then(() => {
+        this.state.posts.forEach(post => {
+          console.log('for each post: ', post)
+          this.postsRef
+            .child(post.key)
+            .child('view_count')
+            .transaction(
+              current => {
+                return (current || 0) + 1
+              },
+              (error, committed, snapshot) => {
+                console.log('error', error)
+                console.log('(committed', committed)
+                console.log('(snapshot', snapshot.val())
+              }
+            )
         })
       })
   }
