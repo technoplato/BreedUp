@@ -4,7 +4,7 @@ import firebase from 'react-native-firebase'
 
 import CommentListItem from '../CommentListItem'
 import styles from './CommentListStyles'
-import { Colors, Metrics } from '../../Themes'
+import { Colors } from '../../Themes'
 
 export default class CommentsList extends React.Component {
   constructor(props) {
@@ -36,10 +36,7 @@ export default class CommentsList extends React.Component {
   renderList = () => {
     return (
       <FlatList
-        style={{
-          maxHeight: '80%',
-          width: '70%'
-        }}
+        style={styles.list}
         data={this.state.comments}
         renderItem={this.renderItem}
         keyExtractor={this.keyExtractor}
@@ -62,4 +59,8 @@ export default class CommentsList extends React.Component {
   }
 
   keyExtractor = item => item.key
+
+  componentWillUnmount() {
+    this.commentsRef.off()
+  }
 }
