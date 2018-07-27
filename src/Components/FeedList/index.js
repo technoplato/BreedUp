@@ -61,7 +61,6 @@ export default class FeedList extends React.Component {
       })
       .then(() => {
         this.state.posts.forEach(post => {
-          console.log('for each post: ', post)
           this.postsRef
             .child(post.key)
             .child('view_count')
@@ -70,9 +69,7 @@ export default class FeedList extends React.Component {
                 return (current || 0) + 1
               },
               (error, committed, snapshot) => {
-                console.log('error', error)
-                console.log('(committed', committed)
-                console.log('(snapshot', snapshot.val())
+                // Optionally handle results here
               }
             )
         })
