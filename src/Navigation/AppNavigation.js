@@ -1,24 +1,16 @@
 import { createSwitchNavigator } from 'react-navigation'
 
-import ChooseImage from '../Containers/ChooseImage'
-import Feed from './Feed'
-import Loading from '../Containers/Loading'
-import Login from '../Containers/Login'
-import SignUp from '../Containers/SignUp'
-import Fiddling from '../Containers/Fiddling'
+import Onboarding from './Onboarding'
+import Main from './Main'
 
-const RootStack = createSwitchNavigator(
+const RootNav = createSwitchNavigator(
   {
-    ChooseImage: ChooseImage,
-    Main: Feed,
-    Loading: Loading,
-    Login: Login,
-    SignUp: SignUp,
-    Fiddling: Fiddling
+    Onboarding: Onboarding,
+    Main: Main
   },
   {
-    initialRouteName: 'Loading'
+    initialRouteName: 'Onboarding'
   }
 )
 
-export default RootStack
+export default RootNav
