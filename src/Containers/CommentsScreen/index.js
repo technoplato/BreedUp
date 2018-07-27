@@ -1,17 +1,11 @@
 import React from 'react'
-import { TextInput, KeyboardAvoidingView, View, Keyboard } from 'react-native'
+import { TextInput, KeyboardAvoidingView, Keyboard } from 'react-native'
 import firebase from 'react-native-firebase'
 import { Button } from 'react-native-elements'
 
 import CommentList from '../../Components/CommentList'
-import styles from './FeedScreenStyles'
+import styles from './CommentsScreenStyles'
 
-/**
- * TODO
- *
- * Implement feedback on CommentList / CommentsScreen
- * Only trigger child_added once per new comment (using limitToLast(1))
- */
 export default class CommentsScreen extends React.Component {
   constructor(props) {
     super(props)
@@ -26,14 +20,9 @@ export default class CommentsScreen extends React.Component {
   }
 
   addComment = () => {
-    this.setState(
-      {
-        comment: ''
-      },
-      () => {
-        console.log(this.state.comment)
-      }
-    )
+    this.setState({
+      comment: ''
+    })
 
     Keyboard.dismiss()
 
@@ -49,15 +38,7 @@ export default class CommentsScreen extends React.Component {
   }
 
   onChangeText = text => {
-    if (text !== '\n') console.log(text)
-  }
-
-  onKeyPress = ({ nativeEvent: { key: keyValue } }) => {
-    if (keyValue === 'Enter') {
-      this.setState({ comment: '' }, () => {
-        console.log(this.state.comment)
-      })
-    }
+    this.setState({ comment: text })
   }
 
   render() {
@@ -66,14 +47,11 @@ export default class CommentsScreen extends React.Component {
         <CommentList postKey={this.state.postKey} />
         <TextInput
           multiline
-          returnKeyType="send"
-          onKeyPress={this.onKeyPress}
-          blurOnSubmit={false}
-          style={{ width: '100%', height: 40, padding: 24 }}
+          style={styles.input}
           value={this.state.comment.toString()}
           onChangeText={comment => this.onChangeText(comment)}
           onSubmitEditing={() => this.addComment()}
-          placeholder="Enter comment here"
+          placeholder="Enter comment"
         />
         <Button height={42} title="Add Comment" onPress={this.addComment} />
       </KeyboardAvoidingView>
