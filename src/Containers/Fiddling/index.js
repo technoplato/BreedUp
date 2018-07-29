@@ -1,18 +1,27 @@
 import React from 'react'
-import { View, StyleSheet, Text, TextInput } from 'react-native'
+import {
+  View,
+  StyleSheet,
+  Text,
+  TextInput,
+  Dimensions,
+  TouchableHighlight
+} from 'react-native'
 import { Button } from 'react-native-elements'
 import firebase from 'react-native-firebase'
+import Modal from 'react-native-modal'
 
 import RoundImage from '../../Components/RoundImageView'
 import { Colors } from '../../Themes'
 
-export default class Testing extends React.Component {
+export default class Fiddling extends React.Component {
   state = {
     avatarURL: '',
     username: '',
     description: '',
     uid: '',
-    currentUserProfile: true
+    currentUserProfile: true,
+    modalVisible: false
   }
   componentWillMount() {
     const currentUserId =
@@ -31,10 +40,26 @@ export default class Testing extends React.Component {
     })
   }
 
+  setModalVisible(visible) {
+    this.setState({ modalVisible: visible })
+  }
+
   render() {
-    console.log('render', this.state.currentUserProfile)
     return (
       <View style={styles.screen.container}>
+        <Modal
+          isVisible={this.state.modalVisible}
+          onBackdropPress={() => this.setModalVisible(false)}
+        >
+          <View
+            style={{
+              alignSelf: 'center',
+              height: 200,
+              width: 300,
+              backgroundColor: 'black'
+            }}
+          />
+        </Modal>
         {this.header()}
         {this.dogList()}
         {this.postsList()}
@@ -43,8 +68,7 @@ export default class Testing extends React.Component {
     )
   }
 
-  header = () => {
-    console.log('header', this.state.currentUserProfile)
+  header() {
     return (
       <View style={styles.header.container}>
         <View style={styles.header.avatarContainer}>
@@ -59,7 +83,12 @@ export default class Testing extends React.Component {
         <View style={styles.header.textAndButtonContainer}>
           <View style={styles.header.topRow}>
             <View style={styles.header.usernameContainer}>
-              <Text style={styles.header.username}>Username</Text>
+              <Text
+                onPress={() => this.setModalVisible(true)}
+                style={styles.header.username}
+              >
+                Username
+              </Text>
             </View>
             <View style={styles.header.buttonContainer}>
               {!this.state.currentUserProfile && (
@@ -84,27 +113,27 @@ export default class Testing extends React.Component {
     )
   }
 
-  dogList = () => {
+  dogList() {
     return (
       <View style={styles.dogList.container}>
         <View style={styles.dogList.list}>
-          <Text>Dog List Placholder</Text>
+          <Text>Dog List Placeholder</Text>
         </View>
       </View>
     )
   }
 
-  postsList = () => {
+  postsList() {
     return (
       <View style={styles.postList.container}>
         <View style={styles.postList.list}>
-          <Text>Posts Placholder</Text>
+          <Text>Posts</Text>
         </View>
       </View>
     )
   }
 
-  footerButtons = () => {
+  footerButtons() {
     return (
       <View style={{ position: 'absolute', bottom: 0, width: '100%' }}>
         <View style={styles.footer.buttonContainer}>
@@ -126,6 +155,7 @@ const styles = {
   screen: StyleSheet.create({
     container: {
       backgroundColor: 'lightskyblue',
+
       flex: 1,
       paddingTop: 24
     }
@@ -134,12 +164,12 @@ const styles = {
   header: StyleSheet.create({
     container: {
       flexDirection: 'row',
-      width: '100%',
-      alignItems: 'center'
+      width: '100%'
     },
     avatarContainer: {},
     textAndButtonContainer: {
-      flex: 1
+      flex: 1,
+      paddingRight: 12
     },
     topRow: {
       justifyContent: 'space-between',
