@@ -19,9 +19,6 @@ export default StyleSheet.create({
     paddingLeft: 12,
     flexDirection: 'column'
   },
-  moreButton: {
-    marginRight: 6
-  },
   text: {
     paddingRight: 12,
     paddingBottom: 12,
