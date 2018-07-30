@@ -196,7 +196,6 @@ export default class Fiddling extends React.Component {
   }
 
   render() {
-    console.log('render', this.state)
     return (
       <View style={styles.screen.container}>
         {this.modal()}
@@ -271,13 +270,13 @@ export default class Fiddling extends React.Component {
   }
 
   dogList() {
-    return (
-      <View style={styles.dogList.container}>
+    return <View style={styles.dogList.container}>
         <View style={styles.dogList.list}>
-          <Text>Dog List Placeholder</Text>
+          <Text onPress={() => alert('This is just a placeholder\n\nA list of a user\'s dogs will go here')}>
+            Dog List Placeholder
+          </Text>
         </View>
       </View>
-    )
   }
 
   postsList() {
