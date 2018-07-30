@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Image } from 'react-native'
+import { Image, TouchableWithoutFeedback } from 'react-native'
 
 export default class RoundImageView extends React.Component {
   static propTypes = {
@@ -10,11 +10,21 @@ export default class RoundImageView extends React.Component {
 
   render() {
     const { size, source } = this.props
-    return (
+    let image = (
       <Image
         source={source}
         style={{ width: size, height: size, borderRadius: size / 2 }}
       />
     )
+
+    const { onPress } = this.props
+    if (onPress) {
+      image = (
+        <TouchableWithoutFeedback onPress={onPress}>
+          {image}
+        </TouchableWithoutFeedback>
+      )
+    }
+    return image
   }
 }
