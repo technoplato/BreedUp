@@ -7,12 +7,12 @@ import Fiddling from '../Containers/Fiddling'
 
 const RootNav = createSwitchNavigator(
   {
-    Fiddling: Fiddling,
     Onboarding: Onboarding,
-    Main: Main
+    Main: Main,
+    Fiddling: Fiddling
   },
   {
-    initialRouteName: 'Fiddling'
+    initialRouteName: 'Onboarding'
   }
 )
 

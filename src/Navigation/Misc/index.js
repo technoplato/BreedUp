@@ -3,41 +3,32 @@ import { createStackNavigator } from 'react-navigation'
 import { Icon } from 'react-native-elements'
 
 import Profile from '../../Containers/Profile'
-import Meetup from '../../Containers/Meetup'
 import AddPost from '../../Containers/AddPost'
-
-const navigationOptions = ({ navigation }) => ({
-  headerLeft: (
-    <Icon
-      containerStyle={{ marginLeft: 12 }}
-      name="menu"
-      color="#000"
-      onPress={() => navigation.toggleDrawer()}
-    />
-  )
-})
-
-const ProfileStack = createStackNavigator({
-    Profile: {
-        screen: Profile,
-        navigationOptions: navigationOptions
-    }
-})
-
-const MeetupStack = createStackNavigator({
-    Meetup: {
-        screen: Meetup,
-        navigationOptions: navigationOptions
-    }
-})
 
 const AddPostStack = createStackNavigator({
   AddPost: {
-    screen: AddPost,
-    navigationOptions: navigationOptions
+    screen: AddPost
   }
 })
 
-export {
-    ProfileStack, MeetupStack, AddPostStack
-}
+const ProfileStack = createStackNavigator({
+  Profile: {
+    screen: Profile,
+    navigationOptions: ({ navigation }) => ({
+      headerRight: (
+        <Icon
+          containerStyle={{ marginRight: 12 }}
+          name="search"
+          color="#000"
+          onPress={() =>
+            alert(
+              'Profile\n\nSearch Tapped\n\nSearch usernames, dog names, and provide option for nearby'
+            )
+          }
+        />
+      )
+    })
+  }
+})
+
+export { ProfileStack, AddPostStack }
