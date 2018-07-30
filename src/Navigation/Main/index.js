@@ -1,17 +1,16 @@
-import { createDrawerNavigator } from 'react-navigation'
+import { createBottomTabNavigator } from 'react-navigation'
 
-import { ProfileStack, MeetupStack, AddPostStack } from '../Misc'
+import { ProfileStack, AddPostStack } from '../Misc'
 
 import FeedStack from '../Feed'
 
 import MyCustomSillyDrawerComponent from '../MyCustomSillyDrawerComponent'
 
-const RootStack = createDrawerNavigator(
+const RootStack = createBottomTabNavigator(
   {
     Main: FeedStack,
-    Profile: ProfileStack,
-    Meetup: MeetupStack,
-    AddPost: AddPostStack
+    AddPost: AddPostStack,
+    Profile: ProfileStack
   },
   {
     initialRouteName: 'Main',
