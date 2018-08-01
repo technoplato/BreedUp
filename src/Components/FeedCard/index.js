@@ -1,5 +1,5 @@
 import React from 'react'
-import { Card, Avatar, Icon, Button } from 'react-native-elements'
+import { Card, Avatar, Button } from 'react-native-elements'
 import { View, Text, Image } from 'react-native'
 import moment from 'moment'
 
@@ -35,11 +35,6 @@ export default class FeedCard extends React.Component {
             </Text>
           </View>
         </View>
-        <Icon
-          name="more-vert"
-          containerStyle={styles.moreButton}
-          onPress={this.props.onMorePressed}
-        />
       </View>
     )
   }

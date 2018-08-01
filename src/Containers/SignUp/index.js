@@ -29,6 +29,7 @@ export default class SignUp extends React.Component {
 
   handleSignUp = () => {
     const { email, password, username } = this.state
+    let userData
 
     if (!email) {
       this.setState({ errorMsg: 'Please enter a valid email.' })
@@ -41,6 +42,7 @@ export default class SignUp extends React.Component {
         .auth()
         .createUserAndRetrieveDataWithEmailAndPassword(email, password)
         .then(data => {
+          userData = data
           return firebase
             .database()
             .ref('users')
@@ -50,7 +52,6 @@ export default class SignUp extends React.Component {
               displayName: data.user.displayName,
               email: data.user.email,
               emailVerified: data.user.emailVerified,
-              photoURL: data.user.photoURL,
               uid: data.user.uid,
               metadata: data.user.metadata
             })

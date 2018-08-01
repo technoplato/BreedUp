@@ -113,28 +113,33 @@ export default class ChooseImage extends Component {
     } else {
       const storageRef = firebase.storage().ref()
 
-      console.table(firebase.auth().currentUser)
-
       const id = firebase.auth().currentUser.uid
 
       const testRef = storageRef.child(id).child('profile-img')
 
+      let storageURL
+
       testRef
         .put(imageUri)
         .then(snapshot => {
-          console.log('snapshot', snapshot)
           return snapshot.downloadURL
         })
         .then(url => {
+          storageURL = url
           return firebase
             .database()
             .ref()
             .child('users')
             .child(id)
-            .child('profile-img')
+            .child('profileURL')
             .set(url)
         })
-        .then(profileImgSet => this.props.navigation.navigate('Main'))
+        .then(() => {
+          return firebase.auth().currentUser.updateProfile({
+            photoURL: storageURL
+          })
+        })
+        .then(profileImgSet => this.props.navigation.navigate('Profile'))
     }
   }
 }
