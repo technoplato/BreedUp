@@ -30,7 +30,6 @@ export default class Fiddling extends React.Component {
   }
 
   componentWillMount() {
-
     const profileId = this.props.navigation.getParam(
       /* TODO: Replace this with reasonable default and handle no ID */ 'uid',
       'JMToo5lrZzMOxTAX8WHPE7t4t5o1'
@@ -52,7 +51,6 @@ export default class Fiddling extends React.Component {
         modifiedUsername: displayName,
         modifiedDescription: '',
         modifiedAvatarURL: photoURL
-        // loading: false
       })
     }
 
@@ -66,7 +64,6 @@ export default class Fiddling extends React.Component {
       .child(`users/${this.state.uid}`)
       .on('child_added', snap => {
         const { username, description, profileURL } = snap.val()
-        console.log(username, description, profileURL)
 
         this.setState({
           avatarURL: profileURL,
@@ -270,13 +267,21 @@ export default class Fiddling extends React.Component {
   }
 
   dogList() {
-    return <View style={styles.dogList.container}>
+    return (
+      <View style={styles.dogList.container}>
         <View style={styles.dogList.list}>
-          <Text onPress={() => alert('This is just a placeholder\n\nA list of a user\'s dogs will go here')}>
+          <Text
+            onPress={() =>
+              alert(
+                "This is just a placeholder\n\nA list of a user's dogs will go here"
+              )
+            }
+          >
             Dog List Placeholder
           </Text>
         </View>
       </View>
+    )
   }
 
   postsList() {
