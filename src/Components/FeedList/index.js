@@ -1,5 +1,5 @@
 import React from 'react'
-import { FlatList, ActivityIndicator, Share, Linking } from 'react-native'
+import { FlatList, ActivityIndicator, Share } from 'react-native'
 import firebase from 'react-native-firebase'
 
 import FeedCard from '../FeedCard'
@@ -83,7 +83,6 @@ export default class FeedList extends React.Component {
         onLikePressed={this.onLikePressed}
         onCommentPressed={this.onCommentPressed}
         onSharePressed={this.onSharePressed}
-        onMorePressed={this.onMorePressed}
         item={item}
       />
     )
@@ -149,9 +148,5 @@ export default class FeedList extends React.Component {
       title: 'Breed Up is awesome!',
       message: `Breed Up is awesome. Download it now! Check out this post.\n\n${text}\n\n${url}`
     })
-  }
-
-  onMorePressed = () => {
-    Linking.openURL('https://github.com/lustigdev/BreedUp/issues/27')
   }
 }
