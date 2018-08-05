@@ -37,14 +37,15 @@ export default class FeedList extends React.Component {
       })
       .then(snapshot => {
         likedKeys = Object.keys(snapshot.val() || {})
-        return this.postsRef
-          .orderByChild('reverse_timestamp')
-          .once('value', snap => {
-            return snap.val()
-          })
+        return this.postsRef.once('value', snap => {
+          return snap.val()
+        })
       })
       .then(postsSnap => {
-        const posts = Object.values(postsSnap.val() || {})
+        const posts = []
+        postsSnap.forEach(postSnap => {
+          posts.unshift(postSnap.val())
+        })
 
         const likedPosts = new Map(likedKeys.map(key => [key, true]))
 
