@@ -96,6 +96,7 @@ export default class FeedList extends React.Component {
       <FlatList
         refreshControl={
           <RefreshControl
+            style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}
             refreshing={this.state.refreshing}
             onRefresh={this.onRefresh}
           />
