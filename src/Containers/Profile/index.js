@@ -13,7 +13,9 @@ import Modal from 'react-native-modal'
 import RoundImage from '../../Components/RoundImageView'
 import { Colors } from '../../Themes'
 
-export default class Fiddling extends React.Component {
+import CameraModal from '../../../lib/InstagramCameraModal'
+
+export default class Profile extends React.Component {
   state = {
     avatarURL: '',
     username: '',
@@ -26,7 +28,16 @@ export default class Fiddling extends React.Component {
     modifiedDescription: '',
     modifiedAvatarURL: '',
     hasProfileChanged: false,
-    loading: true
+    loading: true,
+    photoEditModalVisible: false,
+    saveComplete: false
+  }
+
+  constructor(props) {
+    super(props)
+
+    this.showPhotoModal = this.showPhotoModal.bind(this)
+    this.onNewProfileImageChosen = this.onNewProfileImageChosen.bind(this)
   }
 
   componentWillMount() {
@@ -75,7 +86,7 @@ export default class Fiddling extends React.Component {
       })
   }
 
-  setModalVisible(visible) {
+  setTextEditingModalVisible(visible) {
     this.setState({
       modalVisible: visible,
       saveComplete: !visible
@@ -84,10 +95,6 @@ export default class Fiddling extends React.Component {
 
   setSaving(saving) {
     this.setState({ modalSaving: saving })
-  }
-
-  saveData() {
-    // TODO
   }
 
   onUsernameChange = newUsername => {
@@ -112,7 +119,7 @@ export default class Fiddling extends React.Component {
     return (
       <Modal
         isVisible={this.state.modalVisible && !this.state.saveComplete}
-        onBackdropPress={() => this.setModalVisible(false)}
+        onBackdropPress={() => this.setTextEditingModalVisible(false)}
         style={{ justifyContent: 'center', alignItems: 'center' }}
       >
         <View style={{ width: '100%', height: '100%' }}>
@@ -150,7 +157,7 @@ export default class Fiddling extends React.Component {
                 if (this.state.hasProfileChanged) {
                   this.saveProfileData()
                 } else {
-                  this.setModalVisible(false)
+                  this.setTextEditingModalVisible(false)
                 }
               }}
             />
@@ -161,7 +168,7 @@ export default class Fiddling extends React.Component {
   }
 
   saveProfileData() {
-    this.setModalVisible(false)
+    this.setTextEditingModalVisible(false)
     this.setSaving(false)
 
     const {
@@ -195,6 +202,7 @@ export default class Fiddling extends React.Component {
   render() {
     return (
       <View style={styles.screen.container}>
+        {this.photoEditModal()}
         {this.modal()}
         {this.header()}
         {this.dogList()}
@@ -203,6 +211,67 @@ export default class Fiddling extends React.Component {
         {this.state.loading && this.renderLoading()}
       </View>
     )
+  }
+
+  photoEditModal() {
+    return (
+      <CameraModal
+        onPictureApproved={this.onNewProfileImageChosen}
+        isVisible={this.state.photoEditModalVisible}
+        cancel={() => this.showPhotoModal(false)}
+      />
+    )
+  }
+
+  onNewProfileImageChosen(newProfileImageUri) {
+    // Optimistically update image URI
+    this.setState({
+      avatarURL: newProfileImageUri
+    })
+
+    // Store photo in storage
+    const storageRef = firebase.storage().ref()
+
+    const id = firebase.auth().currentUser.uid
+
+    const currentUserProfileRef = firebase
+      .database()
+      .ref()
+      .child(`users/${id}`)
+
+    const userProfileImageStorageRef = storageRef.child(id).child('profile_img')
+
+    let updatedUrl
+
+    // Save photo URL to Firebase database
+    return userProfileImageStorageRef
+      .put(newProfileImageUri)
+      .then(snapshot => snapshot.downloadURL)
+      .then(url => {
+        updatedUrl = url
+        return currentUserProfileRef.update({
+          profileURL: updatedUrl
+        })
+      })
+      .then(() => {
+        firebase.auth().currentUser.updateProfile({
+          photoURL: updatedUrl
+        })
+      })
+      .then(() => {
+        const { avatarURL } = this.state
+        if (avatarURL !== updatedUrl) {
+          this.setState({
+            avatarURL: updatedUrl
+          })
+        }
+      })
+  }
+
+  showPhotoModal(doShow) {
+    this.setState({
+      photoEditModalVisible: doShow
+    })
   }
 
   renderLoading() {
@@ -227,7 +296,7 @@ export default class Fiddling extends React.Component {
       <View style={styles.header.container}>
         <View style={styles.header.avatarContainer}>
           <RoundImage
-            onPress={() => alert('Edit photo screen ---- TODO')}
+            onPress={this.showPhotoModal}
             size={92}
             source={{
               uri: this.state.avatarURL
@@ -238,7 +307,7 @@ export default class Fiddling extends React.Component {
           <View style={styles.header.topRow}>
             <View style={styles.header.usernameContainer}>
               <Text
-                onPress={() => this.setModalVisible(true)}
+                onPress={() => this.setTextEditingModalVisible(true)}
                 style={styles.header.username}
               >
                 {this.state.username}
@@ -257,7 +326,7 @@ export default class Fiddling extends React.Component {
           </View>
 
           <View style={styles.descriptionContainer}>
-            <Text onPress={() => this.setModalVisible(true)}>
+            <Text onPress={() => this.setTextEditingModalVisible(true)}>
               {this.state.description}
             </Text>
           </View>
