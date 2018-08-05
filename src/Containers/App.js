@@ -29,11 +29,14 @@ class App extends Component {
   configYellowBox = () => {
     const isMounted = 'Warning: isMounted'
     const debuggerError = 'Remote debugger is in a background tab which may'
+    // TODO definitely fix this oen
+    const navigation = 'You should only render'
 
     YellowBox.ignoreWarnings([
       isMounted,
       'Unable to symbolicate',
-      debuggerError
+      debuggerError,
+      navigation
     ])
   }
 }

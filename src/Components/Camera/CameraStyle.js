@@ -1,5 +1,5 @@
-import { StyleSheet } from "react-native";
-import { Metrics, Colors } from "../../Themes/";
+import { StyleSheet } from 'react-native'
+import { Metrics, Colors } from '../../Themes/'
 
 export default StyleSheet.create({
   container: {
@@ -13,10 +13,12 @@ export default StyleSheet.create({
   buttonContainer: {
     padding: Metrics.doubleBaseMargin,
     width: Metrics.screenWidth,
-    justifyContent: "center",
-    flexDirection: "row"
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    position: 'absolute',
+    bottom: 0
   },
   button: {
     padding: Metrics.baseMargin
   }
-});
+})

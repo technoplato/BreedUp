@@ -7,12 +7,6 @@ import { Text } from 'react-native'
 import Profile from '../../Containers/Profile'
 import AddPost from '../../Containers/AddPost'
 
-const AddPostStack = createStackNavigator({
-  AddPost: {
-    screen: AddPost
-  }
-})
-
 const ProfileStack = createStackNavigator({
   Profile: {
     screen: Profile,
@@ -41,4 +35,4 @@ const ProfileStack = createStackNavigator({
   }
 })
 
-export { ProfileStack, AddPostStack }
+export { ProfileStack, AddPost }
