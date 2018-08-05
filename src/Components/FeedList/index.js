@@ -1,10 +1,9 @@
 import React from 'react'
-import { FlatList, ActivityIndicator, Share } from 'react-native'
+import { FlatList, Share, RefreshControl } from 'react-native'
 import firebase from 'react-native-firebase'
 
 import FeedCard from '../FeedCard'
 import styles from './FeedListStyles'
-import { Colors } from '../../Themes'
 
 export default class FeedList extends React.Component {
   componentWillMount() {
@@ -19,18 +18,20 @@ export default class FeedList extends React.Component {
 
     this.setState({
       ...this.state,
-      loading: true,
+      refreshing: true,
       likedPosts: new Map(),
       posts: []
     })
 
-    this.loadPosts()
+    this.loadPosts().then(() => {
+      this.updateViewCounts()
+    })
   }
 
   loadPosts = () => {
     let likedKeys
     // First, we need to get an array of liked posts from the user
-    this.likedPostsRef
+    return this.likedPostsRef
       .once('value', snapshot => {
         // The existence of a key here constitues a like. The value is unused.
         return Object.keys(snapshot.val() || {})
@@ -51,7 +52,7 @@ export default class FeedList extends React.Component {
 
         this.setState({
           ...this.state,
-          loading: false,
+          refreshing: false,
           likedPosts: likedPosts,
           posts: posts
         })
@@ -60,21 +61,22 @@ export default class FeedList extends React.Component {
         // adding another task that consumes memory
         return true
       })
-      .then(() => {
-        this.state.posts.forEach(post => {
-          this.postsRef
-            .child(post.key)
-            .child('view_count')
-            .transaction(
-              current => {
-                return (current || 0) + 1
-              },
-              (error, committed, snapshot) => {
-                // Optionally handle results here
-              }
-            )
-        })
-      })
+  }
+
+  updateViewCounts = () => {
+    this.state.posts.forEach(post => {
+      this.postsRef
+        .child(post.key)
+        .child('view_count')
+        .transaction(
+          current => {
+            return (current || 0) + 1
+          },
+          (error, committed, snapshot) => {
+            // Optionally handle results here
+          }
+        )
+    })
   }
 
   renderItem = ({ item }) => {
@@ -92,6 +94,12 @@ export default class FeedList extends React.Component {
   renderList = () => {
     return (
       <FlatList
+        refreshControl={
+          <RefreshControl
+            refreshing={this.state.refreshing}
+            onRefresh={this.onRefresh}
+          />
+        }
         data={this.state.posts}
         renderItem={this.renderItem}
         extraData={this.state}
@@ -100,18 +108,15 @@ export default class FeedList extends React.Component {
     )
   }
 
-  renderLoading = () => {
-    return (
-      <ActivityIndicator
-        style={styles.loading}
-        size="large"
-        color={Colors.crimson}
-      />
-    )
+  onRefresh = () => {
+    this.setState({ refreshing: true })
+    this.loadPosts().then(() => {
+      this.setState({ refreshing: false })
+    })
   }
 
   render() {
-    return this.state.loading ? this.renderLoading() : this.renderList()
+    return this.renderList()
   }
 
   keyExtractor = item => {
