@@ -41,16 +41,16 @@ export default class FeedCard extends React.Component {
 
   renderText = () => {
     const { text } = this.props.item
-    return <Text style={styles.text}>{text}</Text>
+    return text && <Text style={styles.text}>{text}</Text>
   }
 
   renderImage = () => {
-    const { author_img } = this.props.item
+    const { post_img } = this.props.item
     return (
       <Image
         resizeMode="cover"
         style={styles.image}
-        source={{ uri: author_img }}
+        source={{ uri: post_img }}
       />
     )
   }
