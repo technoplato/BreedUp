@@ -27,9 +27,26 @@ export default class FeedCard extends React.Component {
     return (
       <View style={styles.headerContainer}>
         <View style={styles.imageAndTextContainer}>
-          <Avatar rounded size={350} source={{ uri: author_img }} />
+          <Avatar
+            onPress={() =>
+              alert(
+                "In a future release, clicking the avatar will navigate you to this user's profile"
+              )
+            }
+            rounded
+            size={350}
+            source={{ uri: author_img }}
+          />
           <View style={styles.postMetadata}>
-            <Text>{author}</Text>
+            <Text
+              onPress={() =>
+                alert(
+                  "In a future release, clicking the username will navigate you to this user's profile"
+                )
+              }
+            >
+              {author}
+            </Text>
             <Text>
               {time_since_post} | {fudgedViewCount + ' ' + viewCountSuffix}
             </Text>
