@@ -1,6 +1,6 @@
 import React from 'react'
 
-import CreatePostScreen from '../../Containers/CreatePost'
+import SubmitPostScreen from '../../Containers/SubmitPostScreen'
 import CameraModal from '../../../lib/InstagramCameraModal'
 
 export default class AddPostScreen extends React.Component {
@@ -10,11 +10,11 @@ export default class AddPostScreen extends React.Component {
 
     this.cancelPhoto = this.cancelPhoto.bind(this)
     this.revealPhotoModal = this.revealPhotoModal.bind(this)
-    this.renderNonsense = this.renderNonsense.bind(this)
+    this.renderSubmitPost = this.renderSubmitPost.bind(this)
   }
 
-  renderNonsense(selectedImageUri) {
-    return <CreatePostScreen finish={this.cancelPhoto} uri={selectedImageUri} />
+  renderSubmitPost(selectedImageUri) {
+    return <SubmitPostScreen finish={this.cancelPhoto} uri={selectedImageUri} />
   }
 
   revealPhotoModal() {
@@ -36,7 +36,7 @@ export default class AddPostScreen extends React.Component {
         onPictureApproved={uri => console.log(uri)}
         isVisible={this.state.modalVisible}
         cancel={this.cancelPhoto}
-        screenAfterImageSelection={this.renderNonsense}
+        screenAfterImageSelection={this.renderSubmitPost}
       />
     )
   }
