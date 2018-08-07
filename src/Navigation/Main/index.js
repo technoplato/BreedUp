@@ -39,7 +39,11 @@ TabNavigation.router.getStateForAction = (action, state) => {
       this.currentRoute = action.routeName
       this.nextRoute = action.routeName
       break
-    case 'Navigation/BACK':
+    case this.currentRoute === 'AddPost' && 'Navigation/BACK':
+      // A little ugly of an approach, but AddPost is the tab where I'd like
+      // the special go back behavior. I still need to track state in
+      // other navigation. There has got to be a cleaner way of doing this
+      // but this works for now so going to stick with it. Cleanup later.
       this.nextRoute = this.previousRoute
       this.currentRoute = this.nextRoute
       this.previousRoute = this.currentRoute
@@ -49,8 +53,13 @@ TabNavigation.router.getStateForAction = (action, state) => {
         index: index
       }
       return newState
+    case 'Navigation/BACK':
+      this.nextRoute = this.previousRoute
+      this.currentRoute = this.nextRoute
+      this.previousRoute = this.currentRoute
   }
 
+  console.log(this.previousRoute, this.currentRoute, this.nextRoute)
   return defaultGetStateForAction(action, state)
 }
 
