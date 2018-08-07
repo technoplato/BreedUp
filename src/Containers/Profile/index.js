@@ -21,7 +21,7 @@ export default class Profile extends React.Component {
     username: '',
     description: '',
     uid: '',
-    currentUserProfile: true,
+    currentUserProfile: false,
     modalVisible: false,
     modalSaving: false,
     modifiedUsername: '',
@@ -42,8 +42,8 @@ export default class Profile extends React.Component {
 
   componentWillMount() {
     const profileId = this.props.navigation.getParam(
-      /* TODO: Replace this with reasonable default and handle no ID */ 'uid',
-      'JMToo5lrZzMOxTAX8WHPE7t4t5o1'
+      'uid',
+      firebase.auth().currentUser.uid
     )
 
     const { uid, displayName, photoURL } = firebase.auth().currentUser
@@ -65,15 +65,15 @@ export default class Profile extends React.Component {
       })
     }
 
-    this.loadUserProfile()
+    this.loadUserProfile(profileId)
   }
 
-  loadUserProfile() {
+  loadUserProfile(profileId) {
     firebase
       .database()
       .ref()
-      .child(`users/${this.state.uid}`)
-      .on('child_added', snap => {
+      .child(`users/${profileId}`)
+      .on('value', snap => {
         const { username, description, profileURL } = snap.val()
 
         this.setState({
@@ -123,7 +123,7 @@ export default class Profile extends React.Component {
         style={{ justifyContent: 'center', alignItems: 'center' }}
       >
         <View style={{ width: '100%', height: '100%' }}>
-          <View style={{ padding: 12, backgroundColor: 'orange' }}>
+          <View style={{ padding: 12, backgroundColor: 'white' }}>
             <Text>Username</Text>
             <TextInput
               maxLength={20}
@@ -261,9 +261,7 @@ export default class Profile extends React.Component {
       .then(() => {
         const { avatarURL } = this.state
         if (avatarURL !== updatedUrl) {
-          this.setState({
-            avatarURL: updatedUrl
-          })
+          this.setState({ avatarURL: updatedUrl })
         }
       })
   }
@@ -296,10 +294,12 @@ export default class Profile extends React.Component {
       <View style={styles.header.container}>
         <View style={styles.header.avatarContainer}>
           <RoundImage
-            onPress={this.showPhotoModal}
+            onPress={this.state.currentUserProfile && this.showPhotoModal}
             size={92}
             source={{
-              uri: this.state.avatarURL
+              uri:
+                this.state.avatarURL ||
+                'https://user-images.githubusercontent.com/6922904/43790322-455b8dda-9a40-11e8-800e-09b299ace3b3.png'
             }}
           />
         </View>
@@ -307,7 +307,12 @@ export default class Profile extends React.Component {
           <View style={styles.header.topRow}>
             <View style={styles.header.usernameContainer}>
               <Text
-                onPress={() => this.setTextEditingModalVisible(true)}
+                onPress={() => {
+                  {
+                    this.state.currentUserProfile &&
+                      this.setTextEditingModalVisible(true)
+                  }
+                }}
                 style={styles.header.username}
               >
                 {this.state.username}
@@ -316,10 +321,13 @@ export default class Profile extends React.Component {
             <View style={styles.header.buttonContainer}>
               {!this.state.currentUserProfile && (
                 <Button
-                  buttonStyle={{
-                    backgroundColor: Colors.dogBoneBlue
-                  }}
+                  buttonStyle={{ backgroundColor: Colors.dogBoneBlue }}
                   title="Add to Pack"
+                  onPress={() =>
+                    alert(
+                      'In a future release, you will be able to add a user to people you follow.\n\nClicking this button will follow this user.'
+                    )
+                  }
                 />
               )}
             </View>
@@ -357,7 +365,15 @@ export default class Profile extends React.Component {
     return (
       <View style={styles.postList.container}>
         <View style={styles.postList.list}>
-          <Text>Posts</Text>
+          <Text
+            onPress={() =>
+              alert(
+                "In a future release, this will show a list of this user's posts"
+              )
+            }
+          >
+            Posts
+          </Text>
         </View>
       </View>
     )
@@ -370,6 +386,11 @@ export default class Profile extends React.Component {
           <Button
             title="My Pack"
             buttonStyle={{ backgroundColor: Colors.dogBoneBlue }}
+            onPress={() =>
+              alert(
+                'In a future release, this will bring up a UI for adding your dogs to Breed Up.'
+              )
+            }
           />
         </View>
       </View>
@@ -396,6 +417,7 @@ const styles = {
       paddingRight: 12
     },
     topRow: {
+      marginTop: 12,
       justifyContent: 'space-between',
       flexDirection: 'row'
     },
