@@ -59,7 +59,6 @@ TabNavigation.router.getStateForAction = (action, state) => {
       this.previousRoute = this.currentRoute
   }
 
-  console.log(this.previousRoute, this.currentRoute, this.nextRoute)
   return defaultGetStateForAction(action, state)
 }
 
