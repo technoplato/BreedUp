@@ -1,5 +1,5 @@
 import React from 'react'
-import { FlatList, Share, RefreshControl } from 'react-native'
+import { ListView, Share, RefreshControl } from 'react-native'
 import firebase from 'react-native-firebase'
 
 import FeedCard from '../FeedCard'
@@ -16,11 +16,23 @@ export default class FeedList extends React.Component {
     this.likedPostsRef = rootRef.child('users/' + this.uid + '/likes')
     this.postsRef = rootRef.child('posts/')
 
+    this.ds = new ListView.DataSource({
+      rowHasChanged: (r1, r2) => {
+        return r1.key !== r2.key || r1.liked !== r2.liked
+      },
+      getRowData: (dataBlog, sectionId, rowId) => {
+        const post = dataBlog.s1[rowId]
+        post.liked = this.state.likedPosts.get(post.key) || false
+        return post
+      }
+    })
+
     this.setState({
       ...this.state,
       refreshing: true,
       likedPosts: new Map(),
-      posts: []
+      posts: [],
+      postsDataSource: this.ds.cloneWithRows([])
     })
 
     this.loadPosts().then(() => {
@@ -54,7 +66,8 @@ export default class FeedList extends React.Component {
           ...this.state,
           refreshing: false,
           likedPosts: likedPosts,
-          posts: posts
+          posts: posts,
+          postsDataSource: this.ds.cloneWithRows(posts)
         })
 
         // Need to return something here to ensure everything is loaded before
@@ -79,21 +92,25 @@ export default class FeedList extends React.Component {
     })
   }
 
-  renderItem = ({ item }) => {
-    return (
-      <FeedCard
-        liked={!!this.state.likedPosts.get(item.key)}
-        onLikePressed={this.onLikePressed}
-        onCommentPressed={this.onCommentPressed}
-        onSharePressed={this.onSharePressed}
-        item={item}
-      />
-    )
+  renderItem = item => {
+    if (item !== undefined) {
+      return (
+        <FeedCard
+          liked={!!this.state.likedPosts.get(item.key)}
+          onLikePressed={this.onLikePressed}
+          onCommentPressed={this.onCommentPressed}
+          onSharePressed={this.onSharePressed}
+          item={item}
+        />
+      )
+    } else {
+      return null
+    }
   }
 
   renderList = () => {
     return (
-      <FlatList
+      <ListView
         refreshControl={
           <RefreshControl
             style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}
@@ -101,9 +118,8 @@ export default class FeedList extends React.Component {
             onRefresh={this.onRefresh}
           />
         }
-        data={this.state.posts}
-        renderItem={this.renderItem}
-        extraData={this.state}
+        dataSource={this.state.postsDataSource}
+        renderRow={this.renderItem}
         keyExtractor={this.keyExtractor}
       />
     )
@@ -128,6 +144,12 @@ export default class FeedList extends React.Component {
    ****************************** Interactions ********************************
    ***************************************************************************/
   onLikePressed = (key, wasLiked) => {
+    const newDs = this.state.postsDataSource._dataBlob.s1
+    const index = this.indexWithKey(newDs, key)
+    const post = newDs[index]
+    post['liked'] = !wasLiked
+    newDs[index] = post
+
     handleLikeToggle = wasLiked
       ? this.likedPostsRef.child(key).remove()
       : this.likedPostsRef.child(key).set(!wasLiked)
@@ -139,6 +161,19 @@ export default class FeedList extends React.Component {
         return { likedPosts }
       })
     })
+
+    this.setState({
+      postsDataSource: this.ds.cloneWithRows(newDs)
+    })
+  }
+
+  indexWithKey(arr, key) {
+    for (var i = 0; i < arr.length; i++) {
+      if (arr[i].key === key) {
+        return i
+      }
+    }
+    return -1
   }
 
   onCommentPressed = key => {
