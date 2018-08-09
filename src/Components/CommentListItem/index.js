@@ -19,7 +19,7 @@ export default class CommentListItem extends React.Component {
   }
 
   renderKey = () => {
-    const { key } = this.props.item
-    return <Text>{key}</Text>
+    const { author } = this.props.item
+    return <Text>---{author}</Text>
   }
 }

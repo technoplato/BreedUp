@@ -39,6 +39,7 @@ export default class CommentsList extends React.Component {
         style={styles.list}
         data={this.state.comments}
         renderItem={this.renderItem}
+        extraData={this.state}
         keyExtractor={this.keyExtractor}
       />
     )
