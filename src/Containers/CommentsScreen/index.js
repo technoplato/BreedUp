@@ -17,6 +17,8 @@ export default class CommentsScreen extends React.Component {
     this.commentsRef = rootRef.child(`posts/${postKey}/comments`)
 
     this.state = { postKey: postKey, comment: '' }
+
+    this.onSubmitEditing = this.onSubmitEditing.bind(this)
   }
 
   addComment = () => {
@@ -46,15 +48,22 @@ export default class CommentsScreen extends React.Component {
       <KeyboardAvoidingView behavior="padding" style={styles.container}>
         <CommentList postKey={this.state.postKey} />
         <TextInput
-          multiline
           style={styles.input}
           value={this.state.comment.toString()}
           onChangeText={comment => this.onChangeText(comment)}
-          onSubmitEditing={() => this.addComment()}
+          onSubmitEditing={this.onSubmitEditing}
           placeholder="Enter comment"
         />
         <Button height={42} title="Add Comment" onPress={this.addComment} />
       </KeyboardAvoidingView>
     )
+  }
+
+  onSubmitEditing() {
+    Keyboard.dismiss
+    const { comment } = this.state
+    this.setState({
+      comment: comment.trim()
+    })
   }
 }
