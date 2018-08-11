@@ -60,14 +60,14 @@ export default class SubmitPostScreen extends React.Component {
   uploadPost() {
     this.setState({ saving: true })
     const storageRef = firebase.storage().ref()
+    const rootRef = firebase.database().ref()
 
     const id = firebase.auth().currentUser.uid
 
-    const ref = firebase
-      .database()
-      .ref()
-      .child('posts')
-      .push()
+    const userPostsRef = rootRef.child('TEMP_posts/' + id).push()
+    const ref = rootRef.child('posts').push()
+
+    let photoUrl
 
     const userPostImagesStorageRef = storageRef
       .child(id)
@@ -78,10 +78,22 @@ export default class SubmitPostScreen extends React.Component {
       .put(this.props.uri)
       .then(snapshot => snapshot.downloadURL)
       .then(url => {
+        photoUrl = url
         return ref.set({
           author: firebase.auth().currentUser.displayName,
           author_img: firebase.auth().currentUser.photoURL,
           post_img: url,
+          time_posted: new Date().getTime(),
+          reverse_timestamp: -1 * new Date().getTime(),
+          text: this.state.postText,
+          key: ref.key
+        })
+      })
+      .then(() => {
+        return userPostsRef.set({
+          author: firebase.auth().currentUser.displayName,
+          author_img: firebase.auth().currentUser.photoURL,
+          post_img: photoUrl,
           time_posted: new Date().getTime(),
           reverse_timestamp: -1 * new Date().getTime(),
           text: this.state.postText,
