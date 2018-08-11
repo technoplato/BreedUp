@@ -12,6 +12,7 @@ import Modal from 'react-native-modal'
 
 import RoundImage from '../../Components/RoundImageView'
 import { Colors } from '../../Themes'
+import PostList from '../../Components/PostList'
 
 import CameraModal from '../../../lib/InstagramCameraModal'
 
@@ -364,17 +365,11 @@ export default class Profile extends React.Component {
   postsList() {
     return (
       <View style={styles.postList.container}>
-        <View style={styles.postList.list}>
-          <Text
-            onPress={() =>
-              alert(
-                "In a future release, this will show a list of this user's posts"
-              )
-            }
-          >
-            Posts
-          </Text>
-        </View>
+        <PostList
+          style={styles.postList.list}
+          navigation={this.props.navigation}
+          userId={this.state.uid}
+        />
       </View>
     )
   }
@@ -461,8 +456,7 @@ const styles = {
   postList: StyleSheet.create({
     container: {
       backgroundColor: Colors.crimson,
-      flex: 1,
-      padding: 12
+      flex: 1
     },
     list: {
       flex: 1,
