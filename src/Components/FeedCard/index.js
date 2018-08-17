@@ -129,15 +129,17 @@ export default class FeedCard extends React.Component {
     )
 
     return (
-      <TouchableWithoutFeedback
-        onPress={() => this.props.onCommentPressed(this.props.item.key)}
-      >
-        <View style={{ flexDirection: 'column', padding: 12 }}>
-          {viewAllText}
-          {comment1}
-          {comment2}
-        </View>
-      </TouchableWithoutFeedback>
+      comment_count > 0 && (
+        <TouchableWithoutFeedback
+          onPress={() => this.props.onCommentPressed(this.props.item.key)}
+        >
+          <View style={{ flexDirection: 'column', padding: 12 }}>
+            {viewAllText}
+            {comment1}
+            {comment2}
+          </View>
+        </TouchableWithoutFeedback>
+      )
     )
   }
 }
