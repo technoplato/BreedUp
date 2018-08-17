@@ -18,7 +18,11 @@ export default class FeedList extends React.Component {
 
     this.ds = new ListView.DataSource({
       rowHasChanged: (r1, r2) => {
-        return r1.key !== r2.key || r1.liked !== r2.liked
+        return (
+          r1.key !== r2.key ||
+          r1.liked !== r2.liked ||
+          r1.comment_count !== r2.comment_count
+        )
       },
       getRowData: (dataBlog, sectionId, rowId) => {
         const post = dataBlog.s1[rowId]
