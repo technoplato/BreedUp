@@ -1,32 +1,63 @@
 import React from 'react'
 import { FlatList, ActivityIndicator } from 'react-native'
-import firebase from 'react-native-firebase'
+import { filter, map } from 'rxjs/operators'
+import _ from 'lodash'
 
 import CommentListItem from '../CommentListItem'
 import styles from './CommentListStyles'
 import { Colors } from '../../Themes'
 
+import {
+  fetchCommentsForPost,
+  stopObservingCommentsForPost,
+  observeCommentsForPost
+} from '../../Interactors/Comments'
+
 export default class CommentsList extends React.Component {
   constructor(props) {
     super(props)
 
-    const rootRef = firebase.database().ref()
-    this.commentsRef = rootRef.child(`posts/${this.props.postKey}/comments`)
-
     this.state = {
-      loading: false,
+      loading: true,
       comments: []
     }
 
     this.loadComments()
   }
 
-  loadComments = () => {
-    this.commentsRef.on('child_added', snap => {
-      const comments = this.state.comments
-      comments.push(snap.val())
-      this.setState({ comments: comments, loading: false })
+  loadComments = async () => {
+    const { postId } = this.props
+    const { count, fetchedComments } = await fetchCommentsForPost(postId)
+
+    this.setState({
+      loading: false,
+      comments: fetchedComments
     })
+
+    observeCommentsForPost(postId)
+      .pipe(
+        filter(comment => {
+          const { comments } = this.state
+          let newComment = true
+          for (let i = 0; i < comments.length; i++) {
+            if (comments[i].key === comment.key) {
+              newComment = false
+              break
+            }
+          }
+
+          return newComment
+        })
+      )
+      .subscribe(comment => {
+        this.addCommentToList(comment)
+      })
+  }
+
+  addCommentToList = comment => {
+    const comments = this.state.comments
+    comments.push(comment)
+    this.setState({ comments: _.uniq(comments) })
   }
 
   renderItem = ({ item }) => {
@@ -38,8 +69,8 @@ export default class CommentsList extends React.Component {
       <FlatList
         style={styles.list}
         data={this.state.comments}
-        renderItem={this.renderItem}
         extraData={this.state}
+        renderItem={this.renderItem}
         keyExtractor={this.keyExtractor}
       />
     )
@@ -62,6 +93,6 @@ export default class CommentsList extends React.Component {
   keyExtractor = item => item.key
 
   componentWillUnmount() {
-    this.commentsRef.off()
+    stopObservingCommentsForPost(this.props.postId)
   }
 }

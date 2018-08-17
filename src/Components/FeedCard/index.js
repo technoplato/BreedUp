@@ -1,6 +1,6 @@
 import React from 'react'
 import { Card, Avatar, Button } from 'react-native-elements'
-import { View, Text, Image } from 'react-native'
+import { View, Text, Image, TouchableWithoutFeedback } from 'react-native'
 import moment from 'moment'
 
 import styles from './FeedCardStyles'
@@ -14,6 +14,7 @@ export default class FeedCard extends React.Component {
         {this.renderText()}
         {this.renderImage()}
         {this.renderButtons()}
+        {this.renderComments()}
       </Card>
     )
   }
@@ -103,6 +104,40 @@ export default class FeedCard extends React.Component {
           }
         />
       </View>
+    )
+  }
+
+  renderComments = () => {
+    const { comment_count, first_comment, second_comment } = this.props.item
+
+    const viewAllText = comment_count > 2 && (
+      <Text style={{ color: 'rgb(143, 143, 143)', marginBottom: 12 }}>
+        View all {comment_count} comments
+      </Text>
+    )
+    const comment1 = first_comment && (
+      <Text style={{ marginBottom: 6 }}>
+        <Text style={{ fontWeight: 'bold' }}>{first_comment.author} </Text>
+        {first_comment.text}
+      </Text>
+    )
+    const comment2 = second_comment && (
+      <Text>
+        <Text style={{ fontWeight: 'bold' }}>{second_comment.author} </Text>
+        {second_comment.text}
+      </Text>
+    )
+
+    return (
+      <TouchableWithoutFeedback
+        onPress={() => this.props.onCommentPressed(this.props.item.key)}
+      >
+        <View style={{ flexDirection: 'column', padding: 12 }}>
+          {viewAllText}
+          {comment1}
+          {comment2}
+        </View>
+      </TouchableWithoutFeedback>
     )
   }
 }
