@@ -1,9 +1,11 @@
 import React from 'react'
 import { createBottomTabNavigator, NavigationActions } from 'react-navigation'
+import { Image } from 'react-native'
 
 import { ProfileStack, AddPost } from '../Misc'
 
 import FeedStack from '../Feed'
+import { Images } from '../../Themes'
 
 import MyCustomSillyDrawerComponent from '../MyCustomSillyDrawerComponent'
 
@@ -20,6 +22,38 @@ const TabNavigation = createBottomTabNavigator(
       }
     },
     Profile: ProfileStack
+  },
+  {
+    navigationOptions: ({ navigation }) => ({
+      tabBarIcon: ({ focused, tintColor }) => {
+        const { routeName } = navigation.state
+        let iconSource
+        switch (routeName) {
+          case 'Main':
+            iconSource = Images.iconHome
+            break
+          case 'AddPost':
+            iconSource = Images.iconAdd
+            break
+          case 'Profile':
+            iconSource = Images.iconProfile
+            break
+        }
+
+        // You can return any component that you like here! We usually use an
+        // icon component from react-native-vector-icons
+        return (
+          <Image
+            source={iconSource}
+            style={{ marginTop: 6, height: 24, width: 24 }}
+          />
+        )
+      }
+    }),
+    tabBarOptions: {
+      activeTintColor: 'tomato',
+      inactiveTintColor: 'gray'
+    }
   },
   {
     initialRouteName: 'Main',
