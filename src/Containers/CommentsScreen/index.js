@@ -1,42 +1,28 @@
 import React from 'react'
 import { TextInput, KeyboardAvoidingView, Keyboard } from 'react-native'
-import firebase from 'react-native-firebase'
 import { Button } from 'react-native-elements'
 
 import CommentList from '../../Components/CommentList'
 import styles from './CommentsScreenStyles'
+import { addComment } from '../../Interactors/Comments'
 
 export default class CommentsScreen extends React.Component {
   constructor(props) {
     super(props)
 
-    const { currentUser } = firebase.auth()
-    this.currentUser = currentUser
-    const postKey = this.props.navigation.getParam('key', 'NO-ID')
-    const rootRef = firebase.database().ref()
-    this.commentsRef = rootRef.child(`posts/${postKey}/comments`)
+    const postId = this.props.navigation.getParam('key', 'NO-ID')
 
-    this.state = { postKey: postKey, comment: '' }
+    this.state = { postId: postId, comment: '' }
 
     this.onSubmitEditing = this.onSubmitEditing.bind(this)
   }
 
-  addComment = () => {
-    this.setState({
-      comment: ''
-    })
-
+  onPressAddComment = () => {
     Keyboard.dismiss()
 
-    const ref = this.commentsRef.push()
+    this.setState({ comment: '' })
 
-    ref.set({
-      author: this.currentUser.displayName,
-      time_posted: new Date().getTime(),
-      reverse_timestamp: -1 * new Date().getTime(),
-      text: this.state.comment,
-      key: ref.key
-    })
+    addComment(this.state.postId, this.state.comment)
   }
 
   onChangeText = text => {
@@ -44,26 +30,16 @@ export default class CommentsScreen extends React.Component {
   }
 
   render() {
-    return (
-      <KeyboardAvoidingView behavior="padding" style={styles.container}>
-        <CommentList postKey={this.state.postKey} />
-        <TextInput
-          style={styles.input}
-          value={this.state.comment.toString()}
-          onChangeText={comment => this.onChangeText(comment)}
-          onSubmitEditing={this.onSubmitEditing}
-          placeholder="Enter comment"
-        />
-        <Button height={42} title="Add Comment" onPress={this.addComment} />
+    return <KeyboardAvoidingView behavior="padding" style={styles.container}>
+      <CommentList postId={this.state.postId} />
+        <TextInput style={styles.input} value={this.state.comment.toString()} onChangeText={comment => this.onChangeText(comment)} onSubmitEditing={this.onSubmitEditing} placeholder="Enter comment" />
+        <Button height={42} title="Add Comment" onPress={this.onPressAddComment} />
       </KeyboardAvoidingView>
-    )
   }
 
   onSubmitEditing() {
     Keyboard.dismiss
     const { comment } = this.state
-    this.setState({
-      comment: comment.trim()
-    })
+    this.setState({ comment: comment.trim() })
   }
 }
