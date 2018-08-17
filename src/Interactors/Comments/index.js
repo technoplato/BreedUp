@@ -1,17 +1,44 @@
 import { fromEvent } from 'rxjs'
 import { map } from 'rxjs/operators'
-import { commentsRef, currentUser } from '../../Utils/FirebaseUtils'
+import { commentsRef, postsRef, currentUser } from '../../Utils/FirebaseUtils'
 
-addComment = (postId, text) => {
-  const ref = commentsRef.child(postId).push()
+addComment = async (postId, text) => {
+  const newCommentRef = commentsRef.child(postId).push()
 
-  return ref.set({
+  const newComment = {
     author: currentUser.displayName,
     time_posted: new Date().getTime(),
-    reverse_timestamp: -1 * new Date().getTime(),
     text: text,
-    key: ref.key
-  })
+    key: newCommentRef.key
+  }
+
+  const commentAdded = await newCommentRef.set(newComment)
+
+  const prevCommentCount = await getCommentCountForPost(postId)
+
+  postsRef.child(postId).transaction(post => {
+    if (post !== null) {
+      if (prevCommentCount === 0) {
+        post['comment_count'] = 1
+        post['first_comment'] = newComment
+      } else if (prevCommentCount === 1) {
+        post['comment_count'] = 2
+        post['second_comment'] = newComment
+      } else {
+        post['comment_count'] = post.comment_count + 1
+      }
+    }
+    return post
+  }, true)
+}
+
+getCommentCountForPost = async postId => {
+  const postCommentCountSnap = await postsRef
+    .child(postId)
+    .child('comment_count')
+    .once('value')
+
+  return postCommentCountSnap.val() || 0
 }
 
 fetchCommentsForPost = async postId => {

@@ -2,6 +2,9 @@ import firebase from 'react-native-firebase'
 
 const rootRef = firebase.database().ref()
 
+const POSTS = 'posts'
+const postsRef = rootRef.child(POSTS)
+
 const COMMENTS = 'comments'
 const commentsRef = rootRef.child(COMMENTS)
 
@@ -16,4 +19,4 @@ firebase.auth().onAuthStateChanged(user => {
   currentUser = user
 })
 
-export { commentsRef, currentUser }
+export { postsRef, commentsRef, currentUser }
