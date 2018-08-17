@@ -45,7 +45,9 @@ fetchCommentsForPost = async postId => {
   const snap = await commentsRef.child(postId).once('value')
   return {
     count: snap.numChildren() || 0,
-    fetchedComments: Object.values(snap.val() || {})
+    fetchedComments: Object.values(snap.val() || {}).sort((a, b) => {
+      return a.key > b.key
+    })
   }
 }
 
