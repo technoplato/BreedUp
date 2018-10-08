@@ -36,7 +36,8 @@ class App extends Component {
       isMounted,
       'Unable to symbolicate',
       debuggerError,
-      navigation
+      navigation,
+      'Warning: In next release empty'
     ])
   }
 }

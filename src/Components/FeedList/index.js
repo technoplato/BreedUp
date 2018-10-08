@@ -104,6 +104,7 @@ export default class FeedList extends React.Component {
           onLikePressed={this.onLikePressed}
           onCommentPressed={this.onCommentPressed}
           onSharePressed={this.onSharePressed}
+          onAvatarPressed={this.onAvatarPressed}
           item={item}
         />
       )
@@ -184,6 +185,14 @@ export default class FeedList extends React.Component {
     this.props.navigation.navigate('Comments', {
       key: key,
       postAuthor: this.currentUser.displayName
+    })
+  }
+
+  onAvatarPressed = (userId, username) => {
+    this.props.navigation.navigate('PublicProfile', {
+      userId: userId,
+      username: username,
+      foo: 'bar'
     })
   }
 

@@ -30,8 +30,9 @@ export default class FeedCard extends React.Component {
         <View style={styles.imageAndTextContainer}>
           <Avatar
             onPress={() =>
-              alert(
-                "In a future release, clicking the avatar will navigate you to this user's profile"
+              this.props.onAvatarPressed(
+                this.props.item.author_key,
+                this.props.item.author
               )
             }
             rounded

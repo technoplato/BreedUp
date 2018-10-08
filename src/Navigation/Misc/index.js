@@ -8,7 +8,7 @@ import Profile from '../../Containers/Profile'
 import AddPost from '../../Containers/AddPost'
 
 const ProfileStack = createStackNavigator({
-  Profile: {
+  PrivateProfile: {
     screen: Profile,
     navigationOptions: ({ navigation }) => ({
       headerLeft: (
