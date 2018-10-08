@@ -15,6 +15,12 @@ import { Colors } from '../../Themes'
 import PostList from '../../Components/PostList'
 
 import CameraModal from '../../../lib/InstagramCameraModal'
+import { currentUser } from '../../Utils/FirebaseUtils'
+import {
+  followUser,
+  unfollowUser,
+  isFollowing
+} from '../../Interactors/Profile'
 
 export default class Profile extends React.Component {
   state = {
@@ -31,7 +37,8 @@ export default class Profile extends React.Component {
     hasProfileChanged: false,
     loading: true,
     photoEditModalVisible: false,
-    saveComplete: false
+    saveComplete: false,
+    isFollowed: false
   }
 
   constructor(props) {
@@ -42,29 +49,21 @@ export default class Profile extends React.Component {
   }
 
   componentWillMount() {
+    const privateProfile =
+      this.props.navigation.state.routeName === 'PrivateProfile'
+
+    const currentUid = firebase.auth().currentUser.uid
     const profileId = this.props.navigation.getParam(
-      'uid',
-      firebase.auth().currentUser.uid
+      'userId',
+      privateProfile ? currentUid : ''
     )
 
-    const { uid, displayName, photoURL } = firebase.auth().currentUser
+    const currentUserProfile = currentUid === profileId
 
-    const currentUserProfile = uid === profileId
-
-    if (currentUserProfile) {
-      this.setState({
-        uid: profileId,
-        currentUserProfile: currentUserProfile,
-
-        avatarURL: photoURL,
-        username: displayName,
-        description: '',
-
-        modifiedUsername: displayName,
-        modifiedDescription: '',
-        modifiedAvatarURL: photoURL
-      })
-    }
+    this.setState({
+      uid: profileId,
+      currentUserProfile: currentUserProfile
+    })
 
     this.loadUserProfile(profileId)
   }
@@ -74,7 +73,7 @@ export default class Profile extends React.Component {
       .database()
       .ref()
       .child(`users/${profileId}`)
-      .on('value', snap => {
+      .once('value', snap => {
         const { username, description, profileURL } = snap.val()
 
         this.setState({
@@ -85,6 +84,14 @@ export default class Profile extends React.Component {
           loading: false
         })
       })
+
+    this.loadFollowing()
+  }
+
+  loadFollowing() {
+    isFollowing(this.state.uid).then(follows => {
+      this.setState({ isFollowed: follows })
+    })
   }
 
   setTextEditingModalVisible(visible) {
@@ -310,8 +317,9 @@ export default class Profile extends React.Component {
               <Text
                 onPress={() => {
                   {
-                    this.state.currentUserProfile &&
+                    if (this.state.currentUserProfile) {
                       this.setTextEditingModalVisible(true)
+                    }
                   }
                 }}
                 style={styles.header.username}
@@ -323,12 +331,18 @@ export default class Profile extends React.Component {
               {!this.state.currentUserProfile && (
                 <Button
                   buttonStyle={{ backgroundColor: Colors.dogBoneBlue }}
-                  title="Add to Pack"
-                  onPress={() =>
-                    alert(
-                      'In a future release, you will be able to add a user to people you follow.\n\nClicking this button will follow this user.'
-                    )
-                  }
+                  title={!this.state.isFollowed ? 'Add to Pack' : 'Unfollow'}
+                  onPress={() => {
+                    if (!this.state.isFollowed) {
+                      followUser(this.state.uid).then(followed => {
+                        this.setState({ isFollowed: true })
+                      })
+                    } else {
+                      unfollowUser(this.state.uid).then(followed => {
+                        this.setState({ isFollowed: false })
+                      })
+                    }
+                  }}
                 />
               )}
             </View>
@@ -370,6 +384,7 @@ export default class Profile extends React.Component {
           navigation={this.props.navigation}
           userId={this.state.uid}
         />
+        )
       </View>
     )
   }

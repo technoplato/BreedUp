@@ -8,13 +8,10 @@ import FeedCard from '../FeedCard'
 
 export default class PostList extends React.Component {
   componentWillMount() {
-    const { currentUser } = firebase.auth()
 
     const rootRef = firebase.database().ref()
 
-    this.currentUser = currentUser
-    this.uid = currentUser.uid
-    this.likedPostsRef = rootRef.child('users/' + this.uid + '/likes')
+    this.likedPostsRef = rootRef.child('users/' + this.userId + '/likes')
     this.postsRef = rootRef.child('TEMP_posts/' + this.props.userId)
 
     this.ds = new ListView.DataSource({
@@ -36,38 +33,7 @@ export default class PostList extends React.Component {
       postsDataSource: this.ds.cloneWithRows([])
     })
 
-    this.loadPosts().then(() => {
-      this.updateViewCounts()
-    })
-  }
-
-  getAllChildrenPromise(listRef, debug = false) {
-    const keysLink = listRef.toString() + '.json?shallow=true'
-    if (debug) {
-      console.log('Keys Link:', keysLink)
-    }
-
-    return axios.get(keysLink).then(res => {
-      if (res.data) {
-        const keys = Object.keys(res.data)
-        const promises = []
-
-        keys.forEach(key => {
-          promises.push(
-            listRef
-              .child(key)
-              .once('value')
-              .then(snap => {
-                return snap.val()
-              })
-          )
-        })
-
-        return Promise.all(promises)
-      } else {
-        return Promise.resolve([])
-      }
-    })
+    this.loadPosts()
   }
 
   loadPosts = () => {
@@ -100,22 +66,6 @@ export default class PostList extends React.Component {
         // adding another task that consumes memory
         return true
       })
-  }
-
-  updateViewCounts = () => {
-    // this.state.posts.forEach(post => {
-    //   this.postsRef
-    //     .child(post.key)
-    //     .child('view_count')
-    //     .transaction(
-    //       current => {
-    //         return (current || 0) + 1
-    //       },
-    //       (error, committed, snapshot) => {
-    //         // Optionally handle results here
-    //       }
-    //     )
-    // })
   }
 
   renderItem = item => {
@@ -215,6 +165,35 @@ export default class PostList extends React.Component {
     Share.share({
       title: 'Breed Up is awesome!',
       message: `Breed Up is awesome. Download it now! Check out this post.\n\n${text}\n\n${url}`
+    })
+  }
+
+  getAllChildrenPromise(listRef, debug = false) {
+    const keysLink = listRef.toString() + '.json?shallow=true'
+    if (debug) {
+      console.log('Keys Link:', keysLink)
+    }
+
+    return axios.get(keysLink).then(res => {
+      if (res.data) {
+        const keys = Object.keys(res.data)
+        const promises = []
+
+        keys.forEach(key => {
+          promises.push(
+            listRef
+              .child(key)
+              .once('value')
+              .then(snap => {
+                return snap.val()
+              })
+          )
+        })
+
+        return Promise.all(promises)
+      } else {
+        return Promise.resolve([])
+      }
     })
   }
 }

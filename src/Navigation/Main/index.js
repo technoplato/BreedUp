@@ -1,6 +1,7 @@
 import React from 'react'
-import { createBottomTabNavigator, NavigationActions } from 'react-navigation'
+import { createBottomTabNavigator } from 'react-navigation'
 import { Image } from 'react-native'
+import firebase from 'react-native-firebase'
 
 import { ProfileStack, AddPost } from '../Misc'
 
@@ -21,10 +22,13 @@ const TabNavigation = createBottomTabNavigator(
         tabBarVisible: false
       }
     },
-    Profile: ProfileStack
+    Profile: {
+      screen: ProfileStack
+    }
   },
   {
     navigationOptions: ({ navigation }) => ({
+      tabBarVisible: shouldShowTabBar(navigation),
       tabBarIcon: ({ focused, tintColor }) => {
         const { routeName } = navigation.state
         let iconSource
@@ -61,6 +65,14 @@ const TabNavigation = createBottomTabNavigator(
   }
 )
 
+function shouldShowTabBar(navigation) {
+  const routes = navigation.state.routes
+  const dest = routes && routes[1]
+  const name = dest && dest.routeName
+
+  return !(name === 'PublicProfile')
+}
+
 const defaultGetStateForAction = TabNavigation.router.getStateForAction
 TabNavigation.router.getStateForAction = (action, state) => {
   switch (action.type) {
@@ -96,4 +108,30 @@ TabNavigation.router.getStateForAction = (action, state) => {
   return defaultGetStateForAction(action, state)
 }
 
-export default () => <TabNavigation />
+// gets the current screen from navigation state
+function getActiveRouteName(navigationState) {
+  if (!navigationState) {
+    return null
+  }
+  const route = navigationState.routes[navigationState.index]
+  // dive into nested navigators
+  if (route.routes) {
+    return getActiveRouteName(route)
+  }
+  return route.routeName
+}
+
+export default () => (
+  <TabNavigation
+    onNavigationStateChange={(prevState, currentState) => {
+      const currentScreen = getActiveRouteName(currentState)
+      const prevScreen = getActiveRouteName(prevState)
+
+      if (prevScreen !== currentScreen) {
+        // the line below uses the Google Analytics tracker
+        // change the tracker here to use other Mobile analytics SDK.
+        console.log('Current Screen:\t', currentScreen)
+      }
+    }}
+  />
+)
