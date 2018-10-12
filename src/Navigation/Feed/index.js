@@ -9,19 +9,7 @@ import Profile from '../../Containers/Profile'
 
 export default createStackNavigator({
   Feed: {
-    screen: FeedScreen,
-    navigationOptions: ({ navigation }) => ({
-      headerRight: (
-        <Icon
-          containerStyle={{ marginRight: 12 }}
-          name="search"
-          color="#000"
-          onPress={() =>
-            alert('Feed\n\nSearch Tapped\n\nsearch usernames only')
-          }
-        />
-      )
-    })
+    screen: FeedScreen
   },
   Comments: {
     screen: CommentsScreen,

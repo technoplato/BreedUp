@@ -34,9 +34,9 @@ export default class DogList extends React.Component {
   }
 
   renderItem = ({ item }) => {
+
     return <DogListItem onDogPress={this.onDogPress} item={item} />
   }
-
   onDogPress = dog => {
     this.props.navigation.navigate('ViewDog', {
       dog: dog,
