@@ -13,9 +13,10 @@ import Modal from 'react-native-modal'
 import RoundImage from '../../Components/RoundImageView'
 import { Colors } from '../../Themes'
 import PostList from '../../Components/PostList'
+import DogList from '../../Components/DogList'
 
 import CameraModal from '../../../lib/InstagramCameraModal'
-import { currentUser } from '../../Utils/FirebaseUtils'
+
 import {
   followUser,
   unfollowUser,
@@ -215,7 +216,6 @@ export default class Profile extends React.Component {
         {this.header()}
         {this.dogList()}
         {this.postsList()}
-        {this.state.currentUserProfile && this.footerButtons()}
         {this.state.loading && this.renderLoading()}
       </View>
     )
@@ -361,17 +361,11 @@ export default class Profile extends React.Component {
   dogList() {
     return (
       <View style={styles.dogList.container}>
-        <View style={styles.dogList.list}>
-          <Text
-            onPress={() =>
-              alert(
-                "This is just a placeholder\n\nA list of a user's dogs will go here"
-              )
-            }
-          >
-            Dog List Placeholder
-          </Text>
-        </View>
+        <DogList
+          navigation={this.props.navigation}
+          userId={this.state.uid}
+          currentUser={this.state.currentUserProfile}
+        />
       </View>
     )
   }
@@ -388,30 +382,11 @@ export default class Profile extends React.Component {
       </View>
     )
   }
-
-  footerButtons() {
-    return (
-      <View style={{ position: 'absolute', bottom: 0, width: '100%' }}>
-        <View style={styles.footer.buttonContainer}>
-          <Button
-            title="My Pack"
-            buttonStyle={{ backgroundColor: Colors.dogBoneBlue }}
-            onPress={() =>
-              alert(
-                'In a future release, this will bring up a UI for adding your dogs to Breed Up.'
-              )
-            }
-          />
-        </View>
-      </View>
-    )
-  }
 }
 
 const styles = {
   screen: StyleSheet.create({
     container: {
-      backgroundColor: 'lightskyblue',
       flex: 1
     }
   }),
@@ -456,38 +431,24 @@ const styles = {
 
   dogList: StyleSheet.create({
     container: {
-      backgroundColor: 'lightgrey',
       height: 90,
       width: '100%'
     },
     list: {
       flex: 1,
       justifyContent: 'center',
-      alignItems: 'center',
-      backgroundColor: 'lightgoldenrodyellow'
+      alignItems: 'center'
     }
   }),
 
   postList: StyleSheet.create({
     container: {
-      backgroundColor: Colors.crimson,
       flex: 1
     },
     list: {
       flex: 1,
       justifyContent: 'center',
-      alignItems: 'center',
-      backgroundColor: 'lightcyan'
-    }
-  }),
-
-  footer: StyleSheet.create({
-    buttonContainer: {
-      flex: 1,
-      flexDirection: 'row',
-      justifyContent: 'center',
-      backgroundColor: 'white',
-      padding: 16
+      alignItems: 'center'
     }
   }),
 
