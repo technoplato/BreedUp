@@ -9,21 +9,18 @@ export default StyleSheet.create({
 
   profileHeaderContainer: {
     width: '100%',
-    flexDirection: 'row',
-    backgroundColor: 'yellow'
-  },
-  avatarContainer: {
-    width: 120,
-    height: 120,
-    backgroundColor: 'pink'
+    flexDirection: 'row'
   },
 
-  textAndButtonContainer: { backgroundColor: 'blue' },
+  avatarContainer: {
+    width: 120,
+    height: 120
+  },
+
   usernameAndButtonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between'
   },
-  description: { backgroundColor: 'orange' },
 
   button: {
     backgroundColor: Colors.dogBoneBlue,
