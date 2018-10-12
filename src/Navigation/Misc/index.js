@@ -20,18 +20,6 @@ const ProfileStack = createStackNavigator({
         >
           Sign Out
         </Text>
-      ),
-      headerRight: (
-        <Icon
-          containerStyle={{ marginRight: 12 }}
-          name="search"
-          color="#000"
-          onPress={() =>
-            alert(
-              'Profile\n\nSearch Tapped\n\nSearch usernames, dog names, and provide option for nearby'
-            )
-          }
-        />
       )
     })
   },
