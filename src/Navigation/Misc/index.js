@@ -1,11 +1,11 @@
 import React from 'react'
 import { createStackNavigator } from 'react-navigation'
-import { Icon } from 'react-native-elements'
 import firebase from 'react-native-firebase'
 import { Text } from 'react-native'
 
-import Profile from '../../Containers/Profile'
+import Search from '../../Containers/Search'
 import AddPost from '../../Containers/AddPost'
+import Profile from '../../Containers/Profile'
 import AddDog from '../../Containers/AddDog'
 import ViewDog from '../../Containers/ViewDog'
 
@@ -31,4 +31,10 @@ const ProfileStack = createStackNavigator({
   }
 })
 
-export { ProfileStack, AddPost }
+const SearchStack = createStackNavigator({
+  Search: {
+    screen: Search
+  }
+})
+
+export { ProfileStack, AddPost, SearchStack }
