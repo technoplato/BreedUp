@@ -1,11 +1,10 @@
 import React from 'react'
 import { createBottomTabNavigator } from 'react-navigation'
 import { Image } from 'react-native'
-import firebase from 'react-native-firebase'
 
-import { ProfileStack, AddPost } from '../Misc'
-
+import { ProfileStack, AddPost, SearchStack } from '../Misc'
 import FeedStack from '../Feed'
+
 import { Images } from '../../Themes'
 
 import MyCustomSillyDrawerComponent from '../MyCustomSillyDrawerComponent'
@@ -16,6 +15,7 @@ this.currentRoute = 'Main'
 const TabNavigation = createBottomTabNavigator(
   {
     Main: FeedStack,
+    Search: SearchStack,
     AddPost: {
       screen: AddPost,
       navigationOptions: {
