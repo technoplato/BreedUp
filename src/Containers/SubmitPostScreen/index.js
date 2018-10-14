@@ -64,7 +64,7 @@ export default class SubmitPostScreen extends React.Component {
 
     const id = firebase.auth().currentUser.uid
 
-    const userPostsRef = rootRef.child('TEMP_posts/' + id).push()
+    const userPostsRef = rootRef.child('posts/' + id).push()
     const ref = rootRef.child('posts').push()
 
     let photoUrl

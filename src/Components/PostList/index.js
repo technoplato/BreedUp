@@ -8,11 +8,10 @@ import FeedCard from '../FeedCard'
 
 export default class PostList extends React.Component {
   componentWillMount() {
-
     const rootRef = firebase.database().ref()
 
     this.likedPostsRef = rootRef.child('users/' + this.userId + '/likes')
-    this.postsRef = rootRef.child('TEMP_posts/' + this.props.userId)
+    this.postsRef = rootRef.child('posts/' + this.props.userId)
 
     this.ds = new ListView.DataSource({
       rowHasChanged: (r1, r2) => {
