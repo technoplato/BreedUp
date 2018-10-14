@@ -58,7 +58,7 @@ uploadImage = (imageUri, userId, path) => {
  * Deletes an image from Firebase storage and returns true to resolve the promise.
  */
 deleteImage = (userId, path) => {
-  firebase
+  return firebase
     .storage()
     .ref()
     .child(userId)
