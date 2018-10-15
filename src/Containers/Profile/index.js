@@ -21,7 +21,7 @@ import {
   followUser,
   unfollowUser,
   isFollowing
-} from '../../Interactors/Profile'
+} from '../../Interactors/Users'
 
 export default class Profile extends React.Component {
   state = {
