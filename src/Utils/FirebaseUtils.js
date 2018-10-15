@@ -85,7 +85,7 @@ export {
   postsRef,
   commentsRef,
   usersRef,
-  likedRef,
+  likesRef,
   dogsRef,
   followingRef,
   followersRef,
