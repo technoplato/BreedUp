@@ -14,7 +14,7 @@ export default class FeedList extends React.Component {
     this.currentUser = currentUser
     this.uid = currentUser.uid
     this.likedPostsRef = rootRef.child('users/' + this.uid + '/likes')
-    this.postsRef = rootRef.child('posts/')
+    this.feedRef = rootRef.child('all_posts/')
 
     this.ds = new ListView.DataSource({
       rowHasChanged: (r1, r2) => {
@@ -54,7 +54,7 @@ export default class FeedList extends React.Component {
       })
       .then(snapshot => {
         likedKeys = Object.keys(snapshot.val() || {})
-        return this.postsRef.once('value', snap => {
+        return this.feedRef.once('value', snap => {
           return snap.val()
         })
       })
@@ -82,7 +82,7 @@ export default class FeedList extends React.Component {
 
   updateViewCounts = () => {
     this.state.posts.forEach(post => {
-      this.postsRef
+      this.feedRef
         .child(post.key)
         .child('view_count')
         .transaction(
