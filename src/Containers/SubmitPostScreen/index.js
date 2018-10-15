@@ -60,27 +60,27 @@ export default class SubmitPostScreen extends React.Component {
   // Refactor this to use new interactors
   uploadPost() {
     this.setState({ saving: true })
-    // const storageRef = firebase.storage().ref()
-    // const rootRef = firebase.database().ref()
+    const storageRef = firebase.storage().ref()
+    const rootRef = firebase.database().ref()
 
     const id = firebase.auth().currentUser.uid
 
     const userPostsRef = rootRef.child('posts/' + id).push()
-    const ref = rootRef.child('posts').push()
+    const allPostsRef = rootRef.child('all_posts/' + userPostsRef.key)
 
     let photoUrl
 
     const userPostImagesStorageRef = storageRef
       .child(id)
       .child('posts/images')
-      .child(ref.key)
+      .child(userPostsRef.key)
 
     return userPostImagesStorageRef
       .put(this.props.uri)
       .then(snapshot => snapshot.downloadURL)
       .then(url => {
         photoUrl = url
-        return ref.set({
+        return userPostsRef.set({
           author: firebase.auth().currentUser.displayName,
           author_img: firebase.auth().currentUser.photoURL,
           author_id: firebase.auth().currentUser.uid,
@@ -88,11 +88,11 @@ export default class SubmitPostScreen extends React.Component {
           time_posted: new Date().getTime(),
           reverse_timestamp: -1 * new Date().getTime(),
           text: this.state.postText,
-          key: ref.key
+          key: userPostsRef.key
         })
       })
-      .then(() => {
-        return userPostsRef.set({
+      .then(snap => {
+        return allPostsRef.set({
           author: firebase.auth().currentUser.displayName,
           author_img: firebase.auth().currentUser.photoURL,
           author_id: firebase.auth().currentUser.uid,
@@ -100,7 +100,7 @@ export default class SubmitPostScreen extends React.Component {
           time_posted: new Date().getTime(),
           reverse_timestamp: -1 * new Date().getTime(),
           text: this.state.postText,
-          key: ref.key
+          key: userPostsRef.key
         })
       })
       .then(() => {
