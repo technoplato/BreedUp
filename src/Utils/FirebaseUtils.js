@@ -30,15 +30,11 @@ const BLOCKED = 'blocked'
 const blockedRef = rootRef.child(BLOCKED)
 
 /**
- * This is a hack I'm using because, for some reason, exporting
- * `firebase.auth().currentUser` is null.
- *
- * Will look into this in the future, but it does its job well enough for now.
+ * Convenient access to current authed user
  */
-let currentUser
-firebase.auth().onAuthStateChanged(user => {
-  currentUser = user
-})
+currentUser = () => {
+  return firebase.auth().currentUser
+}
 
 /**
  * Uploads an image to Firebase and returns the URL.
