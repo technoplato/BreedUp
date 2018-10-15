@@ -11,6 +11,9 @@ const commentsRef = rootRef.child(COMMENTS)
 const USERS = 'users'
 const usersRef = rootRef.child(USERS)
 
+const LIKES = 'likes'
+const likesRef = rootRef.child(LIKES)
+
 const DOGS = 'dogs'
 const dogsRef = rootRef.child(DOGS)
 
@@ -67,6 +70,8 @@ deleteImage = (userId, path) => {
     .then(() => true)
 }
 
+const postImageUploadPath = 'posts/images/'
+
 export {
   /**
    * Utility methods
@@ -76,13 +81,19 @@ export {
   /**
    * Firebase references
    */
+  rootRef,
   postsRef,
   commentsRef,
   usersRef,
+  likedRef,
   dogsRef,
   followingRef,
   followersRef,
   blockedRef,
+  /**
+   * Constants
+   */
+  postImageUploadPath,
   /**
    * User info
    */
