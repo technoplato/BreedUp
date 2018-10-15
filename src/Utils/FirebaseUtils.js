@@ -5,6 +5,9 @@ const rootRef = firebase.database().ref()
 const POSTS = 'posts'
 const postsRef = rootRef.child(POSTS)
 
+const GLOBAL_FEED = 'all_posts'
+const globalFeedRef = rootRef.child(GLOBAL_FEED)
+
 const COMMENTS = 'comments'
 const commentsRef = rootRef.child(COMMENTS)
 
@@ -83,6 +86,7 @@ export {
    */
   rootRef,
   postsRef,
+  globalFeedRef,
   commentsRef,
   usersRef,
   likesRef,
