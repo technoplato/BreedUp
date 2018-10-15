@@ -57,10 +57,11 @@ export default class SubmitPostScreen extends React.Component {
     )
   }
 
+  // Refactor this to use new interactors
   uploadPost() {
     this.setState({ saving: true })
-    const storageRef = firebase.storage().ref()
-    const rootRef = firebase.database().ref()
+    // const storageRef = firebase.storage().ref()
+    // const rootRef = firebase.database().ref()
 
     const id = firebase.auth().currentUser.uid
 
@@ -82,7 +83,7 @@ export default class SubmitPostScreen extends React.Component {
         return ref.set({
           author: firebase.auth().currentUser.displayName,
           author_img: firebase.auth().currentUser.photoURL,
-          author_key: firebase.auth().currentUser.uid,
+          author_id: firebase.auth().currentUser.uid,
           post_img: url,
           time_posted: new Date().getTime(),
           reverse_timestamp: -1 * new Date().getTime(),
@@ -94,7 +95,7 @@ export default class SubmitPostScreen extends React.Component {
         return userPostsRef.set({
           author: firebase.auth().currentUser.displayName,
           author_img: firebase.auth().currentUser.photoURL,
-          author_key: firebase.auth().currentUser.uid,
+          author_id: firebase.auth().currentUser.uid,
           post_img: photoUrl,
           time_posted: new Date().getTime(),
           reverse_timestamp: -1 * new Date().getTime(),
