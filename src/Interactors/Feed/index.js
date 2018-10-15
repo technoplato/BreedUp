@@ -11,12 +11,7 @@
  */
 
 /**
- * Here again I'll type some commenty stuff and see what happens in
- * the recording.
- */
-
-/**
- * Adds post to feed
+ * Adds post to particular user's feed
  */
 addPostToFeed = (post, userIdForFeed) => {
   return feedRef
