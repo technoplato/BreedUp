@@ -1,12 +1,13 @@
 import { fromEvent } from 'rxjs'
 import { map } from 'rxjs/operators'
 import { commentsRef, postsRef, currentUser } from '../../Utils/FirebaseUtils'
+import { submitPost } from '../Posts'
 
-addComment = async (postId, text) => {
-  const newCommentRef = commentsRef.child(postId).push()
+addComment = async (oldPost, text) => {
+  const newCommentRef = commentsRef.child(oldPost.key).push()
 
   const newComment = {
-    author: currentUser.displayName,
+    author: currentUser().displayName,
     time_posted: new Date().getTime(),
     text: text,
     key: newCommentRef.key
@@ -14,32 +15,38 @@ addComment = async (postId, text) => {
 
   const commentAdded = await newCommentRef.set(newComment)
 
-  const prevCommentCount = await getCommentCountForPost(postId)
-
-  postsRef.child(postId).transaction(post => {
-    if (post !== null) {
-      if (prevCommentCount === 0) {
-        post['comment_count'] = 1
-        post['first_comment'] = newComment
-      } else if (prevCommentCount === 1) {
-        post['comment_count'] = 2
-        post['second_comment'] = newComment
+  const transaction = await postsRef
+    .child(oldPost.author_id)
+    .child(oldPost.key)
+    .transaction(post => {
+      if (post !== null) {
+        if (post.comment_count === 0) {
+          post['comment_count'] = 1
+          post['first_comment'] = newComment
+        } else if (post.comment_count === 1) {
+          post['comment_count'] = 2
+          post['second_comment'] = newComment
+        } else {
+          post['comment_count'] = post.comment_count + 1
+        }
+        return post
       } else {
-        post['comment_count'] = post.comment_count + 1
+        return oldPost
       }
-    }
-    return post
-  }, true)
+    }, true)
+
+  const newPost = transaction.snapshot.val()
+  return submitPost(newPost)
 }
 
-getCommentCountForPost = async postId => {
-  const postCommentCountSnap = await postsRef
-    .child(postId)
-    .child('comment_count')
-    .once('value')
+// getCommentCountForPost = async postId => {
+//   const postCommentCountSnap = await postsRef
+//     .child(postId)
+//     .child('comment_count')
+//     .once('value')
 
-  return postCommentCountSnap.val() || 0
-}
+//   return postCommentCountSnap.val() || 0
+// }
 
 fetchCommentsForPost = async postId => {
   const snap = await commentsRef.child(postId).once('value')
