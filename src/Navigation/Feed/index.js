@@ -14,7 +14,7 @@ export default createStackNavigator({
   Comments: {
     screen: CommentsScreen,
     navigationOptions: ({ navigation }) => ({
-      title: `${navigation.state.params.postAuthor}'s Post`,
+      title: `${navigation.state.params.post.author_username}'s Post`,
       headerLeft: (
         <Icon
           containerStyle={{ marginLeft: 12 }}
