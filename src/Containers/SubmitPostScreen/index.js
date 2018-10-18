@@ -1,14 +1,14 @@
 import React from 'react'
 import {
   View,
-  Text,
   Image,
   TextInput,
   Keyboard,
   TouchableWithoutFeedback
 } from 'react-native'
 import { Button } from 'react-native-elements'
-import firebase from 'react-native-firebase'
+
+import { createPost, submitPost } from '../../Interactors/Posts'
 
 export default class SubmitPostScreen extends React.Component {
   state = { postText: '', saving: false }
@@ -57,56 +57,15 @@ export default class SubmitPostScreen extends React.Component {
     )
   }
 
-  // Refactor this to use new interactors
-  uploadPost() {
+  async uploadPost() {
     this.setState({ saving: true })
-    const storageRef = firebase.storage().ref()
-    const rootRef = firebase.database().ref()
 
-    const id = firebase.auth().currentUser.uid
+    const post = await createPost(this.props.uri, this.state.postText)
 
-    const userPostsRef = rootRef.child('posts/' + id).push()
-    const allPostsRef = rootRef.child('all_posts/' + userPostsRef.key)
+    const post = await submitPost(post)
 
-    let photoUrl
-
-    const userPostImagesStorageRef = storageRef
-      .child(id)
-      .child('posts/images')
-      .child(userPostsRef.key)
-
-    return userPostImagesStorageRef
-      .put(this.props.uri)
-      .then(snapshot => snapshot.downloadURL)
-      .then(url => {
-        photoUrl = url
-        return userPostsRef.set({
-          author: firebase.auth().currentUser.displayName,
-          author_img: firebase.auth().currentUser.photoURL,
-          author_id: firebase.auth().currentUser.uid,
-          post_img: url,
-          time_posted: new Date().getTime(),
-          reverse_timestamp: -1 * new Date().getTime(),
-          text: this.state.postText,
-          key: userPostsRef.key
-        })
-      })
-      .then(snap => {
-        return allPostsRef.set({
-          author: firebase.auth().currentUser.displayName,
-          author_img: firebase.auth().currentUser.photoURL,
-          author_id: firebase.auth().currentUser.uid,
-          post_img: photoUrl,
-          time_posted: new Date().getTime(),
-          reverse_timestamp: -1 * new Date().getTime(),
-          text: this.state.postText,
-          key: userPostsRef.key
-        })
-      })
-      .then(() => {
-        this.setState({ saving: false })
-        this.props.finish()
-      })
+    this.setState({ saving: false })
+    this.props.finish()
   }
 
   onSubmitEditing() {
