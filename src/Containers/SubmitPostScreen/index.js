@@ -62,7 +62,7 @@ export default class SubmitPostScreen extends React.Component {
 
     const post = await createPost(this.props.uri, this.state.postText)
 
-    const post = await submitPost(post)
+    const submittedPost = await submitPost(post)
 
     this.setState({ saving: false })
     this.props.finish()
