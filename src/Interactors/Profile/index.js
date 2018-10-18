@@ -7,7 +7,7 @@ import {
 } from '../../Utils/FirebaseUtils'
 
 followUser = userId => {
-return followingRef
+  return followingRef
     .child(currentUser().uid)
     .child(userId)
     .set(true)
