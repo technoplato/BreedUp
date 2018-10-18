@@ -93,7 +93,7 @@ export default class FeedCard extends React.Component {
           textStyle={styles.buttonText}
           title="Comment"
           icon={{ name: 'comment', color: 'grey' }}
-          onPress={() => this.props.onCommentPressed(this.props.item.key)}
+          onPress={() => this.props.onCommentPressed(this.props.item)}
         />
         <Button
           buttonStyle={styles.button}
@@ -132,7 +132,7 @@ export default class FeedCard extends React.Component {
     return (
       comment_count > 0 && (
         <TouchableWithoutFeedback
-          onPress={() => this.props.onCommentPressed(this.props.item.key)}
+          onPress={() => this.props.onCommentPressed(this.props.item)}
         >
           <View style={{ flexDirection: 'column', padding: 12 }}>
             {viewAllText}

@@ -151,10 +151,9 @@ export default class PostList extends React.Component {
     return -1
   }
 
-  onCommentPressed = key => {
+  onCommentPressed = post => {
     this.props.navigation.navigate('Comments', {
-      key: key,
-      postAuthor: this.currentUser.displayName
+      post: post
     })
   }
 
