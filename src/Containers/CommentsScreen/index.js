@@ -10,9 +10,9 @@ export default class CommentsScreen extends React.Component {
   constructor(props) {
     super(props)
 
-    const postId = this.props.navigation.getParam('key', 'NO-ID')
+    const post = this.props.navigation.getParam('post', 'NO-ID')
 
-    this.state = { postId: postId, comment: '' }
+    this.state = { post: post, comment: '' }
 
     this.onSubmitEditing = this.onSubmitEditing.bind(this)
   }
@@ -22,7 +22,7 @@ export default class CommentsScreen extends React.Component {
 
     this.setState({ comment: '' })
 
-    addComment(this.state.postId, this.state.comment)
+    addComment(this.state.post, this.state.comment)
   }
 
   onChangeText = text => {
@@ -31,7 +31,7 @@ export default class CommentsScreen extends React.Component {
 
   render() {
     return <KeyboardAvoidingView behavior="padding" style={styles.container}>
-      <CommentList postId={this.state.postId} />
+      <CommentList postId={this.state.post.key} />
         <TextInput style={styles.input} value={this.state.comment.toString()} onChangeText={comment => this.onChangeText(comment)} onSubmitEditing={this.onSubmitEditing} placeholder="Enter comment" />
         <Button height={42} title="Add Comment" onPress={this.onPressAddComment} />
       </KeyboardAvoidingView>
