@@ -35,10 +35,13 @@ createPost = async (imageUri, text) => {
 /**
  * Broadcasts post to the poster's followers
  * and adds the post to the user's list of posts.
+ * 
+ * Returns post after succesful upload.
  */
 submitPost = async post => {
   updatePostsForFollowers(post)
-  return await addOrUpdatePost(post)
+  const postSnap = await addOrUpdatePost(post)
+  return post
 }
 
 /**
