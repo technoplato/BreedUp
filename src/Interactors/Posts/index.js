@@ -11,7 +11,7 @@ import {
 /**
  * Utility method for creating a post. Also uploads image for post
  */
-createPost = async (imageUri, text) => {
+createPost = async (imageUri, text, dogs) => {
   const { uid, displayName, photoURL } = currentUser()
   // First, I need to upload the image
   const postImgUrl = await uploadImageForPost(imageUri, uid)
@@ -22,6 +22,7 @@ createPost = async (imageUri, text) => {
     author_username: displayName,
     author_img_url: photoURL,
     author_id: uid,
+    dogs: dogs,
     key: newPostRef.key,
     text: text,
     comment_count: 0,
@@ -35,7 +36,7 @@ createPost = async (imageUri, text) => {
 /**
  * Broadcasts post to the poster's followers
  * and adds the post to the user's list of posts.
- * 
+ *
  * Returns post after succesful upload.
  */
 submitPost = async post => {
