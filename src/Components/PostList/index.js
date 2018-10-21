@@ -75,6 +75,7 @@ export default class PostList extends React.Component {
           onLikePressed={this.onLikePressed}
           onCommentPressed={this.onCommentPressed}
           onSharePressed={this.onSharePressed}
+          onAvatarPressed={this.props.onAvatarPressed}
           item={item}
         />
       )

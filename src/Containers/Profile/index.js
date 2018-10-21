@@ -394,10 +394,15 @@ export default class Profile extends React.Component {
           style={styles.postList.list}
           navigation={this.props.navigation}
           userId={this.state.uid}
+          onAvatarPressed={this.onAvatarPressed}
         />
         )
       </View>
     )
+  }
+
+  onAvatarPressed = () => {
+    // ignored in profile view
   }
 }
 
