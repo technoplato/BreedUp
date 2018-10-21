@@ -36,6 +36,9 @@ const TabNavigation = createBottomTabNavigator(
           case 'Main':
             iconSource = Images.iconHome
             break
+          case 'Search':
+            iconSource = Images.iconSearch
+            break
           case 'AddPost':
             iconSource = Images.iconAdd
             break
