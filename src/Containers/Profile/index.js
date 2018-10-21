@@ -78,6 +78,10 @@ export default class Profile extends React.Component {
           username: username,
           description: description,
 
+          modifiedAvatarURL: profileURL,
+          modifiedUsername: username,
+          modifiedDescription: description,
+
           loading: false
         })
       })
@@ -361,6 +365,7 @@ export default class Profile extends React.Component {
           navigation={this.props.navigation}
           userId={this.state.uid}
           currentUser={this.state.currentUserProfile}
+          canAddDog={this.state.currentUserProfile}
           onDogPress={this.onDogPress}
         />
       </View>
