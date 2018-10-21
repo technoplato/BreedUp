@@ -53,7 +53,7 @@ export default class DogList extends React.Component {
   renderAddButton = () => {
     return (
       this.props.currentUser &&
-      this.props.canAddDog && (
+      this.props.canAddDog  && (
         <View
           style={{
             height: '100%',
