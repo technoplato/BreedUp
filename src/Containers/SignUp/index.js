@@ -17,7 +17,6 @@ export default class SignUp extends React.Component {
   state = { email: '', password: '', username: '', errorMsg: null }
 
   componentDidMount = () => {
-    console.log(this.props.navigation.state.params)
     if (this.props.navigation.state.params !== undefined) {
       const { email, password } = this.props.navigation.state.params
       this.setState({
@@ -42,7 +41,7 @@ export default class SignUp extends React.Component {
         .auth()
         .createUserAndRetrieveDataWithEmailAndPassword(email, password)
         .then(data => {
-          userData = data
+          userData = data.user
           return firebase
             .database()
             .ref('users')
@@ -60,6 +59,14 @@ export default class SignUp extends React.Component {
           return firebase.auth().currentUser.updateProfile({
             displayName: username
           })
+        })
+        .then(() => {
+          return firebase
+            .database()
+            .ref('names')
+            .child('users')
+            .child(username)
+            .set(userData.uid)
         })
         .then(() => this.props.navigation.navigate('ChooseImage'))
         .catch(error => {

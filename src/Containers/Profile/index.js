@@ -206,6 +206,14 @@ export default class Profile extends React.Component {
           descriptionChange: false
         })
       })
+
+    firebase
+      .database()
+      .ref()
+      .child('names')
+      .child('users')
+      .child(modifiedUsername)
+      .set(this.state.uid)
   }
 
   render() {
