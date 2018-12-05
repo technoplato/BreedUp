@@ -34,7 +34,8 @@ export default class AddDog extends React.Component {
       imageUri: dog.imageUri,
       loading: false,
       photoEditModalVisible: false,
-      currentUser: currentUser
+      // TODO - see if Kent is bothered by not having this functionality
+      currentUser: false
     }
 
     this.showPhotoModal = this.showPhotoModal.bind(this)

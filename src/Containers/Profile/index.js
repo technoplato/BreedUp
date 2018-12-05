@@ -17,11 +17,7 @@ import DogList from '../../Components/DogList'
 
 import CameraModal from '../../../lib/InstagramCameraModal'
 
-import {
-  followUser,
-  unfollowUser,
-  isFollowing
-} from '../../Interactors/Users'
+import { followUser, unfollowUser, isFollowing } from '../../Interactors/Users'
 
 export default class Profile extends React.Component {
   state = {
@@ -81,6 +77,10 @@ export default class Profile extends React.Component {
           avatarURL: profileURL,
           username: username,
           description: description,
+
+          modifiedAvatarURL: profileURL,
+          modifiedUsername: username,
+          modifiedDescription: description,
 
           loading: false
         })
@@ -365,9 +365,26 @@ export default class Profile extends React.Component {
           navigation={this.props.navigation}
           userId={this.state.uid}
           currentUser={this.state.currentUserProfile}
+          canAddDog={this.state.currentUserProfile}
+          onDogPress={this.onDogPress}
         />
       </View>
     )
+  }
+
+  onDogPress = dog => {
+    this.props.navigation.navigate('ViewDog', {
+      dog: dog,
+      currentUser: this.state.currentUserProfile || false,
+      onDogUpdated: this.onDogUpdated
+    })
+  }
+
+  onDogUpdated = (oldDog, updatedDog) => {
+    const dogs = this.state.dogs
+    const index = dogs.indexOf(oldDog)
+    dogs.splice(index, 1, updatedDog)
+    this.setState({ dogs: dogs })
   }
 
   postsList() {
@@ -377,10 +394,15 @@ export default class Profile extends React.Component {
           style={styles.postList.list}
           navigation={this.props.navigation}
           userId={this.state.uid}
+          onAvatarPressed={this.onAvatarPressed}
         />
         )
       </View>
     )
+  }
+
+  onAvatarPressed = () => {
+    // ignored in profile view
   }
 }
 

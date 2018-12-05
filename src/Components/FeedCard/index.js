@@ -20,38 +20,54 @@ export default class FeedCard extends React.Component {
   }
 
   renderCardHeader = () => {
-    const { author, author_img, time_posted, view_count } = this.props.item
+    const {
+      author_username,
+      author_img_url,
+      time_posted,
+      view_count
+    } = this.props.item
     const time_since_post = moment(time_posted).fromNow()
     /* We add 1 to the view_count here and take care of that on the backend as a hack */
     const fudgedViewCount = (view_count || 0) + 1
     const viewCountSuffix = fudgedViewCount == 1 ? 'view' : 'views'
+
+    const dogs = this.props.item.dogs || []
+    const numDogs = dogs.length
+
+    const dogNamesText = `Dogs in this image: ${dogs
+      .map(dog => dog.name)
+      .join(', ')}`
+    const dogNameTextView = numDogs && <Text>{dogNamesText}</Text>
+
     return (
       <View style={styles.headerContainer}>
         <View style={styles.imageAndTextContainer}>
           <Avatar
             onPress={() =>
               this.props.onAvatarPressed(
-                this.props.item.author_key,
-                this.props.item.author
+                this.props.item.author_id,
+                this.props.item.author_username
               )
             }
             rounded
             size={350}
-            source={{ uri: author_img }}
+            source={{ uri: author_img_url }}
           />
           <View style={styles.postMetadata}>
             <Text
               onPress={() =>
-                alert(
-                  "In a future release, clicking the username will navigate you to this user's profile"
+                this.props.onAvatarPressed(
+                  this.props.item.author_id,
+                  this.props.item.author_username
                 )
               }
             >
-              {author}
+              {author_username}
             </Text>
             <Text>
               {time_since_post} | {fudgedViewCount + ' ' + viewCountSuffix}
             </Text>
+            {dogNameTextView}
           </View>
         </View>
       </View>
@@ -93,7 +109,7 @@ export default class FeedCard extends React.Component {
           textStyle={styles.buttonText}
           title="Comment"
           icon={{ name: 'comment', color: 'grey' }}
-          onPress={() => this.props.onCommentPressed(this.props.item.key)}
+          onPress={() => this.props.onCommentPressed(this.props.item)}
         />
         <Button
           buttonStyle={styles.button}
@@ -132,7 +148,7 @@ export default class FeedCard extends React.Component {
     return (
       comment_count > 0 && (
         <TouchableWithoutFeedback
-          onPress={() => this.props.onCommentPressed(this.props.item.key)}
+          onPress={() => this.props.onCommentPressed(this.props.item)}
         >
           <View style={{ flexDirection: 'column', padding: 12 }}>
             {viewAllText}

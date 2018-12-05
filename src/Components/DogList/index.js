@@ -34,25 +34,26 @@ export default class DogList extends React.Component {
   }
 
   renderItem = ({ item }) => {
-
-    return <DogListItem onDogPress={this.onDogPress} item={item} />
-  }
-  onDogPress = dog => {
-    this.props.navigation.navigate('ViewDog', {
-      dog: dog,
-      currentUser: this.props.currentUser || false,
-      onDogUpdated: this.onDogUpdated
-    })
+    return (
+      <DogListItem
+        onDogPress={this.props.onDogPress}
+        onAddDogPress={this.onAddDogPress}
+        item={item}
+      />
+    )
   }
 
   /**
    * Renders the 'Add Dog' button.
    *
-   * NOTE: Only renders button for current user.
+   * NOTE: Only renders button for current user. There is an option to
+   * disable the ability for the current user to add a dog using the
+   * `canAddDog` prop.
    */
   renderAddButton = () => {
     return (
-      this.props.currentUser && (
+      this.props.currentUser &&
+      this.props.canAddDog  && (
         <View
           style={{
             height: '100%',
@@ -69,6 +70,8 @@ export default class DogList extends React.Component {
 
   /**
    * Navigates to the screen where a user can add their dog.
+   *
+   * Only possible if viewing current user's dog list.
    */
   onAddDogPress = () => {
     this.props.navigation.navigate('AddDog', {

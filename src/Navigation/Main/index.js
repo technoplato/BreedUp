@@ -36,6 +36,9 @@ const TabNavigation = createBottomTabNavigator(
           case 'Main':
             iconSource = Images.iconHome
             break
+          case 'Search':
+            iconSource = Images.iconSearch
+            break
           case 'AddPost':
             iconSource = Images.iconAdd
             break
@@ -70,7 +73,7 @@ function shouldShowTabBar(navigation) {
   const dest = routes && routes[1]
   const name = dest && dest.routeName
 
-  return !(name === 'PublicProfile')
+  return !(name === 'PublicProfile' || name === 'ViewDog')
 }
 
 const defaultGetStateForAction = TabNavigation.router.getStateForAction
