@@ -29,6 +29,11 @@ const followersRef = rootRef.child(FOLLOWERS)
 const BLOCKED = 'blocked'
 const blockedRef = rootRef.child(BLOCKED)
 
+const NAMES = 'names'
+const namesRef = rootRef.child(NAMES)
+const userNamesRef = namesRef.child(USERS)
+const dogNamesRef = namesRef.child(DOGS)
+
 /**
  * Convenient access to current authed user
  */
@@ -90,6 +95,8 @@ export {
   followingRef,
   followersRef,
   blockedRef,
+  userNamesRef,
+  dogNamesRef,
   /**
    * Constants
    */

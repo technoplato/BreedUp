@@ -87,6 +87,7 @@ export default class PostList extends React.Component {
   renderList = () => {
     return (
       <ListView
+        enableEmptySections={true}
         refreshControl={
           <RefreshControl
             style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}
@@ -169,9 +170,6 @@ export default class PostList extends React.Component {
 
   getAllChildrenPromise(listRef, debug = false) {
     const keysLink = listRef.toString() + '.json?shallow=true'
-    if (debug) {
-      console.log('Keys Link:', keysLink)
-    }
 
     return axios.get(keysLink).then(res => {
       if (res.data) {

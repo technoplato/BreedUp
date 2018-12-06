@@ -95,11 +95,8 @@ export default class Camera extends React.Component {
   pickImage = () => {
     ImagePicker.launchImageLibrary(null, response => {
       if (response.didCancel) {
-        console.log('User cancelled image picker')
       } else if (response.error) {
-        console.log('ImagePicker Error: ', response.error)
       } else if (response.customButton) {
-        console.log('User tapped custom button: ', response.customButton)
       } else {
         this.props.onNewPhotoUri(response.uri)
       }

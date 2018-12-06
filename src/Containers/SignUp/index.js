@@ -27,8 +27,9 @@ export default class SignUp extends React.Component {
   }
 
   handleSignUp = () => {
-    const { email, password, username } = this.state
+    let { email, password, username } = this.state
     let userData
+    username = username.toLocaleLowerCase()
 
     if (!email) {
       this.setState({ errorMsg: 'Please enter a valid email.' })
@@ -65,8 +66,8 @@ export default class SignUp extends React.Component {
             .database()
             .ref('names')
             .child('users')
-            .child(username)
-            .set(userData.uid)
+            .child(userData.uid)
+            .set({ username, uid: userData.uid })
         })
         .then(() => this.props.navigation.navigate('ChooseImage'))
         .catch(error => {
@@ -91,14 +92,14 @@ export default class SignUp extends React.Component {
           Alert.alert(
             'Reset password email sent',
             'Please check your email to reset your password.',
-            [{ text: 'Ok', onPress: () => console.log('Ok pressed') }]
+            [{ text: 'Ok' }]
           )
         })
         .catch(function(error) {
           Alert.alert(
             'An error occurred sending email',
             'Please email support for help.',
-            [{ text: 'Ok', onPress: () => console.log('Ok pressed') }]
+            [{ text: 'Ok' }]
           )
         })
     }

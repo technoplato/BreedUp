@@ -33,7 +33,7 @@ export default class AddPostScreen extends React.Component {
   render() {
     return (
       <CameraModal
-        onPictureApproved={uri => console.log(uri)}
+        onPictureApproved={uri => {}}
         isVisible={this.state.modalVisible}
         cancel={this.cancelPhoto}
         screenAfterImageSelection={this.renderSubmitPost}

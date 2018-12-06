@@ -1,25 +1,41 @@
-import { dogsRef, uploadImage, deleteImage } from '../../Utils/FirebaseUtils'
+import {
+  dogsRef,
+  uploadImage,
+  deleteImage,
+  dogNamesRef,
+  currentUser
+} from '../../Utils/FirebaseUtils'
 
 /**
  * Adds a dog to a user's list of dogs.
  */
-addDog = (ownerId, name, breed, imageUri) => {
+addDog = async (ownerId, name, breed, imageUri) => {
   // Get new dog ref
   const newDogRef = dogsRef.child(ownerId).push()
   // Upload image of dog
-  return uploadImage(imageUri, ownerId, 'dogs/' + newDogRef.key).then(url => {
-    // Store new dog at /dogs/ { userId } / { new dog ID }
-    const newDog = {
-      name: name,
-      imageUri: url,
-      breed: breed,
-      ownerId: ownerId,
-      key: newDogRef.key
-    }
-    return newDogRef.set(newDog).then(() => {
-      return newDog
-    })
+  const url = await uploadImage(imageUri, ownerId, 'dogs/' + newDogRef.key)
+
+  // Store new dog at /dogs/ { userId } / { new dog ID }
+  const newDog = {
+    name: name.toLowerCase(),
+    imageUri: url,
+    breed: breed,
+    ownerId: ownerId,
+    key: newDogRef.key
+  }
+
+  const newDogSnap = await newDogRef.set(newDog)
+  const dogNameSnap = await dogNamesRef.child(newDog.key).set({
+    dogId: newDog.key,
+    ownerId: ownerId,
+    owner: {
+      uid: ownerId,
+      name: currentUser().displayName
+    },
+    dogName: newDog.name
   })
+
+  return Promise.resolve(newDog)
 }
 
 updateDog = (oldDog, newDog) => {
@@ -50,18 +66,5 @@ fetchDogsForUser = async ownerId => {
 
   return Object.values(dogsSnap.val() || {})
 }
-
-// unfollowUser = userId => {
-//   return followingRef
-//     .child(currentUser.uid)
-//     .child(userId)
-//     .set(false)
-//     .then(() => {
-//       followersRef
-//         .child(userId)
-//         .child(currentUser.uid)
-//         .set(false)
-//     })
-// }
 
 export { addDog, updateDog, fetchDogsForUser }

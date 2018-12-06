@@ -2,6 +2,7 @@ import React from 'react'
 import { createStackNavigator } from 'react-navigation'
 import firebase from 'react-native-firebase'
 import { Text } from 'react-native'
+import { Icon } from 'react-native-elements'
 
 import Search from '../../Containers/Search'
 import AddPost from '../../Containers/AddPost'
@@ -34,6 +35,27 @@ const ProfileStack = createStackNavigator({
 const SearchStack = createStackNavigator({
   Search: {
     screen: Search
+  },
+  PublicProfile: {
+    screen: Profile,
+    navigationOptions: ({ navigation }) => ({
+      headerVisible: 'false',
+      title: `${navigation.state.params.username}'s Profile`,
+      headerLeft: (
+        <Icon
+          containerStyle={{ marginLeft: 12 }}
+          name="arrow-back"
+          color="#000"
+          onPress={() => navigation.goBack()}
+        />
+      )
+    })
+  },
+  AddDog: {
+    screen: AddDog
+  },
+  ViewDog: {
+    screen: ViewDog
   }
 })
 

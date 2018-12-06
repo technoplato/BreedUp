@@ -1,10 +1,12 @@
 import { StyleSheet } from 'react-native'
 
 export default StyleSheet.create({
-  container: {
+  screen: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
     paddingTop: 24
+  },
+  main: {
+    flex: 1,
+    margin: 12
   }
 })

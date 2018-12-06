@@ -108,7 +108,8 @@ TabNavigation.router.getStateForAction = (action, state) => {
       this.previousRoute = this.currentRoute
   }
 
-  return defaultGetStateForAction(action, state)
+  const defaultStateForAction = defaultGetStateForAction(action, state)
+  return defaultStateForAction
 }
 
 // gets the current screen from navigation state
@@ -133,7 +134,8 @@ export default () => (
       if (prevScreen !== currentScreen) {
         // the line below uses the Google Analytics tracker
         // change the tracker here to use other Mobile analytics SDK.
-        console.log('Current Screen:\t', currentScreen)
+        // console.log('Current Screen:\t', currentScreen)
+        // console.log('PREVIOUS Screen:\t', prevScreen)
       }
     }}
   />

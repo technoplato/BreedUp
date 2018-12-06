@@ -116,6 +116,7 @@ export default class FeedList extends React.Component {
   renderList = () => {
     return (
       <ListView
+        enableEmptySections={true}
         refreshControl={
           <RefreshControl
             style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}
@@ -191,7 +192,6 @@ export default class FeedList extends React.Component {
     this.props.navigation.navigate('PublicProfile', {
       userId: userId,
       username: username,
-      foo: 'bar'
     })
   }
 

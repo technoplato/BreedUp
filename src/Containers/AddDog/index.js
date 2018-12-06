@@ -37,7 +37,7 @@ export default class AddDog extends React.Component {
     this.onNewDogImageUri = this.onNewDogImageUri.bind(this)
   }
 
-  onPressAddDog = () => {
+  onPressAddDog = async () => {
     Keyboard.dismiss()
 
     // Show loading
@@ -65,11 +65,9 @@ export default class AddDog extends React.Component {
       })
     } else {
       // Let addDog interactor do its thing and then go back
-      addDog(ownerId, name, breed, imageUri)
-        .then(newDog => {
-          return this.props.navigation.state.params.onNewDogAdded(newDog)
-        })
-        .then(() => this.props.navigation.goBack())
+      const dog = await addDog(ownerId, name, breed, imageUri)
+      this.props.navigation.state.params.onNewDogAdded(dog)
+      this.props.navigation.goBack()
     }
   }
 

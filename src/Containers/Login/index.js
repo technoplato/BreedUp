@@ -12,7 +12,6 @@ export default class Login extends React.Component {
   state = { email: '', password: '', errorMsg: null }
 
   componentDidMount = () => {
-    console.log(this.props.navigation.state.params)
     if (this.props.navigation.state.params !== undefined) {
       const { email, password } = this.props.navigation.state.params
       this.setState({
@@ -28,9 +27,7 @@ export default class Login extends React.Component {
       .auth()
       .signInAndRetrieveDataWithEmailAndPassword(email, password)
 
-      .then(data => {
-        console.log(data)
-      })
+      .then(data => {})
 
       .then(() => this.props.navigation.navigate('Main'))
       .catch(error => this.setState({ errorMsg: error.message }))
@@ -52,14 +49,14 @@ export default class Login extends React.Component {
           Alert.alert(
             'Reset password email sent',
             'Please check your email to reset your password.',
-            [{ text: 'Ok', onPress: () => console.log('Ok pressed') }]
+            [{ text: 'Ok' }]
           )
         })
         .catch(function(error) {
           Alert.alert(
             'An error occurred sending email',
             'Please email support for help.',
-            [{ text: 'Ok', onPress: () => console.log('Ok pressed') }]
+            [{ text: 'Ok' }]
           )
         })
     }

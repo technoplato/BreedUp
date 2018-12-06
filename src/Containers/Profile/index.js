@@ -193,7 +193,7 @@ export default class Profile extends React.Component {
       .update({
         description: modifiedDescription,
         profileURL: modifiedAvatarURL,
-        username: modifiedUsername
+        username: modifiedUsername.toLowerCase()
       })
       .then(() => {
         this.setState({
@@ -212,8 +212,8 @@ export default class Profile extends React.Component {
       .ref()
       .child('names')
       .child('users')
-      .child(modifiedUsername)
-      .set(this.state.uid)
+      .child(this.state.uid)
+      .set({ username: modifiedUsername.toLowerCase(), uid: this.state.uid })
   }
 
   render() {

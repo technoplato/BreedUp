@@ -39,15 +39,6 @@ addComment = async (oldPost, text) => {
   return submitPost(newPost)
 }
 
-// getCommentCountForPost = async postId => {
-//   const postCommentCountSnap = await postsRef
-//     .child(postId)
-//     .child('comment_count')
-//     .once('value')
-
-//   return postCommentCountSnap.val() || 0
-// }
-
 fetchCommentsForPost = async postId => {
   const snap = await commentsRef.child(postId).once('value')
   return {

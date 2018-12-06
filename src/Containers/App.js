@@ -37,8 +37,21 @@ class App extends Component {
       'Unable to symbolicate',
       debuggerError,
       navigation,
+      'Warning: isMounted(...) is deprecated',
+      'Module RCTImageLoader',
       'Warning: In next release empty'
     ])
+
+    console.ignoredYellowBox = [
+      isMounted,
+      'Unable to symbolicate',
+      debuggerError,
+      navigation,
+      'Warning: isMounted(...) is deprecated',
+      'Module RCTImageLoader',
+      'Module RCTImageLoader requires main queue setup since it overrides',
+      'Warning: In next release empty'
+    ]
   }
 }
 
