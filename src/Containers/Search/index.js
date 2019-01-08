@@ -66,7 +66,6 @@ export default class SearchScreen extends React.Component {
       // render dog
       return (
         <TouchableHighlight
-          style={{ backgroundColor: 'blue' }}
           onPress={() => {
             this.onResultPress(item)
           }}
