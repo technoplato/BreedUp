@@ -13,6 +13,7 @@ import ViewDog from '../../Containers/ViewDog'
 import EventScreen from '../../Containers/Event'
 import AddEventScreen from '../../Containers/AddEventScreen'
 import ListEventsScreen from '../../Containers/ListEventsScreen'
+import ViewEventScreen from '../../Containers/ViewEventScreen'
 
 const ProfileStack = createStackNavigator({
   PrivateProfile: {
@@ -72,6 +73,9 @@ const EventStack = createStackNavigator({
   },
   ListEvents: {
     screen: ListEventsScreen
+  },
+  ViewEvent: {
+    screen: ViewEventScreen
   }
 })
 

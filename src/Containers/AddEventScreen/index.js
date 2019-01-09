@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { View, Text, Button, Input } from 'react-native'
 import { eventsRef, currentUser } from '../../Utils/FirebaseUtils'
+import GeoFire from 'geofire'
 
 import { getCoordinatesForAddress } from '../../Utils/location'
 
@@ -8,11 +9,11 @@ class EventScreen extends Component {
   state = {
     title: 'Title',
     description: 'Description',
-    address: '1600 Amphitheater Drive, Mountain View CA'
+    address: '32826'
   }
 
   render() {
-    console.log('render')
+    // TODO: Render proper input UI
     return (
       <View>
         <Button title="Add Event" onPress={this.addEvent} />
@@ -43,7 +44,13 @@ const saveEvent = async event => {
     attendees: {},
     createdOn: Date.now()
   }
-  await ref.set(dto)
+
+  const georef = eventsRef
+  const geofire = new GeoFire(georef)
+
+  await geofire.set(dto.id, dto.coordinates)
+  await ref.update(dto)
+
   return dto
 }
 

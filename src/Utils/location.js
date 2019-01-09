@@ -5,5 +5,5 @@ export const getCoordinatesForAddress = async address => {
     `https://maps.googleapis.com/maps/api/geocode/json?address=${address}&key=${KEY}`
   )
     .then(res => res.json())
-    .then(data => data.results[0].geometry.location)
+    .then(data => Object.values(data.results[0].geometry.location))
 }
