@@ -8,7 +8,7 @@ class EventScreen extends Component {
 
   componentDidMount = async () => {
     const coordinates = await getCoordinatesForAddress(
-      '12221 East Colonial Drive'
+      '1600 Amphitheater Drive, Mountain View CA'
     )
     this.setState({ stuff: JSON.stringify(coordinates) })
   }
@@ -19,7 +19,11 @@ class EventScreen extends Component {
         <Text>Stuff: {this.state.stuff}</Text>
         <Button
           title="Add Event"
-          onPress={() => this.props.navigation.navigate('AddEvent')}
+          onPress={() =>
+            this.props.navigation.navigate('AddEvent', {
+              onEventAdded: event => this.handleEventAdded(event)
+            })
+          }
         />
         <Button
           title="List Events"
@@ -27,6 +31,10 @@ class EventScreen extends Component {
         />
       </View>
     )
+  }
+
+  handleEventAdded = event => {
+    console.log(event)
   }
 }
 

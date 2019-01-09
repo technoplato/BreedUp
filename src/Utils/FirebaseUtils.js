@@ -34,6 +34,9 @@ const namesRef = rootRef.child(NAMES)
 const userNamesRef = namesRef.child(USERS)
 const dogNamesRef = namesRef.child(DOGS)
 
+const EVENTS = 'events'
+export const eventsRef = rootRef.child(EVENTS)
+
 /**
  * Convenient access to current authed user
  */
