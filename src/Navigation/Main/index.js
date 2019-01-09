@@ -2,7 +2,7 @@ import React from 'react'
 import { createBottomTabNavigator } from 'react-navigation'
 import { Image } from 'react-native'
 
-import { ProfileStack, AddPost, SearchStack } from '../Misc'
+import { ProfileStack, AddPost, SearchStack, EventStack } from '../Misc'
 import FeedStack from '../Feed'
 
 import { Images } from '../../Themes'
@@ -14,6 +14,9 @@ this.currentRoute = 'Main'
 
 const TabNavigation = createBottomTabNavigator(
   {
+    Event: {
+      screen: EventStack
+    },
     Main: FeedStack,
     Search: SearchStack,
     AddPost: {

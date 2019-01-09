@@ -9,6 +9,7 @@ import AddPost from '../../Containers/AddPost'
 import Profile from '../../Containers/Profile'
 import AddDog from '../../Containers/AddDog'
 import ViewDog from '../../Containers/ViewDog'
+import EventScreen from '../../Containers/Event'
 
 const ProfileStack = createStackNavigator({
   PrivateProfile: {
@@ -59,4 +60,10 @@ const SearchStack = createStackNavigator({
   }
 })
 
-export { ProfileStack, AddPost, SearchStack }
+const EventStack = createStackNavigator({
+  Event: {
+    screen: EventScreen
+  }
+})
+
+export { ProfileStack, AddPost, SearchStack, EventStack }
