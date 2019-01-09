@@ -9,7 +9,10 @@ import AddPost from '../../Containers/AddPost'
 import Profile from '../../Containers/Profile'
 import AddDog from '../../Containers/AddDog'
 import ViewDog from '../../Containers/ViewDog'
+
 import EventScreen from '../../Containers/Event'
+import AddEventScreen from '../../Containers/AddEventScreen'
+import ListEventsScreen from '../../Containers/ListEventsScreen'
 
 const ProfileStack = createStackNavigator({
   PrivateProfile: {
@@ -63,6 +66,12 @@ const SearchStack = createStackNavigator({
 const EventStack = createStackNavigator({
   Event: {
     screen: EventScreen
+  },
+  AddEvent: {
+    screen: AddEventScreen
+  },
+  ListEvents: {
+    screen: ListEventsScreen
   }
 })
 

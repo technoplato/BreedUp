@@ -16,15 +16,8 @@ class EventScreen extends Component {
   render() {
     return (
       <View>
-        <Text>Stuff: {this.state.stuff}</Text>
-        <Button
-          title="Add Event"
-          onPress={() => this.props.navigation.navigate('AddEvent')}
-        />
-        <Button
-          title="List Events"
-          onPress={() => this.props.navigation.navigate('ListEvents')}
-        />
+        <Text>List Events</Text>
+        
       </View>
     )
   }
