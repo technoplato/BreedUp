@@ -1,22 +1,10 @@
 import React, { Component } from 'react'
-import { View, Text, Button } from 'react-native'
-
-import { getCoordinatesForAddress } from '../../Utils/location'
+import { View, Button } from 'react-native'
 
 class EventScreen extends Component {
-  state = { stuff: null }
-
-  componentDidMount = async () => {
-    const coordinates = await getCoordinatesForAddress(
-      '1600 Amphitheater Drive, Mountain View CA'
-    )
-    this.setState({ stuff: JSON.stringify(coordinates) })
-  }
-
   render() {
     return (
       <View>
-        <Text>Stuff: {this.state.stuff}</Text>
         <Button
           title="Add Event"
           onPress={() =>
