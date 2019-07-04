@@ -1,13 +1,13 @@
-import React from 'react'
-import { View, Text, FlatList, TouchableHighlight } from 'react-native'
-import { SearchBar } from 'react-native-elements'
+import React from "react"
+import { View, Text, FlatList, TouchableHighlight } from "react-native"
+import { SearchBar } from "react-native-elements"
 
-import styles from './SearchStyle'
-import { searchUser, searchDog } from '../../Interactors/Search'
+import styles from "./SearchStyle"
+import { searchUser, searchDog } from "../../Interactors/Search"
 
 const ListEmptyComponent = ({ query }) => {
   const text =
-    query === '' ? 'Search for a dog or user!' : `No results for '${query}'.`
+    query === "" ? "Search for a dog or user!" : `No results for '${query}'.`
   return (
     <View>
       <Text
@@ -23,7 +23,7 @@ const ListEmptyComponent = ({ query }) => {
 
 const ItemSeparatorComponent = () => {
   return (
-    <View style={{ marginVertical: 4, height: 1, backgroundColor: 'grey' }} />
+    <View style={{ marginVertical: 4, height: 1, backgroundColor: "grey" }} />
   )
 }
 
@@ -32,7 +32,7 @@ export default class SearchScreen extends React.Component {
     header: null
   }
   state = {
-    query: '',
+    query: "",
     results: []
   }
   render() {
@@ -40,8 +40,8 @@ export default class SearchScreen extends React.Component {
       <View style={styles.screen}>
         <SearchBar
           autoCorrect={false}
-          autoCapitalize={'none'}
-          containerStyle={{ width: '100%' }}
+          autoCapitalize={"none"}
+          containerStyle={{ width: "100%" }}
           value={this.state.query}
           lightTheme
           onChangeText={this.onChangeText}
@@ -81,7 +81,7 @@ export default class SearchScreen extends React.Component {
       // render user
       return (
         <TouchableHighlight
-          style={{ backgroundColor: 'blue' }}
+          style={{ backgroundColor: "blue" }}
           onPress={() => {
             this.onResultPress(item)
           }}
@@ -97,7 +97,7 @@ export default class SearchScreen extends React.Component {
   }
 
   onResultPress = result => {
-    this.props.navigation.navigate('PublicProfile', {
+    this.props.navigation.navigate("PublicProfile", {
       userId: result.owner ? result.owner.uid : result.uid,
       username: result.owner ? result.owner.name : result.username
     })

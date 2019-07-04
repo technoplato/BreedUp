@@ -24,7 +24,7 @@ addPostToFeed = (post, userIdForFeed) => {
  * Gets feed for particular user
  */
 getFeed = async userId => {
-  const feed = await feedRef.child(userId).once('value')
+  const feed = await feedRef.child(userId).once("value")
   return {
     feed: Object.values(feed.val() || {})
   }

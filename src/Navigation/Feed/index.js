@@ -1,11 +1,11 @@
-import React from 'react'
-import { Icon } from 'react-native-elements'
-import { createStackNavigator } from 'react-navigation'
+import React from "react"
+import { Icon } from "react-native-elements"
+import { createStackNavigator } from "react-navigation"
 
-import FeedScreen from '../../Containers/FeedScreen'
-import CommentsScreen from '../../Containers/CommentsScreen'
+import FeedScreen from "../../Containers/FeedScreen"
+import CommentsScreen from "../../Containers/CommentsScreen"
 
-import Profile from '../../Containers/Profile'
+import Profile from "../../Containers/Profile"
 
 export default createStackNavigator({
   Feed: {
@@ -28,7 +28,7 @@ export default createStackNavigator({
   PublicProfile: {
     screen: Profile,
     navigationOptions: ({ navigation }) => ({
-      headerVisible: 'false',
+      headerVisible: "false",
       title: `${navigation.state.params.username}'s Profile`,
       headerLeft: (
         <Icon

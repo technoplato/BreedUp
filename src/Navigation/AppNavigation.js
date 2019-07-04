@@ -1,9 +1,9 @@
-import { createSwitchNavigator } from 'react-navigation'
+import { createSwitchNavigator } from "react-navigation"
 
-import Onboarding from './Onboarding'
-import Main from './Main'
+import Onboarding from "./Onboarding"
+import Main from "./Main"
 
-import Fiddling from '../Containers/Fiddling'
+import Fiddling from "../Containers/Fiddling"
 
 const RootNav = createSwitchNavigator(
   {
@@ -12,7 +12,7 @@ const RootNav = createSwitchNavigator(
     Fiddling: Fiddling
   },
   {
-    initialRouteName: 'Onboarding'
+    initialRouteName: "Onboarding"
   }
 )
 

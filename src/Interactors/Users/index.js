@@ -2,7 +2,7 @@ import {
   currentUser,
   followersRef,
   followingRef
-} from '../../Utils/FirebaseUtils'
+} from "../../Utils/FirebaseUtils"
 
 followUser = userId => {
   return followingRef
@@ -34,7 +34,7 @@ isFollowing = userId => {
   return followingRef
     .child(currentUser.uid)
     .child(userId)
-    .once('value')
+    .once("value")
     .then(snap => {
       return !!snap.val()
     })
@@ -45,7 +45,7 @@ isFollowing = userId => {
  * user whose userId is provided.
  */
 getFollowersForUser = async userId => {
-  const followersRefForUser = await followersRef.child(userId).once('value')
+  const followersRefForUser = await followersRef.child(userId).once("value")
   return Object.keys(followersRefForUser.val() || {})
 }
 

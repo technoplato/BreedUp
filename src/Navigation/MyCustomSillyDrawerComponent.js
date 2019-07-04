@@ -1,10 +1,10 @@
-import React, { PureComponent } from 'react'
-import { View, Text } from 'react-native'
-import { DrawerItems } from 'react-navigation'
-import firebase from 'react-native-firebase'
-import { Button } from 'react-native-elements'
+import React, { PureComponent } from "react"
+import { View, Text } from "react-native"
+import { DrawerItems } from "react-navigation"
+import firebase from "react-native-firebase"
+import { Button } from "react-native-elements"
 
-import { Colors } from '../Themes'
+import { Colors } from "../Themes"
 
 class DrawerContent extends PureComponent {
   render() {
@@ -14,14 +14,14 @@ class DrawerContent extends PureComponent {
       <View style={{ flex: 1 }}>
         <Text
           style={{
-            width: '100%',
+            width: "100%",
             backgroundColor: Colors.crimson,
             height: 160,
             paddingTop: 70,
-            color: 'white',
-            textAlign: 'center',
-            alignSelf: 'center',
-            textAlignVertical: 'center',
+            color: "white",
+            textAlign: "center",
+            alignSelf: "center",
+            textAlignVertical: "center",
             fontSize: 32
           }}
         >
@@ -32,7 +32,7 @@ class DrawerContent extends PureComponent {
 
         <View
           style={{
-            justifyContent: 'flex-end',
+            justifyContent: "flex-end",
             flex: 1,
             paddingVertical: 24
           }}
@@ -42,10 +42,10 @@ class DrawerContent extends PureComponent {
       </View>
     )
   }
-  
+
   handleLogout = () => {
     firebase.auth().signOut()
-    this.props.navigation.navigate('SignUp')
+    this.props.navigation.navigate("SignUp")
   }
 }
 

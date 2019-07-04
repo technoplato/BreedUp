@@ -1,9 +1,9 @@
-import React from 'react'
-import { ListView, Share, RefreshControl } from 'react-native'
-import firebase from 'react-native-firebase'
+import React from "react"
+import { ListView, Share, RefreshControl } from "react-native"
+import firebase from "react-native-firebase"
 
-import FeedCard from '../FeedCard'
-import styles from './FeedListStyles'
+import FeedCard from "../FeedCard"
+import styles from "./FeedListStyles"
 
 export default class FeedList extends React.Component {
   componentWillMount() {
@@ -13,8 +13,8 @@ export default class FeedList extends React.Component {
 
     this.currentUser = currentUser
     this.uid = currentUser.uid
-    this.likedPostsRef = rootRef.child('users/' + this.uid + '/likes')
-    this.feedRef = rootRef.child('all_posts/')
+    this.likedPostsRef = rootRef.child("users/" + this.uid + "/likes")
+    this.feedRef = rootRef.child("all_posts/")
 
     this.ds = new ListView.DataSource({
       rowHasChanged: (r1, r2) => {
@@ -48,13 +48,13 @@ export default class FeedList extends React.Component {
     let likedKeys
     // First, we need to get an array of liked posts from the user
     return this.likedPostsRef
-      .once('value', snapshot => {
+      .once("value", snapshot => {
         // The existence of a key here constitues a like. The value is unused.
         return Object.keys(snapshot.val() || {})
       })
       .then(snapshot => {
         likedKeys = Object.keys(snapshot.val() || {})
-        return this.feedRef.once('value', snap => {
+        return this.feedRef.once("value", snap => {
           return snap.val()
         })
       })
@@ -84,7 +84,7 @@ export default class FeedList extends React.Component {
     this.state.posts.forEach(post => {
       this.feedRef
         .child(post.key)
-        .child('view_count')
+        .child("view_count")
         .transaction(
           current => {
             return (current || 0) + 1
@@ -119,7 +119,7 @@ export default class FeedList extends React.Component {
         enableEmptySections={true}
         refreshControl={
           <RefreshControl
-            style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}
+            style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
             refreshing={this.state.refreshing}
             onRefresh={this.onRefresh}
           />
@@ -153,7 +153,7 @@ export default class FeedList extends React.Component {
     const newDs = this.state.postsDataSource._dataBlob.s1
     const index = this.indexWithKey(newDs, key)
     const post = newDs[index]
-    post['liked'] = !wasLiked
+    post["liked"] = !wasLiked
     newDs[index] = post
 
     handleLikeToggle = wasLiked
@@ -183,23 +183,23 @@ export default class FeedList extends React.Component {
   }
 
   onCommentPressed = post => {
-    this.props.navigation.navigate('Comments', {
+    this.props.navigation.navigate("Comments", {
       post: post
     })
   }
 
   onAvatarPressed = (userId, username) => {
-    this.props.navigation.navigate('PublicProfile', {
+    this.props.navigation.navigate("PublicProfile", {
       userId: userId,
-      username: username,
+      username: username
     })
   }
 
   onSharePressed = (key, text) => {
     const url =
-      /* TODO: Proper link on iOS and Android to download link (with deep link for extra points) */ 'https://github.com/lustigdev/BreedUp/issues/37'
+      /* TODO: Proper link on iOS and Android to download link (with deep link for extra points) */ "https://github.com/lustigdev/BreedUp/issues/37"
     Share.share({
-      title: 'Breed Up is awesome!',
+      title: "Breed Up is awesome!",
       message: `Breed Up is awesome. Download it now! Check out this post.\n\n${text}\n\n${url}`
     })
   }

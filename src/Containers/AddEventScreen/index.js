@@ -1,15 +1,15 @@
-import React, { Component } from 'react'
-import { View, Text, Button, TextInput } from 'react-native'
-import { eventsRef, currentUser } from '../../Utils/FirebaseUtils'
-import GeoFire from 'geofire'
+import React, { Component } from "react"
+import { View, Text, Button, TextInput } from "react-native"
+import { eventsRef, currentUser } from "../../Utils/FirebaseUtils"
+import GeoFire from "geofire"
 
-import { getCoordinatesForAddress } from '../../Utils/location'
+import { getCoordinatesForAddress } from "../../Utils/location"
 
-class EventScreen extends Component {
+class AddEventScreen extends Component {
   state = {
-    title: '',
-    description: '',
-    address: ''
+    title: "",
+    description: "",
+    address: ""
   }
 
   render() {
@@ -44,11 +44,11 @@ class EventScreen extends Component {
     const saved = await saveEvent(event)
     if (!saved) {
       this.setState({
-        error: 'Could not find that address, please try again.'
+        error: "Could not find that address, please try again."
       })
       return
     }
-    this.setState({ title: '', description: '', address: '' })
+    this.setState({ title: "", description: "", address: "" })
     this.props.navigation.state.params.onEventAdded(saved)
     this.props.navigation.goBack()
   }
@@ -82,4 +82,4 @@ const saveEvent = async event => {
   return dto
 }
 
-export default EventScreen
+export default AddEventScreen

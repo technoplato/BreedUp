@@ -1,14 +1,14 @@
-import React from 'react'
-import { View, Text, ActivityIndicator } from 'react-native'
+import React from "react"
+import { View, Text, ActivityIndicator } from "react-native"
 
-import firebase from 'react-native-firebase'
+import firebase from "react-native-firebase"
 
-import styles from './LoadingStyles'
+import styles from "./LoadingStyles"
 
 export default class Loading extends React.Component {
   componentDidMount() {
     firebase.auth().onAuthStateChanged(user => {
-      this.props.navigation.navigate(user ? 'Main' : 'SignUp')
+      this.props.navigation.navigate(user ? "Main" : "SignUp")
     })
   }
 

@@ -1,28 +1,28 @@
-import { StyleSheet } from 'react-native'
+import { StyleSheet } from "react-native"
 
-import { Colors } from '../../Themes'
+import { Colors } from "../../Themes"
 
 export default StyleSheet.create({
   container: {
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     flex: 1
   },
   topBar: {
     top: 0,
-    position: 'absolute',
-    backgroundColor: 'white',
-    alignItems: 'center',
-    width: '100%',
+    position: "absolute",
+    backgroundColor: "white",
+    alignItems: "center",
+    width: "100%",
     minHeight: 24,
     paddingTop: 24
   },
   textInput: {
     height: 48,
     padding: 4,
-    backgroundColor: 'white',
+    backgroundColor: "white",
     borderRadius: 12,
-    width: '80%',
+    width: "80%",
     marginTop: 8
   },
   button: {
@@ -39,6 +39,6 @@ export default StyleSheet.create({
   },
   headerText: {
     fontSize: 60,
-    color: 'white'
+    color: "white"
   }
 })

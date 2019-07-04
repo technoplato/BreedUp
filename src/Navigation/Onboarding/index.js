@@ -1,8 +1,8 @@
-import { createSwitchNavigator } from 'react-navigation'
+import { createSwitchNavigator } from "react-navigation"
 
-import Loading from '../../Containers/Loading'
-import Login from '../../Containers/Login'
-import SignUp from '../../Containers/SignUp'
+import Loading from "../../Containers/Loading"
+import Login from "../../Containers/Login"
+import SignUp from "../../Containers/SignUp"
 
 const OnboardingScreens = createSwitchNavigator(
   {
@@ -11,7 +11,7 @@ const OnboardingScreens = createSwitchNavigator(
     SignUp: SignUp
   },
   {
-    initialRouteName: 'Loading'
+    initialRouteName: "Loading"
   }
 )
 

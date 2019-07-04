@@ -4,7 +4,7 @@ import {
   deleteImage,
   dogNamesRef,
   currentUser
-} from '../../Utils/FirebaseUtils'
+} from "../../Utils/FirebaseUtils"
 
 /**
  * Adds a dog to a user's list of dogs.
@@ -13,7 +13,7 @@ addDog = async (ownerId, name, breed, imageUri) => {
   // Get new dog ref
   const newDogRef = dogsRef.child(ownerId).push()
   // Upload image of dog
-  const url = await uploadImage(imageUri, ownerId, 'dogs/' + newDogRef.key)
+  const url = await uploadImage(imageUri, ownerId, "dogs/" + newDogRef.key)
 
   // Store new dog at /dogs/ { userId } / { new dog ID }
   const newDog = {
@@ -44,14 +44,14 @@ updateDog = (oldDog, newDog) => {
   // Check if we need to upload new image
   if (oldDog.imageUri !== newDog.imageUri) {
     // Delete old image
-    deleteImage(oldDog.ownerId, 'dogs/' + newDogRef.key)
+    deleteImage(oldDog.ownerId, "dogs/" + newDogRef.key)
     return uploadImage(
       newDog.imageUri,
       oldDog.ownerId,
-      'dogs/' + newDogRef.key
+      "dogs/" + newDogRef.key
     ).then(url => {
       // Store new dog at /dogs/ { userId } / { new dog ID }
-      newDog['imageUri'] = url
+      newDog["imageUri"] = url
       return newDogRef.set(newDog).then(() => {
         return newDog
       })
@@ -62,7 +62,7 @@ updateDog = (oldDog, newDog) => {
 }
 
 fetchDogsForUser = async ownerId => {
-  const dogsSnap = await dogsRef.child(ownerId).once('value')
+  const dogsSnap = await dogsRef.child(ownerId).once("value")
 
   return Object.values(dogsSnap.val() || {})
 }

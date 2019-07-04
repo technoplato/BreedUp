@@ -1,7 +1,7 @@
-import React from 'react'
-import { View, Text } from 'react-native'
+import React from "react"
+import { View, Text } from "react-native"
 
-import styles from './CommentListItemStyles'
+import styles from "./CommentListItemStyles"
 
 export default class CommentListItem extends React.Component {
   render() {

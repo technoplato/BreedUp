@@ -1,4 +1,4 @@
-import { getFollowersForUser } from '../Users'
+import { getFollowersForUser } from "../Users"
 import {
   rootRef,
   postsRef,
@@ -6,7 +6,7 @@ import {
   uploadImage,
   postImageUploadPath,
   currentUser
-} from '../../Utils/FirebaseUtils'
+} from "../../Utils/FirebaseUtils"
 
 /**
  * Utility method for creating a post. Also uploads image for post
@@ -94,7 +94,7 @@ postToGlobalFeed = async post => {
  * Currently used on Profile view.
  */
 getPosts = async userId => {
-  const postsSnap = await postsRef.child(userId).once('value')
+  const postsSnap = await postsRef.child(userId).once("value")
   return Object.values(postsSnap.val())
 }
 
@@ -112,7 +112,7 @@ function fanoutPost(followers, post) {
   var fanoutObj = {}
   // write to each follower's timeline
   followers.forEach(
-    userId => (fanoutObj['/feed/' + userId + '/' + post.key] = post)
+    userId => (fanoutObj["/feed/" + userId + "/" + post.key] = post)
   )
   return fanoutObj
 }

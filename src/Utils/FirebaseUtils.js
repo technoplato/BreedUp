@@ -1,40 +1,40 @@
-import firebase from 'react-native-firebase'
+import firebase from "react-native-firebase"
 
 const rootRef = firebase.database().ref()
 
-const POSTS = 'posts'
+const POSTS = "posts"
 const postsRef = rootRef.child(POSTS)
 
-const GLOBAL_FEED = 'all_posts'
+const GLOBAL_FEED = "all_posts"
 const globalFeedRef = rootRef.child(GLOBAL_FEED)
 
-const COMMENTS = 'comments'
+const COMMENTS = "comments"
 const commentsRef = rootRef.child(COMMENTS)
 
-const USERS = 'users'
+const USERS = "users"
 const usersRef = rootRef.child(USERS)
 
-const LIKES = 'likes'
+const LIKES = "likes"
 const likesRef = rootRef.child(LIKES)
 
-const DOGS = 'dogs'
+const DOGS = "dogs"
 const dogsRef = rootRef.child(DOGS)
 
-const FOLLOWING = 'following'
+const FOLLOWING = "following"
 const followingRef = rootRef.child(FOLLOWING)
 
-const FOLLOWERS = 'followers'
+const FOLLOWERS = "followers"
 const followersRef = rootRef.child(FOLLOWERS)
 
-const BLOCKED = 'blocked'
+const BLOCKED = "blocked"
 const blockedRef = rootRef.child(BLOCKED)
 
-const NAMES = 'names'
+const NAMES = "names"
 const namesRef = rootRef.child(NAMES)
 const userNamesRef = namesRef.child(USERS)
 const dogNamesRef = namesRef.child(DOGS)
 
-const EVENTS = 'events'
+const EVENTS = "events"
 export const eventsRef = rootRef.child(EVENTS)
 
 /**
@@ -77,7 +77,7 @@ deleteImage = (userId, path) => {
     .then(() => true)
 }
 
-const postImageUploadPath = 'posts/images/'
+const postImageUploadPath = "posts/images/"
 
 export {
   /**

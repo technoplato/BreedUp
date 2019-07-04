@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native'
+import { StyleSheet } from "react-native"
 
 export default StyleSheet.create({
   container: {
@@ -6,10 +6,10 @@ export default StyleSheet.create({
   },
   loading: {
     flex: 1,
-    justifyContent: 'center'
+    justifyContent: "center"
   },
   input: {
-    width: '100%',
+    width: "100%",
     height: 80,
     padding: 24
   }

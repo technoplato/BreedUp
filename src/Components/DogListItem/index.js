@@ -1,7 +1,7 @@
-import React from 'react'
-import { View, Image, TouchableHighlight } from 'react-native'
+import React from "react"
+import { View, Image, TouchableHighlight } from "react-native"
 
-import styles from './DogListItemStyles'
+import styles from "./DogListItemStyles"
 
 export default class DogListItem extends React.Component {
   render() {

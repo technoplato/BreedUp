@@ -10,7 +10,7 @@ target 'BreedUp' do
   pod 'Firebase/Database'
   pod 'Firebase/Storage'
   pod 'Firebase/Auth'
-
+  
   pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
 
 end

@@ -1,19 +1,18 @@
-import React from 'react'
-import { createStackNavigator } from 'react-navigation'
-import firebase from 'react-native-firebase'
-import { Text } from 'react-native'
-import { Icon } from 'react-native-elements'
+import React from "react"
+import { createStackNavigator } from "react-navigation"
+import firebase from "react-native-firebase"
+import { Text } from "react-native"
+import { Icon } from "react-native-elements"
 
-import Search from '../../Containers/Search'
-import AddPost from '../../Containers/AddPost'
-import Profile from '../../Containers/Profile'
-import AddDog from '../../Containers/AddDog'
-import ViewDog from '../../Containers/ViewDog'
+import Search from "../../Containers/Search"
+import AddPost from "../../Containers/AddPost"
+import Profile from "../../Containers/Profile"
+import AddDog from "../../Containers/AddDog"
+import ViewDog from "../../Containers/ViewDog"
 
-import EventScreen from '../../Containers/Event'
-import AddEventScreen from '../../Containers/AddEventScreen'
-import ListEventsScreen from '../../Containers/ListEventsScreen'
-import ViewEventScreen from '../../Containers/ViewEventScreen'
+import AddEventScreen from "../../Containers/AddEventScreen"
+import EventsScreen from "../../Containers/Event"
+import ViewEventScreen from "../../Containers/ViewEventScreen"
 
 const ProfileStack = createStackNavigator({
   PrivateProfile: {
@@ -44,7 +43,7 @@ const SearchStack = createStackNavigator({
   PublicProfile: {
     screen: Profile,
     navigationOptions: ({ navigation }) => ({
-      headerVisible: 'false',
+      headerVisible: "false",
       title: `${navigation.state.params.username}'s Profile`,
       headerLeft: (
         <Icon
@@ -66,13 +65,10 @@ const SearchStack = createStackNavigator({
 
 const EventStack = createStackNavigator({
   Event: {
-    screen: EventScreen
+    screen: EventsScreen
   },
   AddEvent: {
     screen: AddEventScreen
-  },
-  ListEvents: {
-    screen: ListEventsScreen
   },
   ViewEvent: {
     screen: ViewEventScreen

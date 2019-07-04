@@ -1,12 +1,12 @@
-import React from 'react'
-import { View, Button, FlatList, ActivityIndicator } from 'react-native'
-import _ from 'lodash'
+import React from "react"
+import { View, Button, FlatList, ActivityIndicator } from "react-native"
+import _ from "lodash"
 
-import DogListItem from '../DogListItem'
-import styles from './DogListStyles'
-import { Colors } from '../../Themes'
+import DogListItem from "../DogListItem"
+import styles from "./DogListStyles"
+import { Colors } from "../../Themes"
 
-import { fetchDogsForUser } from '../../Interactors/Dog'
+import { fetchDogsForUser } from "../../Interactors/Dog"
 
 export default class DogList extends React.Component {
   constructor(props) {
@@ -53,13 +53,13 @@ export default class DogList extends React.Component {
   renderAddButton = () => {
     return (
       this.props.currentUser &&
-      this.props.canAddDog  && (
+      this.props.canAddDog && (
         <View
           style={{
-            height: '100%',
+            height: "100%",
             width: 96,
-            alignItems: 'center',
-            justifyContent: 'center'
+            alignItems: "center",
+            justifyContent: "center"
           }}
         >
           <Button onPress={this.onAddDogPress} title="Add Dog" />
@@ -74,7 +74,7 @@ export default class DogList extends React.Component {
    * Only possible if viewing current user's dog list.
    */
   onAddDogPress = () => {
-    this.props.navigation.navigate('AddDog', {
+    this.props.navigation.navigate("AddDog", {
       userId: this.props.userId,
       onNewDogAdded: this.onNewDogAdded
     })
@@ -98,7 +98,7 @@ export default class DogList extends React.Component {
    */
   renderList = () => {
     return (
-      <View style={{ flex: 1, flexDirection: 'row', paddingLeft: 24 }}>
+      <View style={{ flex: 1, flexDirection: "row", paddingLeft: 24 }}>
         {this.renderAddButton()}
         <FlatList
           horizontal

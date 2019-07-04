@@ -1,4 +1,4 @@
-import React from 'react'
+import React from "react"
 import {
   Text,
   TextInput,
@@ -6,22 +6,22 @@ import {
   Alert,
   ImageBackground,
   Image
-} from 'react-native'
-import { Button } from 'react-native-elements'
-import firebase from 'react-native-firebase'
+} from "react-native"
+import { Button } from "react-native-elements"
+import firebase from "react-native-firebase"
 
-import styles from './SignUpStyles'
-import { Images } from '../../Themes'
+import styles from "./SignUpStyles"
+import { Images } from "../../Themes"
 
 export default class SignUp extends React.Component {
-  state = { email: '', password: '', username: '', errorMsg: null }
+  state = { email: "", password: "", username: "", errorMsg: null }
 
   componentDidMount = () => {
     if (this.props.navigation.state.params !== undefined) {
       const { email, password } = this.props.navigation.state.params
       this.setState({
-        email: email || '',
-        password: password || ''
+        email: email || "",
+        password: password || ""
       })
     }
   }
@@ -32,11 +32,11 @@ export default class SignUp extends React.Component {
     username = username.toLocaleLowerCase()
 
     if (!email) {
-      this.setState({ errorMsg: 'Please enter a valid email.' })
+      this.setState({ errorMsg: "Please enter a valid email." })
     } else if (!password) {
-      this.setState({ errorMsg: 'Please enter a valid password.' })
+      this.setState({ errorMsg: "Please enter a valid password." })
     } else if (!username) {
-      this.setState({ errorMsg: 'Please enter a valid username.' })
+      this.setState({ errorMsg: "Please enter a valid username." })
     } else {
       firebase
         .auth()
@@ -45,7 +45,7 @@ export default class SignUp extends React.Component {
           userData = data.user
           return firebase
             .database()
-            .ref('users')
+            .ref("users")
             .child(data.user.uid)
             .set({
               username: username,
@@ -64,12 +64,12 @@ export default class SignUp extends React.Component {
         .then(() => {
           return firebase
             .database()
-            .ref('names')
-            .child('users')
+            .ref("names")
+            .child("users")
             .child(userData.uid)
             .set({ username, uid: userData.uid })
         })
-        .then(() => this.props.navigation.navigate('ChooseImage'))
+        .then(() => this.props.navigation.navigate("ChooseImage"))
         .catch(error => {
           this.setState({ errorMsg: error.message })
         })
@@ -81,7 +81,7 @@ export default class SignUp extends React.Component {
 
     if (!email) {
       const errorMsg =
-        'Please enter an email that we can send a password reset link to.'
+        "Please enter an email that we can send a password reset link to."
 
       this.setState({ errorMsg })
     } else {
@@ -90,16 +90,16 @@ export default class SignUp extends React.Component {
         .sendPasswordResetEmail(email)
         .then(function() {
           Alert.alert(
-            'Reset password email sent',
-            'Please check your email to reset your password.',
-            [{ text: 'Ok' }]
+            "Reset password email sent",
+            "Please check your email to reset your password.",
+            [{ text: "Ok" }]
           )
         })
         .catch(function(error) {
           Alert.alert(
-            'An error occurred sending email',
-            'Please email support for help.',
-            [{ text: 'Ok' }]
+            "An error occurred sending email",
+            "Please email support for help.",
+            [{ text: "Ok" }]
           )
         })
     }
@@ -113,7 +113,7 @@ export default class SignUp extends React.Component {
       >
         <Text style={styles.headerText}>Breed Up</Text>
         {this.state.errorMsg && (
-          <Text style={{ color: 'white', padding: 24 }}>
+          <Text style={{ color: "white", padding: 24 }}>
             {this.state.errorMsg}
           </Text>
         )}
@@ -121,7 +121,7 @@ export default class SignUp extends React.Component {
           placeholder="Email"
           autoCapitalize="none"
           style={styles.textInput}
-          keyboardType={'email-address'}
+          keyboardType={"email-address"}
           onChangeText={email => this.setState({ email })}
           value={this.state.email}
         />
@@ -152,7 +152,7 @@ export default class SignUp extends React.Component {
           onPress={() => {
             const { email, password } = this.state
 
-            this.props.navigation.navigate('Login', {
+            this.props.navigation.navigate("Login", {
               email,
               password
             })

@@ -1,17 +1,16 @@
-import React, { Component } from 'react'
-import { View, Text, TouchableWithoutFeedback } from 'react-native'
-import GeoFire from 'geofire'
-import _ from 'lodash'
+import React, { Component } from "react"
+import { View, Text, TouchableWithoutFeedback } from "react-native"
+import GeoFire from "geofire"
 
-import { eventsRef, currentUser } from '../../Utils/FirebaseUtils'
-import { getCoordinatesForAddress } from '../../Utils/location'
+import { eventsRef, currentUser } from "../../Utils/FirebaseUtils"
+import { getCoordinatesForAddress } from "../../Utils/location"
 
-class EventScreen extends Component {
+class EventsList extends Component {
   state = { events: [] }
 
   componentDidMount = async () => {
     const coordinates = await getCoordinatesForAddress(
-      '12221 East Colonial Drive'
+      "12221 East Colonial Drive"
     )
 
     const events = await getAllEventsByProximity(
@@ -41,7 +40,7 @@ class EventScreen extends Component {
   }
 
   handleEventPress = event => {
-    this.props.navigation.navigate('ViewEvent', {
+    this.props.navigation.navigate("ViewEvent", {
       id: event.key
     })
   }
@@ -69,7 +68,7 @@ const getAllEventsByProximity = async (center, radiusKm, eventsRef) => {
 
   const events = []
 
-  query.on('key_entered', (key, location, distance) => {
+  query.on("key_entered", (key, location, distance) => {
     events.push({
       key,
       location,
@@ -78,7 +77,7 @@ const getAllEventsByProximity = async (center, radiusKm, eventsRef) => {
   })
 
   await new Promise(resolve => {
-    query.on('ready', () => {
+    query.on("ready", () => {
       resolve()
     })
   })
@@ -88,7 +87,7 @@ const getAllEventsByProximity = async (center, radiusKm, eventsRef) => {
     eventPromises.push(
       eventsRef
         .child(event.key)
-        .once('value')
+        .once("value")
         .then(snap => snap.val())
         .then(fetchedEvent => {
           return {
@@ -104,4 +103,4 @@ const getAllEventsByProximity = async (center, radiusKm, eventsRef) => {
   return fetchedEvents
 }
 
-export default EventScreen
+export default EventsList

@@ -1,16 +1,16 @@
-import React from 'react'
-import { createBottomTabNavigator } from 'react-navigation'
-import { Image } from 'react-native'
+import React from "react"
+import { createBottomTabNavigator } from "react-navigation"
+import { Image } from "react-native"
 
-import { ProfileStack, AddPost, SearchStack, EventStack } from '../Misc'
-import FeedStack from '../Feed'
+import { ProfileStack, AddPost, SearchStack, EventStack } from "../Misc"
+import FeedStack from "../Feed"
 
-import { Images } from '../../Themes'
+import { Images } from "../../Themes"
 
-import MyCustomSillyDrawerComponent from '../MyCustomSillyDrawerComponent'
+import MyCustomSillyDrawerComponent from "../MyCustomSillyDrawerComponent"
 
-this.previousRoute = 'Main'
-this.currentRoute = 'Main'
+this.previousRoute = "Main"
+this.currentRoute = "Main"
 
 const TabNavigation = createBottomTabNavigator(
   {
@@ -36,16 +36,16 @@ const TabNavigation = createBottomTabNavigator(
         const { routeName } = navigation.state
         let iconSource
         switch (routeName) {
-          case 'Main':
+          case "Main":
             iconSource = Images.iconHome
             break
-          case 'Search':
+          case "Search":
             iconSource = Images.iconSearch
             break
-          case 'AddPost':
+          case "AddPost":
             iconSource = Images.iconAdd
             break
-          case 'Profile':
+          case "Profile":
             iconSource = Images.iconProfile
             break
         }
@@ -61,12 +61,12 @@ const TabNavigation = createBottomTabNavigator(
       }
     }),
     tabBarOptions: {
-      activeTintColor: 'tomato',
-      inactiveTintColor: 'gray'
+      activeTintColor: "tomato",
+      inactiveTintColor: "gray"
     }
   },
   {
-    initialRouteName: 'Main',
+    initialRouteName: "Main",
     contentComponent: MyCustomSillyDrawerComponent
   }
 )
@@ -76,22 +76,22 @@ function shouldShowTabBar(navigation) {
   const dest = routes && routes[1]
   const name = dest && dest.routeName
 
-  return !(name === 'PublicProfile' || name === 'ViewDog')
+  return !(name === "PublicProfile" || name === "ViewDog")
 }
 
 const defaultGetStateForAction = TabNavigation.router.getStateForAction
 TabNavigation.router.getStateForAction = (action, state) => {
   switch (action.type) {
-    case 'Navigation/INIT':
-      this.currentRoute = 'Main'
-      this.nextRoute = 'Main'
+    case "Navigation/INIT":
+      this.currentRoute = "Main"
+      this.nextRoute = "Main"
       break
-    case 'Navigation/NAVIGATE':
+    case "Navigation/NAVIGATE":
       this.previousRoute = this.currentRoute
       this.currentRoute = action.routeName
       this.nextRoute = action.routeName
       break
-    case this.currentRoute === 'AddPost' && 'Navigation/BACK':
+    case this.currentRoute === "AddPost" && "Navigation/BACK":
       // A little ugly of an approach, but AddPost is the tab where I'd like
       // the special go back behavior. I still need to track state in
       // other navigation. There has got to be a cleaner way of doing this
@@ -105,7 +105,7 @@ TabNavigation.router.getStateForAction = (action, state) => {
         index: index
       }
       return newState
-    case 'Navigation/BACK':
+    case "Navigation/BACK":
       this.nextRoute = this.previousRoute
       this.currentRoute = this.nextRoute
       this.previousRoute = this.currentRoute

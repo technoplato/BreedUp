@@ -1,36 +1,36 @@
-import React from 'react'
+import React from "react"
 import {
   View,
   StyleSheet,
   Text,
   TextInput,
   ActivityIndicator
-} from 'react-native'
-import { Button } from 'react-native-elements'
-import firebase from 'react-native-firebase'
-import Modal from 'react-native-modal'
+} from "react-native"
+import { Button } from "react-native-elements"
+import firebase from "react-native-firebase"
+import Modal from "react-native-modal"
 
-import RoundImage from '../../Components/RoundImageView'
-import { Colors } from '../../Themes'
-import PostList from '../../Components/PostList'
-import DogList from '../../Components/DogList'
+import RoundImage from "../../Components/RoundImageView"
+import { Colors } from "../../Themes"
+import PostList from "../../Components/PostList"
+import DogList from "../../Components/DogList"
 
-import CameraModal from '../../../lib/InstagramCameraModal'
+import CameraModal from "../../../lib/InstagramCameraModal"
 
-import { followUser, unfollowUser, isFollowing } from '../../Interactors/Users'
+import { followUser, unfollowUser, isFollowing } from "../../Interactors/Users"
 
 export default class Profile extends React.Component {
   state = {
-    avatarURL: '',
-    username: '',
-    description: '',
-    uid: '',
+    avatarURL: "",
+    username: "",
+    description: "",
+    uid: "",
     currentUserProfile: false,
     modalVisible: false,
     modalSaving: false,
-    modifiedUsername: '',
-    modifiedDescription: '',
-    modifiedAvatarURL: '',
+    modifiedUsername: "",
+    modifiedDescription: "",
+    modifiedAvatarURL: "",
     hasProfileChanged: false,
     loading: true,
     photoEditModalVisible: false,
@@ -47,12 +47,12 @@ export default class Profile extends React.Component {
 
   componentWillMount() {
     const privateProfile =
-      this.props.navigation.state.routeName === 'PrivateProfile'
+      this.props.navigation.state.routeName === "PrivateProfile"
 
     const currentUid = firebase.auth().currentUser.uid
     const profileId = this.props.navigation.getParam(
-      'userId',
-      privateProfile ? currentUid : ''
+      "userId",
+      privateProfile ? currentUid : ""
     )
 
     const currentUserProfile = currentUid === profileId
@@ -70,7 +70,7 @@ export default class Profile extends React.Component {
       .database()
       .ref()
       .child(`users/${profileId}`)
-      .once('value', snap => {
+      .once("value", snap => {
         const { username, description, profileURL } = snap.val()
 
         this.setState({
@@ -129,10 +129,10 @@ export default class Profile extends React.Component {
       <Modal
         isVisible={this.state.modalVisible && !this.state.saveComplete}
         onBackdropPress={() => this.setTextEditingModalVisible(false)}
-        style={{ justifyContent: 'center', alignItems: 'center' }}
+        style={{ justifyContent: "center", alignItems: "center" }}
       >
-        <View style={{ width: '100%', height: '100%' }}>
-          <View style={{ padding: 12, backgroundColor: 'white' }}>
+        <View style={{ width: "100%", height: "100%" }}>
+          <View style={{ padding: 12, backgroundColor: "white" }}>
             <Text>Username</Text>
             <TextInput
               maxLength={20}
@@ -154,12 +154,12 @@ export default class Profile extends React.Component {
               flex: 1,
               paddingBottom: 12,
               minHeight: 42,
-              backgroundColor: 'grey',
-              justifyContent: 'flex-end'
+              backgroundColor: "grey",
+              justifyContent: "flex-end"
             }}
           >
             <Button
-              title={this.state.modalSaving ? 'Saving...' : 'Save Info'}
+              title={this.state.modalSaving ? "Saving..." : "Save Info"}
               loading={this.state.modalSaving}
               disabled={this.state.modalSaving}
               onPress={() => {
@@ -210,8 +210,8 @@ export default class Profile extends React.Component {
     firebase
       .database()
       .ref()
-      .child('names')
-      .child('users')
+      .child("names")
+      .child("users")
       .child(this.state.uid)
       .set({ username: modifiedUsername.toLowerCase(), uid: this.state.uid })
   }
@@ -255,7 +255,7 @@ export default class Profile extends React.Component {
       .ref()
       .child(`users/${id}`)
 
-    const userProfileImageStorageRef = storageRef.child(id).child('profile_img')
+    const userProfileImageStorageRef = storageRef.child(id).child("profile_img")
 
     let updatedUrl
 
@@ -292,12 +292,12 @@ export default class Profile extends React.Component {
     return (
       <View
         style={{
-          backgroundColor: 'white',
-          alignItems: 'center',
-          justifyContent: 'center',
-          position: 'absolute',
-          width: '100%',
-          height: '100%'
+          backgroundColor: "white",
+          alignItems: "center",
+          justifyContent: "center",
+          position: "absolute",
+          width: "100%",
+          height: "100%"
         }}
       >
         <ActivityIndicator size="large" color={Colors.crimson} />
@@ -315,7 +315,7 @@ export default class Profile extends React.Component {
             source={{
               uri:
                 this.state.avatarURL ||
-                'https://user-images.githubusercontent.com/6922904/43790322-455b8dda-9a40-11e8-800e-09b299ace3b3.png'
+                "https://user-images.githubusercontent.com/6922904/43790322-455b8dda-9a40-11e8-800e-09b299ace3b3.png"
             }}
           />
         </View>
@@ -339,7 +339,7 @@ export default class Profile extends React.Component {
               {!this.state.currentUserProfile && (
                 <Button
                   buttonStyle={{ backgroundColor: Colors.dogBoneBlue }}
-                  title={!this.state.isFollowed ? 'Add to Pack' : 'Unfollow'}
+                  title={!this.state.isFollowed ? "Add to Pack" : "Unfollow"}
                   onPress={() => {
                     if (!this.state.isFollowed) {
                       followUser(this.state.uid).then(followed => {
@@ -381,7 +381,7 @@ export default class Profile extends React.Component {
   }
 
   onDogPress = dog => {
-    this.props.navigation.navigate('ViewDog', {
+    this.props.navigation.navigate("ViewDog", {
       dog: dog,
       currentUser: this.state.currentUserProfile || false,
       onDogUpdated: this.onDogUpdated
@@ -423,8 +423,8 @@ const styles = {
 
   header: StyleSheet.create({
     container: {
-      flexDirection: 'row',
-      width: '100%'
+      flexDirection: "row",
+      width: "100%"
     },
     avatarContainer: {},
     textAndButtonContainer: {
@@ -433,8 +433,8 @@ const styles = {
     },
     topRow: {
       marginTop: 12,
-      justifyContent: 'space-between',
-      flexDirection: 'row'
+      justifyContent: "space-between",
+      flexDirection: "row"
     },
 
     avatarContainer: {
@@ -443,12 +443,12 @@ const styles = {
       width: 92
     },
     usernameContainer: {
-      alignItems: 'center',
-      justifyContent: 'center'
+      alignItems: "center",
+      justifyContent: "center"
     },
     buttonContainer: {
-      alignItems: 'center',
-      justifyContent: 'center'
+      alignItems: "center",
+      justifyContent: "center"
     },
     avatar: {
       height: 92,
@@ -462,12 +462,12 @@ const styles = {
   dogList: StyleSheet.create({
     container: {
       height: 90,
-      width: '100%'
+      width: "100%"
     },
     list: {
       flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center'
+      justifyContent: "center",
+      alignItems: "center"
     }
   }),
 
@@ -477,18 +477,18 @@ const styles = {
     },
     list: {
       flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center'
+      justifyContent: "center",
+      alignItems: "center"
     }
   }),
 
   modal: StyleSheet.create({
     bottomButtonContainer: {
-      position: 'absolute',
+      position: "absolute",
       right: 0,
       flex: 1,
       minHeight: 42,
-      backgroundColor: 'grey'
+      backgroundColor: "grey"
     }
   })
 }

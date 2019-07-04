@@ -1,7 +1,7 @@
-const KEY = 'AIzaSyBiBUbWUtBJrCincC5hyQ6JKnSBsPs3t9w'
+const KEY = "AIzaSyBiBUbWUtBJrCincC5hyQ6JKnSBsPs3t9w"
 
 export const getCoordinatesForAddress = async address => {
-  console.log('address', address)
+  console.log("address", address)
   return await fetch(
     `https://maps.googleapis.com/maps/api/geocode/json?address=
     ${encodeURIComponent(address)}

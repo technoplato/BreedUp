@@ -1,7 +1,7 @@
-import { userNamesRef, dogNamesRef } from '../../Utils/FirebaseUtils'
+import { userNamesRef, dogNamesRef } from "../../Utils/FirebaseUtils"
 
 // This seems very random but is used to limit search to prefixes of search content
-const HIGH_UNICODE_VAL = '\uf8ff'
+const HIGH_UNICODE_VAL = "\uf8ff"
 
 /**
  * Searches for user based on starting text of username.
@@ -12,11 +12,11 @@ searchUser = usernamePrefix => {
   if (!usernamePrefix) return []
 
   return userNamesRef
-    .orderByChild('username')
+    .orderByChild("username")
     .startAt(usernamePrefix)
     .endAt(usernamePrefix + HIGH_UNICODE_VAL)
     .limitToFirst(5)
-    .once('value')
+    .once("value")
     .then(snap => {
       const keysArray = Object.keys(snap.val() || [])
       const results = keysArray.map(key => snap.val()[key])
@@ -33,11 +33,11 @@ searchDog = dogNamePrefix => {
   if (!dogNamePrefix) return []
 
   return dogNamesRef
-    .orderByChild('dogName')
+    .orderByChild("dogName")
     .startAt(dogNamePrefix)
     .endAt(dogNamePrefix + HIGH_UNICODE_VAL)
     .limitToFirst(5)
-    .once('value')
+    .once("value")
     .then(snap => {
       const keysArray = Object.keys(snap.val() || [])
       const results = keysArray.map(key => snap.val()[key])

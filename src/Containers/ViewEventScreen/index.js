@@ -1,6 +1,6 @@
-import React, { Component } from 'react'
-import { View, Text, Button, Input } from 'react-native'
-import { eventsRef, currentUser } from '../../Utils/FirebaseUtils'
+import React, { Component } from "react"
+import { View, Text, Button, Input } from "react-native"
+import { eventsRef, currentUser } from "../../Utils/FirebaseUtils"
 
 class ViewEventScreen extends Component {
   state = { loading: true }
@@ -23,7 +23,7 @@ class ViewEventScreen extends Component {
 const getEventById = async id => {
   return await eventsRef
     .child(id)
-    .once('value')
+    .once("value")
     .then(snap => snap.val())
 }
 

@@ -1,10 +1,10 @@
-import React from 'react'
-import { Card, Avatar, Button } from 'react-native-elements'
-import { View, Text, Image, TouchableWithoutFeedback } from 'react-native'
-import moment from 'moment'
+import React from "react"
+import { Card, Avatar, Button } from "react-native-elements"
+import { View, Text, Image, TouchableWithoutFeedback } from "react-native"
+import moment from "moment"
 
-import styles from './FeedCardStyles'
-import { Colors } from '../../Themes'
+import styles from "./FeedCardStyles"
+import { Colors } from "../../Themes"
 
 export default class FeedCard extends React.Component {
   render() {
@@ -29,14 +29,14 @@ export default class FeedCard extends React.Component {
     const time_since_post = moment(time_posted).fromNow()
     /* We add 1 to the view_count here and take care of that on the backend as a hack */
     const fudgedViewCount = (view_count || 0) + 1
-    const viewCountSuffix = fudgedViewCount == 1 ? 'view' : 'views'
+    const viewCountSuffix = fudgedViewCount == 1 ? "view" : "views"
 
     const dogs = this.props.item.dogs || []
     const numDogs = dogs.length
 
     const dogNamesText = `Dogs in this image: ${dogs
       .map(dog => dog.name)
-      .join(', ')}`
+      .join(", ")}`
     const dogNameTextView = numDogs && <Text>{dogNamesText}</Text>
 
     return (
@@ -65,7 +65,7 @@ export default class FeedCard extends React.Component {
               {author_username}
             </Text>
             <Text>
-              {time_since_post} | {fudgedViewCount + ' ' + viewCountSuffix}
+              {time_since_post} | {fudgedViewCount + " " + viewCountSuffix}
             </Text>
             {dogNameTextView}
           </View>
@@ -99,7 +99,7 @@ export default class FeedCard extends React.Component {
           buttonStyle={styles.button}
           textStyle={styles.buttonText}
           title="Like"
-          icon={{ name: 'thumb-up', color: likeColor }}
+          icon={{ name: "thumb-up", color: likeColor }}
           onPress={() =>
             this.props.onLikePressed(this.props.item.key, this.props.liked)
           }
@@ -108,14 +108,14 @@ export default class FeedCard extends React.Component {
           buttonStyle={styles.button}
           textStyle={styles.buttonText}
           title="Comment"
-          icon={{ name: 'comment', color: 'grey' }}
+          icon={{ name: "comment", color: "grey" }}
           onPress={() => this.props.onCommentPressed(this.props.item)}
         />
         <Button
           buttonStyle={styles.button}
           textStyle={styles.buttonText}
           title="Share"
-          icon={{ name: 'share', color: 'grey' }}
+          icon={{ name: "share", color: "grey" }}
           onPress={() =>
             this.props.onSharePressed(this.props.item.key, this.props.item.text)
           }
@@ -128,19 +128,19 @@ export default class FeedCard extends React.Component {
     const { comment_count, first_comment, second_comment } = this.props.item
 
     const viewAllText = comment_count > 2 && (
-      <Text style={{ color: 'rgb(143, 143, 143)', marginBottom: 12 }}>
+      <Text style={{ color: "rgb(143, 143, 143)", marginBottom: 12 }}>
         View all {comment_count} comments
       </Text>
     )
     const comment1 = first_comment && (
       <Text style={{ marginBottom: 6 }}>
-        <Text style={{ fontWeight: 'bold' }}>{first_comment.author} </Text>
+        <Text style={{ fontWeight: "bold" }}>{first_comment.author} </Text>
         {first_comment.text}
       </Text>
     )
     const comment2 = second_comment && (
       <Text>
-        <Text style={{ fontWeight: 'bold' }}>{second_comment.author} </Text>
+        <Text style={{ fontWeight: "bold" }}>{second_comment.author} </Text>
         {second_comment.text}
       </Text>
     )
@@ -150,7 +150,7 @@ export default class FeedCard extends React.Component {
         <TouchableWithoutFeedback
           onPress={() => this.props.onCommentPressed(this.props.item)}
         >
-          <View style={{ flexDirection: 'column', padding: 12 }}>
+          <View style={{ flexDirection: "column", padding: 12 }}>
             {viewAllText}
             {comment1}
             {comment2}

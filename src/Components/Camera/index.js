@@ -1,19 +1,19 @@
-import React from 'react'
-import { View } from 'react-native'
-import { RNCamera } from 'react-native-camera'
-import ImagePicker from 'react-native-image-picker'
-import { Button } from 'react-native-elements'
+import React from "react"
+import { View } from "react-native"
+import { RNCamera } from "react-native-camera"
+import ImagePicker from "react-native-image-picker"
+import { Button } from "react-native-elements"
 
-import styles from './CameraStyle'
+import styles from "./CameraStyle"
 
 export default class Camera extends React.Component {
   state = {
-    flash: 'off',
+    flash: "off",
     zoom: 0,
-    autoFocus: 'on',
-    type: 'back',
-    whiteBalance: 'auto',
-    ratio: '16:9'
+    autoFocus: "on",
+    type: "back",
+    whiteBalance: "auto",
+    ratio: "16:9"
   }
 
   getRatios = async function() {
@@ -23,13 +23,13 @@ export default class Camera extends React.Component {
 
   toggleFacing() {
     this.setState({
-      type: this.state.type === 'back' ? 'front' : 'back'
+      type: this.state.type === "back" ? "front" : "back"
     })
   }
 
   toggleFlash() {
     this.setState({
-      type: this.state.flash === 'on' ? 'off' : 'on'
+      type: this.state.flash === "on" ? "off" : "on"
     })
   }
 
@@ -58,9 +58,9 @@ export default class Camera extends React.Component {
         zoom={this.state.zoom}
         whiteBalance={this.state.whiteBalance}
         ratio={this.state.ratio}
-        permissionDialogTitle={'Permission to use camera'}
+        permissionDialogTitle={"Permission to use camera"}
         permissionDialogMessage={
-          'We need your permission to use your camera phone'
+          "We need your permission to use your camera phone"
         }
       />
     )
@@ -70,12 +70,12 @@ export default class Camera extends React.Component {
     return (
       <View style={styles.buttonContainer}>
         <Button
-          buttonStyle={{ backgroundColor: 'transparent' }}
+          buttonStyle={{ backgroundColor: "transparent" }}
           title="FLIP"
           onPress={this.toggleFacing.bind(this)}
         />
         <Button
-          buttonStyle={{ backgroundColor: 'transparent' }}
+          buttonStyle={{ backgroundColor: "transparent" }}
           title="FLASH"
           onPress={this.toggleFlash.bind(this)}
         />

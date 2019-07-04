@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native'
+import { StyleSheet } from "react-native"
 
 export default StyleSheet.create({
   cardContainer: {
@@ -7,17 +7,17 @@ export default StyleSheet.create({
   },
   headerContainer: {
     flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between'
+    flexDirection: "row",
+    justifyContent: "space-between"
   },
   imageAndTextContainer: {
     padding: 16,
     flex: 1,
-    flexDirection: 'row'
+    flexDirection: "row"
   },
   postMetadata: {
     paddingLeft: 12,
-    flexDirection: 'column'
+    flexDirection: "column"
   },
   text: {
     paddingRight: 12,
@@ -25,18 +25,18 @@ export default StyleSheet.create({
     paddingLeft: 12
   },
   image: {
-    width: '100%',
+    width: "100%",
     aspectRatio: 4 / 3
   },
   buttonContainer: {
     flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-around'
+    flexDirection: "row",
+    justifyContent: "space-around"
   },
   button: {
-    backgroundColor: 'transparent'
+    backgroundColor: "transparent"
   },
   buttonText: {
-    color: 'black'
+    color: "black"
   }
 })

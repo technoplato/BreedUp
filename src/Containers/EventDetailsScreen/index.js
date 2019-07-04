@@ -10,7 +10,6 @@ class EventScreen extends Component {
       <View>
         <Button
           title="PO Event"
-          color={"black"}
           onPress={() =>
             this.props.navigation.navigate("AddEvent", {
               onEventAdded: event => this.handleEventAdded(event)

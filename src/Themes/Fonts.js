@@ -1,7 +1,7 @@
 const type = {
-  base: 'Avenir-Book',
-  bold: 'Avenir-Black',
-  emphasis: 'HelveticaNeue-Italic'
+  base: "Avenir-Book",
+  bold: "Avenir-Black",
+  emphasis: "HelveticaNeue-Italic"
 }
 
 const size = {
@@ -24,7 +24,7 @@ const style = {
     fontSize: size.h1
   },
   h2: {
-    fontWeight: 'bold',
+    fontWeight: "bold",
     fontSize: size.h2
   },
   h3: {

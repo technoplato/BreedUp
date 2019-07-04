@@ -1,4 +1,4 @@
-import React from 'react'
+import React from "react"
 import {
   Text,
   TextInput,
@@ -9,15 +9,15 @@ import {
   View,
   Alert,
   Image
-} from 'react-native'
+} from "react-native"
 
-import styles from './ViewDogStyles'
-import { updateDog } from '../../Interactors/Dog'
+import styles from "./ViewDogStyles"
+import { updateDog } from "../../Interactors/Dog"
 
-import CameraModal from '../../../lib/InstagramCameraModal'
+import CameraModal from "../../../lib/InstagramCameraModal"
 
-import { Button } from 'react-native-elements'
-import _ from 'lodash'
+import { Button } from "react-native-elements"
+import _ from "lodash"
 
 export default class AddDog extends React.Component {
   state = {}
@@ -52,16 +52,16 @@ export default class AddDog extends React.Component {
 
     // Create clone with potentially new info to update
     const newDog = _.clone(oldDog)
-    newDog['name'] = name
-    newDog['breed'] = breed
-    newDog['imageUri'] = imageUri
+    newDog["name"] = name
+    newDog["breed"] = breed
+    newDog["imageUri"] = imageUri
 
     // Verify input
-    if (name === '') {
-      Alert.alert('Please enter a name for your dog')
+    if (name === "") {
+      Alert.alert("Please enter a name for your dog")
       this.setState({ loading: false })
-    } else if (breed === '') {
-      Alert.alert('Please enter a breed for your dog')
+    } else if (breed === "") {
+      Alert.alert("Please enter a breed for your dog")
       this.setState({ loading: false })
     } else {
       // Let addDog interactor do its thing and then go back
@@ -94,7 +94,7 @@ export default class AddDog extends React.Component {
             >
               <Image
                 source={{ uri: this.state.imageUri }}
-                style={{ height: 144, width: 144, alignSelf: 'center' }}
+                style={{ height: 144, width: 144, alignSelf: "center" }}
               />
             </TouchableHighlight>
             {this.renderName()}

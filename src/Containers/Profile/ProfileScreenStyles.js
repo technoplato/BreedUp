@@ -1,6 +1,6 @@
-import { StyleSheet } from 'react-native'
+import { StyleSheet } from "react-native"
 
-import { Colors } from '../../Themes'
+import { Colors } from "../../Themes"
 
 export default StyleSheet.create({
   container: {
@@ -8,8 +8,8 @@ export default StyleSheet.create({
   },
 
   profileHeaderContainer: {
-    width: '100%',
-    flexDirection: 'row'
+    width: "100%",
+    flexDirection: "row"
   },
 
   avatarContainer: {
@@ -18,8 +18,8 @@ export default StyleSheet.create({
   },
 
   usernameAndButtonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between'
+    flexDirection: "row",
+    justifyContent: "space-between"
   },
 
   button: {
