@@ -1,8 +1,8 @@
 import React, { Component } from "react"
-import { View, Text, TouchableWithoutFeedback } from "react-native"
+import { Text, TouchableWithoutFeedback, View } from "react-native"
 import GeoFire from "geofire"
 
-import { eventsRef, currentUser } from "../../Utils/FirebaseUtils"
+import { eventsRef } from "../../Utils/FirebaseUtils"
 import { getCoordinatesForAddress } from "../../Utils/location"
 
 class EventsList extends Component {
@@ -10,7 +10,7 @@ class EventsList extends Component {
 
   componentDidMount = async () => {
     const coordinates = await getCoordinatesForAddress(
-      "12221 East Colonial Drive"
+      "5368 Carrara Court, Saint Cloud Florida 34771"
     )
 
     const events = await getAllEventsByProximity(
@@ -19,13 +19,15 @@ class EventsList extends Component {
       eventsRef
     )
 
+    console.log(events)
+
     this.setState({ events: events })
   }
 
   render() {
     return (
       <View>
-        <Text>List Events</Text>
+        <Text>Listing Events Below</Text>
         {this.state.events.map(event => {
           return (
             <EventListItem
@@ -40,6 +42,7 @@ class EventsList extends Component {
   }
 
   handleEventPress = event => {
+    console.log(this.props)
     this.props.navigation.navigate("ViewEvent", {
       id: event.key
     })
@@ -83,7 +86,7 @@ const getAllEventsByProximity = async (center, radiusKm, eventsRef) => {
   })
 
   const eventPromises = []
-  events.forEach((event, index) => {
+  events.forEach(event => {
     eventPromises.push(
       eventsRef
         .child(event.key)
@@ -98,9 +101,7 @@ const getAllEventsByProximity = async (center, radiusKm, eventsRef) => {
     )
   })
 
-  const fetchedEvents = await Promise.all(eventPromises)
-
-  return fetchedEvents
+  return await Promise.all(eventPromises)
 }
 
 export default EventsList

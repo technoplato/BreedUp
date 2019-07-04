@@ -40,14 +40,14 @@ export const eventsRef = rootRef.child(EVENTS)
 /**
  * Convenient access to current authed user
  */
-currentUser = () => {
+const currentUser = () => {
   return firebase.auth().currentUser
 }
 
 /**
  * Uploads an image to Firebase and returns the URL.
  */
-uploadImage = (imageUri, userId, path) => {
+const uploadImage = (imageUri, userId, path) => {
   // Create ref for storing image
   const storageRef = firebase
     .storage()
@@ -67,7 +67,7 @@ uploadImage = (imageUri, userId, path) => {
 /**
  * Deletes an image from Firebase storage and returns true to resolve the promise.
  */
-deleteImage = (userId, path) => {
+const deleteImage = (userId, path) => {
   return firebase
     .storage()
     .ref()

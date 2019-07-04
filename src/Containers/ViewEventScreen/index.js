@@ -41,6 +41,7 @@ const EventDetails = ({ event }) => (
     <Text>description: {event.description}</Text>
     <Text>address: {event.address}</Text>
     <Text>creator: {event.creator.name}</Text>
+    <Text>photo: {event.creator.image}</Text>
     {/* TODO: get distance from event in details page */}
     <Text>distance: {event.distance} km</Text>
   </View>

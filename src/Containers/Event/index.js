@@ -9,15 +9,17 @@ class EventScreen extends Component {
     return (
       <View>
         <Button
-          title="PO Event"
-          color={"black"}
+          title="Add Event"
+          buttonStyle={{
+            backgroundColor: "black"
+          }}
           onPress={() =>
             this.props.navigation.navigate("AddEvent", {
               onEventAdded: event => this.handleEventAdded(event)
             })
           }
         />
-        <EventsList />
+        <EventsList navigation={this.props.navigation} />
       </View>
     )
   }

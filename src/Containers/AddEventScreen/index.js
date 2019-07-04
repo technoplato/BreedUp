@@ -9,7 +9,7 @@ class AddEventScreen extends Component {
   state = {
     title: "",
     description: "",
-    address: ""
+    address: "5368 Carrara Court, Saint Cloud Florida 34771"
   }
 
   render() {
@@ -32,7 +32,7 @@ class AddEventScreen extends Component {
         <TextInput
           placeholder="Enter a address"
           onChangeText={address => this.setState({ address })}
-          value={this.state.address}
+          value={"5368 Carrara Court, Saint Cloud Florida 34771"}
         />
       </View>
     )
@@ -59,7 +59,7 @@ const saveEvent = async event => {
   if (!coordinates) {
     return null
   }
-  const { displayName, uid } = currentUser()
+  const { displayName, uid, photoURL } = currentUser()
   const ref = eventsRef.push()
   const dto = {
     id: ref.key,
@@ -67,7 +67,8 @@ const saveEvent = async event => {
     coordinates,
     creator: {
       name: displayName,
-      uid
+      uid,
+      image: photoURL
     },
     attendees: {},
     createdOn: Date.now()
