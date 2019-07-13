@@ -34,6 +34,9 @@ const TabNavigation = createBottomTabNavigator(
         const { routeName } = navigation.state
         let iconSource
         switch (routeName) {
+          case "Event":
+            iconSource = Images.iconEvents
+            break
           case "FeedNavigation":
             iconSource = Images.iconHome
             break
