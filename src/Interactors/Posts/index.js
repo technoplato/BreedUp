@@ -91,7 +91,7 @@ postToGlobalFeed = async post => {
 /**
  * Returns array of posts made by user.
  *
- * Currently used on Profile view.
+ * Currently used on ProfileScreen view.
  */
 getPosts = async userId => {
   const postsSnap = await postsRef.child(userId).once("value")

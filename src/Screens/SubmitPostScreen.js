@@ -11,9 +11,9 @@ import {
 
 import { Button } from "react-native-elements"
 
-import { createPost, submitPost } from "../../Interactors/Posts"
-import DogList from "../../Components/DogList"
-import { currentUser } from "../../Utils/FirebaseUtils"
+import { createPost, submitPost } from "../Interactors/Posts"
+import DogList from "../Components/DogList"
+import { currentUser } from "../Utils/FirebaseUtils"
 
 import _ from "lodash"
 

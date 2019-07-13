@@ -7,17 +7,15 @@ import FeedStack from "../Feed"
 
 import { Images } from "../../Themes"
 
-import MyCustomSillyDrawerComponent from "../MyCustomSillyDrawerComponent"
-
-this.previousRoute = "Main"
-this.currentRoute = "Main"
+this.previousRoute = "FeedNavigation"
+this.currentRoute = "FeedNavigation"
 
 const TabNavigation = createBottomTabNavigator(
   {
     Event: {
       screen: EventStack
     },
-    Main: FeedStack,
+    FeedNavigation: FeedStack,
     Search: SearchStack,
     AddPost: {
       screen: AddPost,
@@ -25,7 +23,7 @@ const TabNavigation = createBottomTabNavigator(
         tabBarVisible: false
       }
     },
-    Profile: {
+    ProfileScreen: {
       screen: ProfileStack
     }
   },
@@ -36,7 +34,7 @@ const TabNavigation = createBottomTabNavigator(
         const { routeName } = navigation.state
         let iconSource
         switch (routeName) {
-          case "Main":
+          case "FeedNavigation":
             iconSource = Images.iconHome
             break
           case "Search":
@@ -45,7 +43,7 @@ const TabNavigation = createBottomTabNavigator(
           case "AddPost":
             iconSource = Images.iconAdd
             break
-          case "Profile":
+          case "ProfileScreen":
             iconSource = Images.iconProfile
             break
         }
@@ -66,8 +64,7 @@ const TabNavigation = createBottomTabNavigator(
     }
   },
   {
-    initialRouteName: "Main",
-    contentComponent: MyCustomSillyDrawerComponent
+    initialRouteName: "FeedNavigation"
   }
 )
 
@@ -83,8 +80,8 @@ const defaultGetStateForAction = TabNavigation.router.getStateForAction
 TabNavigation.router.getStateForAction = (action, state) => {
   switch (action.type) {
     case "Navigation/INIT":
-      this.currentRoute = "Main"
-      this.nextRoute = "Main"
+      this.currentRoute = "FeedNavigation"
+      this.nextRoute = "FeedNavigation"
       break
     case "Navigation/NAVIGATE":
       this.previousRoute = this.currentRoute
@@ -117,10 +114,11 @@ TabNavigation.router.getStateForAction = (action, state) => {
 
 // gets the current screen from navigation state
 function getActiveRouteName(navigationState) {
+  console.log("getactiveroutename")
   if (!navigationState) {
     return null
   }
-  const route = navigationState.routes[navigationState.index]
+  const route = navigationState.routes[navigationState.AddDogScreen]
   // dive into nested navigators
   if (route.routes) {
     return getActiveRouteName(route)
@@ -128,18 +126,20 @@ function getActiveRouteName(navigationState) {
   return route.routeName
 }
 
-export default () => (
-  <TabNavigation
-    onNavigationStateChange={(prevState, currentState) => {
-      const currentScreen = getActiveRouteName(currentState)
-      const prevScreen = getActiveRouteName(prevState)
-
-      if (prevScreen !== currentScreen) {
-        // the line below uses the Google Analytics tracker
-        // change the tracker here to use other Mobile analytics SDK.
-        // console.log('Current Screen:\t', currentScreen)
-        // console.log('PREVIOUS Screen:\t', prevScreen)
-      }
-    }}
-  />
-)
+// export default () => (
+export default TabNavigation
+// onNavigationStateChange={(prevState, currentState) => {
+//   const currentScreen = getActiveRouteName(currentState)
+//   const prevScreen = getActiveRouteName(prevState)
+//
+//   if (prevScreen !== currentScreen) {
+//     // the line below uses the Google Analytics tracker
+//     // change the tracker here to use other Mobile analytics SDK.
+//     // console.log('Current Screen:\t', currentScreen)
+//     // console.log('PREVIOUS Screen:\t', prevScreen)
+//   }
+// }}
+{
+  /*/>*/
+}
+// )

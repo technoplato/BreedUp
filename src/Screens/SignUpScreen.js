@@ -11,9 +11,9 @@ import { Button } from "react-native-elements"
 import firebase from "react-native-firebase"
 
 import styles from "./SignUpStyles"
-import { Images } from "../../Themes"
+import { Images } from "../Themes"
 
-export default class SignUp extends React.Component {
+export default class SignUpScreen extends React.Component {
   state = { email: "", password: "", username: "", errorMsg: null }
 
   componentDidMount = () => {
@@ -152,7 +152,7 @@ export default class SignUp extends React.Component {
           onPress={() => {
             const { email, password } = this.state
 
-            this.props.navigation.navigate("Login", {
+            this.props.navigation.navigate("LoginScreen", {
               email,
               password
             })

@@ -2,9 +2,9 @@ import React from "react"
 import { TextInput, KeyboardAvoidingView, Keyboard } from "react-native"
 import { Button } from "react-native-elements"
 
-import CommentList from "../../Components/CommentList"
-import styles from "./CommentsScreenStyles"
-import { addComment } from "../../Interactors/Comments"
+import CommentList from "../Components/CommentList"
+import styles from "../Styles/CommentsScreenStyles"
+import { addComment } from "../Interactors/Comments"
 
 export default class CommentsScreen extends React.Component {
   constructor(props) {

@@ -1,7 +1,7 @@
 import React from "react"
 
-import SubmitPostScreen from "../../Containers/SubmitPostScreen"
-import CameraModal from "../../../lib/InstagramCameraModal"
+import SubmitPostScreen from "./SubmitPostScreen"
+import CameraModal from "../../lib/InstagramCameraModal"
 
 export default class AddPostScreen extends React.Component {
   state = { modalVisible: true }

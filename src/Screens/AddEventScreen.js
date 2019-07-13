@@ -1,11 +1,11 @@
 import React, { Component } from "react"
 import { View, Text, Button, TextInput } from "react-native"
-import { eventsRef, currentUser } from "../../Utils/FirebaseUtils"
+import { eventsRef, currentUser } from "../Utils/FirebaseUtils"
 import GeoFire from "geofire"
 
-import { getCoordinatesForAddress } from "../../Utils/location"
+import { getCoordinatesForAddress } from "../Utils/location"
 
-class AddEventScreen extends Component {
+export default class AddEventScreen extends Component {
   state = {
     title: "",
     description: "",
@@ -82,5 +82,3 @@ const saveEvent = async event => {
 
   return dto
 }
-
-export default AddEventScreen

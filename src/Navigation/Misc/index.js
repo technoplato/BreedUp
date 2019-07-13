@@ -4,20 +4,20 @@ import firebase from "react-native-firebase"
 import { Text } from "react-native"
 import { Icon } from "react-native-elements"
 
-import Search from "../../Containers/Search"
-import AddPost from "../../Containers/AddPost"
-import Profile from "../../Containers/Profile"
-import AddDog from "../../Containers/AddDog"
-import ViewDog from "../../Containers/ViewDog"
+import Search from "../../Screens/SearchScreen"
+import AddPost from "../../Screens/AddPostScreen"
+import Profile from "../../Screens/ProfileScreen"
+import AddDog from "../../Screens/AddDogScreen"
+import DogDetails from "../../Screens/DogDetailsScreen"
 
-import AddEventScreen from "../../Containers/AddEventScreen"
-import EventsScreen from "../../Containers/Event"
-import ViewEventScreen from "../../Containers/ViewEventScreen"
+import AddEventScreen from "../../Screens/AddEventScreen"
+import EventsScreen from "../../Screens/EventsScreen"
+import EventDetails from "../../Screens/EventDetailsScreen"
 
 const ProfileStack = createStackNavigator({
   PrivateProfile: {
     screen: Profile,
-    navigationOptions: ({ navigation }) => ({
+    navigationOptions: ({}) => ({
       headerLeft: (
         <Text
           style={{ marginLeft: 12 }}
@@ -32,7 +32,7 @@ const ProfileStack = createStackNavigator({
     screen: AddDog
   },
   ViewDog: {
-    screen: ViewDog
+    screen: DogDetails
   }
 })
 
@@ -59,7 +59,7 @@ const SearchStack = createStackNavigator({
     screen: AddDog
   },
   ViewDog: {
-    screen: ViewDog
+    screen: DogDetails
   }
 })
 
@@ -71,7 +71,7 @@ const EventStack = createStackNavigator({
     screen: AddEventScreen
   },
   ViewEvent: {
-    screen: ViewEventScreen
+    screen: EventDetails
   }
 })
 

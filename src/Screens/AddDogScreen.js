@@ -12,12 +12,12 @@ import {
 } from "react-native"
 import { Button } from "react-native-elements"
 
-import styles from "./AddDogStyles"
-import { addDog } from "../../Interactors/Dog"
+import styles from "../Styles/AddDogStyles"
+import { addDog } from "../Interactors/Dog"
 
-import CameraModal from "../../../lib/InstagramCameraModal"
+import CameraModal from "../../lib/InstagramCameraModal"
 
-export default class AddDog extends React.Component {
+export default class AddDogScreen extends React.Component {
   state = {}
   constructor(props) {
     super(props)

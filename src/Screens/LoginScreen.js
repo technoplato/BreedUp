@@ -6,7 +6,7 @@ import { Button } from "react-native-elements"
 import firebase from "react-native-firebase"
 
 import styles from "./LoginStyles"
-import { Images } from "../../Themes"
+import { Images } from "../Themes"
 
 export default class Login extends React.Component {
   state = { email: "", password: "", errorMsg: null }
@@ -29,7 +29,7 @@ export default class Login extends React.Component {
 
       .then(data => {})
 
-      .then(() => this.props.navigation.navigate("Main"))
+      .then(() => this.props.navigation.navigate("FeedNavigation"))
       .catch(error => this.setState({ errorMsg: error.message }))
   }
 
@@ -102,7 +102,7 @@ export default class Login extends React.Component {
           onPress={() => {
             const { email, password } = this.state
 
-            this.props.navigation.navigate("SignUp", { email, password })
+            this.props.navigation.navigate("SignUpScreen", { email, password })
           }}
         />
         <Button

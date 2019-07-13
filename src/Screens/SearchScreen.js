@@ -3,7 +3,7 @@ import { View, Text, FlatList, TouchableHighlight } from "react-native"
 import { SearchBar } from "react-native-elements"
 
 import styles from "./SearchStyle"
-import { searchUser, searchDog } from "../../Interactors/Search"
+import { searchUser, searchDog } from "../Interactors/Search"
 
 const ListEmptyComponent = ({ query }) => {
   const text =

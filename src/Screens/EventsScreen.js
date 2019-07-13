@@ -2,7 +2,7 @@ import React, { Component } from "react"
 import { View } from "react-native"
 import { Button } from "react-native-elements"
 
-import EventsList from "../../Components/EventsList"
+import EventsList from "../Components/EventsList"
 
 class EventScreen extends Component {
   render() {

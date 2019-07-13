@@ -10,14 +10,14 @@ import { Button } from "react-native-elements"
 import firebase from "react-native-firebase"
 import Modal from "react-native-modal"
 
-import RoundImage from "../../Components/RoundImageView"
-import { Colors } from "../../Themes"
-import PostList from "../../Components/PostList"
-import DogList from "../../Components/DogList"
+import RoundImage from "../Components/RoundImageView"
+import { Colors } from "../Themes"
+import PostList from "../Components/PostList"
+import DogList from "../Components/DogList"
 
-import CameraModal from "../../../lib/InstagramCameraModal"
+import CameraModal from "../../lib/InstagramCameraModal"
 
-import { followUser, unfollowUser, isFollowing } from "../../Interactors/Users"
+import { followUser, unfollowUser, isFollowing } from "../Interactors/Users"
 
 export default class Profile extends React.Component {
   state = {
@@ -426,7 +426,6 @@ const styles = {
       flexDirection: "row",
       width: "100%"
     },
-    avatarContainer: {},
     textAndButtonContainer: {
       flex: 1,
       paddingRight: 12
@@ -436,7 +435,6 @@ const styles = {
       justifyContent: "space-between",
       flexDirection: "row"
     },
-
     avatarContainer: {
       margin: 12,
       height: 92,

@@ -2,10 +2,10 @@ import React from "react"
 import { Icon } from "react-native-elements"
 import { createStackNavigator } from "react-navigation"
 
-import FeedScreen from "../../Containers/FeedScreen"
-import CommentsScreen from "../../Containers/CommentsScreen"
+import FeedScreen from "../../Screens/FeedScreen"
+import CommentsScreen from "../../Screens/CommentsScreen"
 
-import Profile from "../../Containers/Profile"
+import Profile from "../../Screens/ProfileScreen"
 
 export default createStackNavigator({
   Feed: {

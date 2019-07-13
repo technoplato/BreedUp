@@ -3,7 +3,7 @@ import { createSwitchNavigator } from "react-navigation"
 import Onboarding from "./Onboarding"
 import Main from "./Main"
 
-import Fiddling from "../Containers/Fiddling"
+import Fiddling from "../Screens/Fiddling"
 
 const RootNav = createSwitchNavigator(
   {

@@ -12,14 +12,14 @@ import {
 } from "react-native"
 
 import styles from "./ViewDogStyles"
-import { updateDog } from "../../Interactors/Dog"
+import { updateDog } from "../Interactors/Dog"
 
-import CameraModal from "../../../lib/InstagramCameraModal"
+import CameraModal from "../../lib/InstagramCameraModal"
 
 import { Button } from "react-native-elements"
 import _ from "lodash"
 
-export default class AddDog extends React.Component {
+export default class DogDetailsScreen extends React.Component {
   state = {}
   constructor(props) {
     super(props)
