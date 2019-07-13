@@ -12,18 +12,20 @@ this.currentRoute = "FeedNavigation"
 
 const TabNavigation = createBottomTabNavigator(
   {
-    Event: {
-      screen: EventStack
+    // Event: {
+    //   screen: EventStack
+    // },
+    Feed: {
+      screen: FeedStack
     },
-    FeedNavigation: FeedStack,
     Search: SearchStack,
-    AddPost: {
+    Add: {
       screen: AddPost,
       navigationOptions: {
         tabBarVisible: false
       }
     },
-    ProfileScreen: {
+    Profile: {
       screen: ProfileStack
     }
   },
@@ -37,16 +39,16 @@ const TabNavigation = createBottomTabNavigator(
           case "Event":
             iconSource = Images.iconEvents
             break
-          case "FeedNavigation":
+          case "Feed":
             iconSource = Images.iconHome
             break
           case "Search":
             iconSource = Images.iconSearch
             break
-          case "AddPost":
+          case "Add":
             iconSource = Images.iconAdd
             break
-          case "ProfileScreen":
+          case "Profile":
             iconSource = Images.iconProfile
             break
         }
@@ -67,7 +69,7 @@ const TabNavigation = createBottomTabNavigator(
     }
   },
   {
-    initialRouteName: "FeedNavigation"
+    initialRouteName: "Feed"
   }
 )
 
@@ -83,8 +85,8 @@ const defaultGetStateForAction = TabNavigation.router.getStateForAction
 TabNavigation.router.getStateForAction = (action, state) => {
   switch (action.type) {
     case "Navigation/INIT":
-      this.currentRoute = "FeedNavigation"
-      this.nextRoute = "FeedNavigation"
+      this.currentRoute = "Feed"
+      this.nextRoute = "Feed"
       break
     case "Navigation/NAVIGATE":
       this.previousRoute = this.currentRoute
@@ -129,20 +131,4 @@ function getActiveRouteName(navigationState) {
   return route.routeName
 }
 
-// export default () => (
 export default TabNavigation
-// onNavigationStateChange={(prevState, currentState) => {
-//   const currentScreen = getActiveRouteName(currentState)
-//   const prevScreen = getActiveRouteName(prevState)
-//
-//   if (prevScreen !== currentScreen) {
-//     // the line below uses the Google Analytics tracker
-//     // change the tracker here to use other Mobile analytics SDK.
-//     // console.log('Current Screen:\t', currentScreen)
-//     // console.log('PREVIOUS Screen:\t', prevScreen)
-//   }
-// }}
-{
-  /*/>*/
-}
-// )

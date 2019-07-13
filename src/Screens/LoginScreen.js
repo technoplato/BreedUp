@@ -29,7 +29,7 @@ export default class Login extends React.Component {
 
       .then(data => {})
 
-      .then(() => this.props.navigation.navigate("FeedNavigation"))
+      .then(() => this.props.navigation.navigate("Feed"))
       .catch(error => this.setState({ errorMsg: error.message }))
   }
 
