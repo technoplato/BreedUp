@@ -74,7 +74,7 @@ export default class DogList extends React.Component {
    * Only possible if viewing current user's dog list.
    */
   onAddDogPress = () => {
-    this.props.navigation.navigate("AddDogScreen", {
+    this.props.navigation.navigate("AddDog", {
       userId: this.props.userId,
       onNewDogAdded: this.onNewDogAdded
     })

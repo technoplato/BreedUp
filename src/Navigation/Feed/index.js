@@ -4,12 +4,28 @@ import { createStackNavigator } from "react-navigation"
 
 import FeedScreen from "../../Screens/FeedScreen"
 import CommentsScreen from "../../Screens/CommentsScreen"
+import ChatScreen from "../../Screens/ChatScreen"
 
 import Profile from "../../Screens/ProfileScreen"
 
 export default createStackNavigator({
   Feed: {
     screen: FeedScreen
+  },
+  Chat: {
+    screen: ChatScreen,
+    navigationOptions: ({ navigation }) => ({
+      headerVisible: "false",
+      title: "CHAT",
+      headerLeft: (
+        <Icon
+          containerStyle={{ marginLeft: 12 }}
+          name="arrow-back"
+          color="#000"
+          onPress={() => navigation.goBack()}
+        />
+      )
+    })
   },
   Comments: {
     screen: CommentsScreen,

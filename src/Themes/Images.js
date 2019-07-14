@@ -5,7 +5,8 @@ const images = {
   iconHome: require("../Images/Icons/home_icon.png"),
   iconAdd: require("../Images/Icons/add_icon.png"),
   iconSearch: require("../Images/Icons/search.png"),
-  iconEvents: require("../Images/Icons/events_icon.png")
+  iconEvents: require("../Images/Icons/events_icon.png"),
+  iconLogout: require("../Images/Icons/logout_icon.png")
 }
 
 export default images

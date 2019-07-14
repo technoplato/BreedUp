@@ -152,7 +152,7 @@ export default class SignUpScreen extends React.Component {
           onPress={() => {
             const { email, password } = this.state
 
-            this.props.navigation.navigate("LoginScreen", {
+            this.props.navigation.navigate("Login", {
               email,
               password
             })

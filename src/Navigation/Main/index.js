@@ -1,14 +1,17 @@
 import React from "react"
-import { createBottomTabNavigator } from "react-navigation"
-import { Image } from "react-native"
+import {
+  createBottomTabNavigator,
+  createStackNavigator
+} from "react-navigation"
+import { Image, View } from "react-native"
 
 import { ProfileStack, AddPost, SearchStack, EventStack } from "../Misc"
 import FeedStack from "../Feed"
 
 import { Images } from "../../Themes"
 
-this.previousRoute = "FeedNavigation"
-this.currentRoute = "FeedNavigation"
+this.previousRoute = "Feed"
+this.currentRoute = "Feed"
 
 const TabNavigation = createBottomTabNavigator(
   {
