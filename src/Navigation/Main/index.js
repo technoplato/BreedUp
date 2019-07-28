@@ -12,9 +12,9 @@ this.currentRoute = "FeedNavigation"
 
 const TabNavigation = createBottomTabNavigator(
   {
-    Event: {
-      screen: EventStack
-    },
+    // Event: {
+    //   screen: EventStack
+    // },
     FeedNavigation: FeedStack,
     Search: SearchStack,
     AddPost: {
@@ -76,41 +76,49 @@ function shouldShowTabBar(navigation) {
   return !(name === "PublicProfile" || name === "ViewDog")
 }
 
-const defaultGetStateForAction = TabNavigation.router.getStateForAction
-TabNavigation.router.getStateForAction = (action, state) => {
-  switch (action.type) {
-    case "Navigation/INIT":
-      this.currentRoute = "FeedNavigation"
-      this.nextRoute = "FeedNavigation"
-      break
-    case "Navigation/NAVIGATE":
-      this.previousRoute = this.currentRoute
-      this.currentRoute = action.routeName
-      this.nextRoute = action.routeName
-      break
-    case this.currentRoute === "AddPost" && "Navigation/BACK":
-      // A little ugly of an approach, but AddPost is the tab where I'd like
-      // the special go back behavior. I still need to track state in
-      // other navigation. There has got to be a cleaner way of doing this
-      // but this works for now so going to stick with it. Cleanup later.
-      this.nextRoute = this.previousRoute
-      this.currentRoute = this.nextRoute
-      this.previousRoute = this.currentRoute
-      const index = state.routes.map(route => route.key).indexOf(this.nextRoute)
-      const newState = {
-        routes: state.routes,
-        index: index
-      }
-      return newState
-    case "Navigation/BACK":
-      this.nextRoute = this.previousRoute
-      this.currentRoute = this.nextRoute
-      this.previousRoute = this.currentRoute
-  }
-
-  const defaultStateForAction = defaultGetStateForAction(action, state)
-  return defaultStateForAction
-}
+// const defaultGetStateForAction = TabNavigation.router.getStateForAction
+// TabNavigation.router.getStateForAction = (action, state) => {
+//   return defaultGetStateForAction(action, state)
+// }
+//   switch (action.type) {
+//     case "Navigation/INIT":
+//       this.currentRoute = "FeedNavigation"
+//       this.nextRoute = "FeedNavigation"
+//       break
+//     case "Navigation/NAVIGATE":
+//       this.previousRoute = this.currentRoute
+//       this.currentRoute = action.routeName
+//       this.nextRoute = action.routeName
+//       break
+//     case this.currentRoute === "AddPost" && "Navigation/BACK":
+//       console.log(state.routes)
+//       // A little ugly of an approach, but AddPost is the tab where I'd like
+//       // the special go back behavior. I still need to track state in
+//       // other navigation. There has got to be a cleaner way of doing this
+//       // but this works for now so going to stick with it. Cleanup later.
+//       this.nextRoute = this.previousRoute
+//       this.currentRoute = this.nextRoute
+//       this.previousRoute = this.currentRoute
+//       const index = state.routes.map(route => route.key).indexOf(this.nextRoute)
+//       const newState = {
+//         routes: state.routes,
+//         index: index
+//       }
+//
+//       console.log(newState)
+//       return newState
+//     case "Navigation/BACK":
+//       this.nextRoute = this.previousRoute
+//       this.currentRoute = this.nextRoute
+//       this.previousRoute = this.currentRoute
+//   }
+//   console.log(this.currentRoute)
+//   console.log(this.nextRoute)
+//   console.log(this.previousRoute)
+//   const defaultStateForAction = defaultGetStateForAction(action, state)
+//   console.log(defaultStateForAction)
+//   return defaultStateForAction
+// }
 
 // gets the current screen from navigation state
 function getActiveRouteName(navigationState) {
@@ -121,25 +129,10 @@ function getActiveRouteName(navigationState) {
   const route = navigationState.routes[navigationState.AddDogScreen]
   // dive into nested navigators
   if (route.routes) {
+    alert("Butthole sufrfer")
     return getActiveRouteName(route)
   }
   return route.routeName
 }
 
-// export default () => (
 export default TabNavigation
-// onNavigationStateChange={(prevState, currentState) => {
-//   const currentScreen = getActiveRouteName(currentState)
-//   const prevScreen = getActiveRouteName(prevState)
-//
-//   if (prevScreen !== currentScreen) {
-//     // the line below uses the Google Analytics tracker
-//     // change the tracker here to use other Mobile analytics SDK.
-//     // console.log('Current Screen:\t', currentScreen)
-//     // console.log('PREVIOUS Screen:\t', prevScreen)
-//   }
-// }}
-{
-  /*/>*/
-}
-// )

@@ -8,7 +8,7 @@ import styles from "./LoadingStyles"
 export default class Loading extends React.Component {
   componentDidMount() {
     firebase.auth().onAuthStateChanged(user => {
-      this.props.navigation.navigate(user ? "FeedNavigation" : "SignUp")
+      this.props.navigation.navigate(user ? "Feed" : "SignUp")
     })
   }
 
