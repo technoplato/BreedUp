@@ -13,17 +13,26 @@ import DogDetails from "../../Screens/DogDetailsScreen"
 import AddEventScreen from "../../Screens/AddEventScreen"
 import EventsScreen from "../../Screens/EventsScreen"
 import EventDetails from "../../Screens/EventDetailsScreen"
+import ChatNavigation from "../../navigations/ChatNavigation"
 
 const ProfileStack = createStackNavigator({
   PrivateProfile: {
     screen: Profile,
-    navigationOptions: ({}) => ({
+    navigationOptions: ({ navigation }) => ({
       headerLeft: (
         <Text
           style={{ marginLeft: 12 }}
           onPress={() => firebase.auth().signOut()}
         >
           Sign Out
+        </Text>
+      ),
+      headerRight: (
+        <Text
+          onPress={() => navigation.navigate("Chat")}
+          style={{ marginLeft: 12 }}
+        >
+          chat
         </Text>
       )
     })
@@ -33,6 +42,9 @@ const ProfileStack = createStackNavigator({
   },
   ViewDog: {
     screen: DogDetails
+  },
+  Chat: {
+    screen: ChatNavigation
   }
 })
 
