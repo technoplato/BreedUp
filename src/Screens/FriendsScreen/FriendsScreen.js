@@ -61,19 +61,19 @@ class FriendsScreen extends React.Component {
     this.heAcceptedFriendshipsRef = firebase
       .firestore()
       .collection("friendships")
-      .where("user1", "==", this.props.user.id)
+      .where("user1", "==", firebase.auth().currentUser.uid)
     this.heAcceptedFriendshipssUnsubscribe = null
 
     this.iAcceptedFriendshipsRef = firebase
       .firestore()
       .collection("friendships")
-      .where("user2", "==", this.props.user.id)
+      .where("user2", "==", firebase.auth().currentUser.uid)
     this.iAcceptedFriendshipssUnsubscribe = null
 
     this.toMePendingFriendshipsRef = firebase
       .firestore()
       .collection("pending_friendships")
-      .where("user2", "==", this.props.user.id)
+      .where("user2", "==", firebase.auth().currentUser.uid)
     this.toMePendingFriendshipssUnsubscribe = null
   }
 
@@ -255,7 +255,7 @@ class FriendsScreen extends React.Component {
   onAccept = item => {
     const data = {
       user1: item.id,
-      user2: this.props.user.id
+      user2: firebase.auth().currentUser.uid
     }
 
     firebase
@@ -283,12 +283,12 @@ class FriendsScreen extends React.Component {
   }
 
   onPressFriend = friend => {
-    let id1 = this.props.user.id
+    let id1 = firebase.auth().currentUser.uid
     let id2 = friend.id
     let channel = {
       name: friend.firstName,
       id: id1 < id2 ? id1 + id2 : id2 + id1,
-      participants: [this.props.user, friend]
+      participants: [firebase.auth().currentUser, friend]
     }
 
     this.props.navigation.navigate("Chat", { channel: channel })
@@ -326,8 +326,4 @@ class FriendsScreen extends React.Component {
   }
 }
 
-const mapStateToProps = state => ({
-  user: state.auth.user
-})
-
-export default connect(mapStateToProps)(FriendsScreen)
+export default FriendsScreen

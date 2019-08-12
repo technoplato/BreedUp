@@ -503,8 +503,4 @@ class HomeScreen extends React.Component {
   }
 }
 
-const mapStateToProps = state => ({
-  user: state.auth.user
-})
-
-export default connect(mapStateToProps)(HomeScreen)
+export default HomeScreen

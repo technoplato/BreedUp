@@ -1,9 +1,9 @@
 import { createStackNavigator } from "react-navigation"
 import AppStyles from "../AppStyles"
-import ChatScreen from "../screens/ChatScreen/ChatScreen"
-import SearchScreen from "../screens/SearchScreen/SearchScreen"
-import FriendsScreen from "../screens/FriendsScreen/FriendsScreen"
-import ChatHomeScreen from "../screens/HomeScreen/HomeScreen"
+import ChatScreen from "../Screens/ChatScreen/ChatScreen"
+import SearchScreen from "../Screens/SearchScreen/SearchScreen"
+import FriendsScreen from "../Screens/FriendsScreen/FriendsScreen"
+import ChatHomeScreen from "../Screens/HomeScreen/HomeScreen"
 import styles from "./styles"
 
 const ChatNavigation = createStackNavigator(

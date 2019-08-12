@@ -86,9 +86,9 @@ class ChatScreen extends React.Component {
     for (let i = 0; i < messages.length; i++) {
       const temp = messages[i]
       if (
-        newMessage.senderID == temp.senderID &&
-        temp.content == newMessage.content &&
-        temp.created == newMessage.created
+        newMessage.senderID === temp.senderID &&
+        temp.content === newMessage.content &&
+        temp.created === newMessage.created
       ) {
         return true
       }
@@ -112,20 +112,20 @@ class ChatScreen extends React.Component {
   }
 
   onSettingActionDone = index => {
-    if (index == 0) {
+    if (index === 0) {
       this.showRenameDialog(true)
-    } else if (index == 1) {
+    } else if (index === 1) {
       this.onLeave()
     }
   }
 
   onConfirmActionDone = index => {
-    if (index == 0) {
+    if (index === 0) {
       firebase
         .firestore()
         .collection("channel_participation")
         .where("channel", "==", this.state.channel.id)
-        .where("user", "==", this.props.user.id)
+        .where("user", "==", firebase.auth().currentUser)
         .get()
         .then(querySnapshot => {
           querySnapshot.forEach(function(doc) {
@@ -156,8 +156,6 @@ class ChatScreen extends React.Component {
         source: {
           uri: url
         }
-        // width: 806,
-        // height: 720,
       }
     ]
     this.setState({
@@ -168,13 +166,18 @@ class ChatScreen extends React.Component {
 
   createOne2OneChannel = () => {
     const channelData = {
-      creator_id: this.props.user.id,
+      creator_id: firebase.auth().currentUser.uid,
       name: "",
       lastMessage: this.state.input,
       lastMessageDate: new Date()
     }
 
-    const { id, firstName, profilePictureURL } = this.props.user
+    const { uid, displayName, profileURL } = firebase.auth().currentUser
+
+    // const { id, firstName, profilePictureURL } = this.props.user
+    const id = uid
+    const firstName = displayName
+    const profilePictureURL = profileURL
 
     const that = this
 
@@ -270,7 +273,13 @@ class ChatScreen extends React.Component {
     if (!this.state.channel.id) {
       this.createOne2OneChannel()
     } else {
-      const { id, firstName, profilePictureURL } = this.props.user
+      const { uid, displayName, profileURL } = firebase.auth().currentUser
+
+      // const { id, firstName, profilePictureURL } = this.props.user
+      const id = uid
+      const firstName = displayName
+      const profilePictureURL = profileURL
+
       const created = Date.now()
       this.state.channel.participants.forEach(friend => {
         const data = {
@@ -334,7 +343,12 @@ class ChatScreen extends React.Component {
       }
     }
 
-    const { id, firstName, profilePictureURL } = this.props.user
+    const { uid, displayName, profileURL } = firebase.auth().currentUser
+
+    // const { id, firstName, profilePictureURL } = this.props.user
+    const id = uid
+    const firstName = displayName
+    const profilePictureURL = profileURL
 
     ImagePicker.showImagePicker(options, response => {
       if (response.didCancel) {
@@ -395,9 +409,9 @@ class ChatScreen extends React.Component {
 
   renderChatItem = ({ item }) => (
     <TouchableOpacity onPress={() => this.onPressChat(item)}>
-      {item.senderID == this.props.user.id && (
+      {item.senderID === firebase.auth().currentUser.uid && (
         <View style={styles.sendItemContainer}>
-          {item.url != "" && (
+          {item.url !== "" && (
             <View
               style={[
                 styles.itemContent,
@@ -411,7 +425,7 @@ class ChatScreen extends React.Component {
               />
             </View>
           )}
-          {item.url == "" && (
+          {item.url === "" && (
             <View style={[styles.itemContent, styles.sendItemContent]}>
               <Autolink
                 style={styles.sendTextMessage}
@@ -430,14 +444,14 @@ class ChatScreen extends React.Component {
           )}
         </View>
       )}
-      {item.senderID != this.props.user.id && (
+      {item.senderID !== firebase.auth().currentUser.uid && (
         <View style={styles.receiveItemContainer}>
           <ChatIconView
             style={styles.userIcon}
             imageStyle={styles.userIcon}
             participants={[item]}
           />
-          {item.url != "" && (
+          {item.url !== "" && (
             <View
               style={[
                 styles.itemContent,
@@ -451,7 +465,7 @@ class ChatScreen extends React.Component {
               />
             </View>
           )}
-          {item.url == "" && (
+          {item.url === "" && (
             <View style={[styles.itemContent, styles.receiveItemContent]}>
               <Autolink
                 style={styles.receiveTextMessage}
@@ -563,8 +577,4 @@ class ChatScreen extends React.Component {
   }
 }
 
-const mapStateToProps = state => ({
-  user: state.auth.user
-})
-
-export default connect(mapStateToProps)(ChatScreen)
+export default ChatScreen
