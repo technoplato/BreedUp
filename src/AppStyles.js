@@ -50,32 +50,32 @@ const _sizeSet = {
   radius: 25
 }
 
-// const _iconSet = {
-//   add_user: require("../assets/icons/add-user-icon.png"),
-//   add_user_filled: require("../assets/icons/add-user-icon-filled.png"),
-//   camera_filled: require("../assets/icons/camera-filled-icon.png"),
-//   camera: require("../assets/icons/camera-icon.png"),
-//   chat: require("../assets/icons/chat-icon.png"),
-//   close: require("../assets/icons/close-x-icon.png"),
-//   checked: require("../assets/icons/checked-icon.png"),
-//   delete: require("../assets/icons/delete.png"),
-//   friends: require("../assets/icons/friends-icon.png"),
-//   inscription: require("../assets/icons/inscription-icon.png"),
-//   menu: require("../assets/icons/menu.png"),
-//   private_chat: require("../assets/icons/private-chat-icon.png"),
-//   search: require("../assets/icons/search-icon.png"),
-//   profile: require("../assets/icons/profile.png"),
-//   users: require("../assets/icons/users.png"),
-//   user: require("../assets/icons/user.png"),
-//   share: require("../assets/icons/share-icon.png"),
-//   mail: require("../assets/icons/mail.png"),
-//   lock: require("../assets/icons/lock.png"),
-//   edit: require("../assets/icons/edit.png"),
-//   // defaultUser: require('../assets/icons/default_user.jpg'),
-//   logout: require("../assets/icons/shutdown.png"),
-//   userAvatar: require("../assets/icons/default-avatar.jpg"),
-//   addCamera: require("../assets/icons/add-camera.png")
-// }
+const _iconSet = {
+  add_user: require("../assets/icons/add-user-icon.png"),
+  add_user_filled: require("../assets/icons/add-user-icon-filled.png"),
+  camera_filled: require("../assets/icons/camera-filled-icon.png"),
+  camera: require("../assets/icons/camera-icon.png"),
+  chat: require("../assets/icons/chat-icon.png"),
+  close: require("../assets/icons/close-x-icon.png"),
+  checked: require("../assets/icons/checked-icon.png"),
+  delete: require("../assets/icons/delete.png"),
+  friends: require("../assets/icons/friends-icon.png"),
+  inscription: require("../assets/icons/inscription-icon.png"),
+  menu: require("../assets/icons/menu.png"),
+  private_chat: require("../assets/icons/private-chat-icon.png"),
+  search: require("../assets/icons/search-icon.png"),
+  profile: require("../assets/icons/profile.png"),
+  users: require("../assets/icons/users.png"),
+  user: require("../assets/icons/user.png"),
+  share: require("../assets/icons/share-icon.png"),
+  mail: require("../assets/icons/mail.png"),
+  lock: require("../assets/icons/lock.png"),
+  edit: require("../assets/icons/edit.png"),
+  // defaultUser: require("../assets/icons/default_user.jpg"),
+  logout: require("../assets/icons/shutdown.png"),
+  userAvatar: require("../assets/icons/default-avatar.jpg"),
+  addCamera: require("../assets/icons/add-camera.png")
+}
 
 const _styleSet = {
   menuBtn: {
@@ -146,7 +146,7 @@ const _functions = {
 
 const StyleDict = {
   colorSet: _colorSet,
-  // iconSet: _iconSet,
+  iconSet: _iconSet,
   sizeSet: _sizeSet,
   fontSet: _fontSet,
   styleSet: _styleSet,
