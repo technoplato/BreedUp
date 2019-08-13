@@ -14,13 +14,12 @@ import firebase from "react-native-firebase"
 import ImagePicker from "react-native-image-picker"
 import ActionSheet from "react-native-actionsheet"
 import { KeyboardAwareView } from "react-native-keyboard-aware-view"
-import { connect } from "react-redux"
 import Icon from "react-native-vector-icons/FontAwesome"
 import LinearGradient from "react-native-linear-gradient"
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view"
 import ImageView from "react-native-image-view"
 import AppStyles from "../../AppStyles"
-import ProfileItem from "../../components/ProfileItem/ProfileItem"
+import ProfileItem from "../../Components/ProfileItem/ProfileItem"
 import styles from "./styles"
 
 const regexForNames = /^[a-zA-Z]{2,25}$/
@@ -629,7 +628,7 @@ const mapStateToProps = state => ({
   user: state.auth.user
 })
 
-export default connect(mapStateToProps)(MyProfileScreen)
+export default MyProfileScreen
 
 // export default MyProfileScreen;
 // AppStyles.iconSet.share

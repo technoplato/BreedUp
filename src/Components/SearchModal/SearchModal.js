@@ -10,7 +10,6 @@ import {
 } from "react-native"
 import { SearchBar } from "react-native-elements"
 import FastImage from "react-native-fast-image"
-import { connect } from "react-redux"
 import TextButton from "react-native-button"
 import firebase from "react-native-firebase"
 import { SafeAreaView } from "react-navigation"
@@ -354,8 +353,4 @@ class SearchModal extends React.Component {
   }
 }
 
-const mapStateToProps = state => ({
-  user: state.auth.user
-})
-
-export default connect(mapStateToProps)(SearchModal)
+export default SearchModal

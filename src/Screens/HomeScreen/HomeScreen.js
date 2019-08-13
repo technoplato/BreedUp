@@ -12,9 +12,9 @@ import firebase from "react-native-firebase"
 import Icon from "react-native-vector-icons/Ionicons"
 
 import AppStyles from "../../AppStyles"
-import ChatIconView from "../../components/ChatIconView/ChatIconView"
-import SearchModal from "../../components/SearchModal/SearchModal"
-import CreateGroupModal from "../../components/CreateGroupModal/CreateGroupModal"
+import ChatIconView from "../../Components/ChatIconView/ChatIconView"
+import SearchModal from "../../Components/SearchModal/SearchModal"
+import CreateGroupModal from "../../Components/CreateGroupModal/CreateGroupModal"
 import styles from "./styles"
 
 class HomeScreen extends React.Component {

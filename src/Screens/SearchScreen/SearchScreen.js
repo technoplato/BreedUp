@@ -10,7 +10,7 @@ import {
 import { SearchBar } from "react-native-elements"
 import TextButton from "react-native-button"
 import firebase from "react-native-firebase"
-import ChatIconView from "../../components/ChatIconView/ChatIconView"
+import ChatIconView from "../../Components/ChatIconView/ChatIconView"
 import AppStyles from "../../AppStyles"
 import styles from "./styles"
 

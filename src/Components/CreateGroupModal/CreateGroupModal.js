@@ -8,7 +8,6 @@ import {
   View
 } from "react-native"
 import FastImage from "react-native-fast-image"
-import { connect } from "react-redux"
 import TextButton from "react-native-button"
 import firebase from "react-native-firebase"
 import DialogInput from "react-native-dialog-input"
@@ -271,8 +270,4 @@ class CreateGroupModal extends React.Component {
   }
 }
 
-const mapStateToProps = state => ({
-  user: state.auth.user
-})
-
-export default connect(mapStateToProps)(CreateGroupModal)
+export default CreateGroupModal

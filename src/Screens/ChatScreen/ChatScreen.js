@@ -16,7 +16,7 @@ import { SafeAreaView } from "react-navigation"
 import { KeyboardAwareView } from "react-native-keyboard-aware-view"
 import ImageView from "react-native-image-view"
 import Autolink from "react-native-autolink"
-import ChatIconView from "../../components/ChatIconView/ChatIconView"
+import ChatIconView from "../../Components/ChatIconView/ChatIconView"
 import AppStyles from "../../AppStyles"
 import styles from "./styles"
 
