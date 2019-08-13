@@ -155,13 +155,13 @@ class MyProfileScreen extends React.Component {
       tappedImage: [],
       isIntialFieldsUpdate: true
     }
-    console.log(this.props.user.id)
+    console.log(firebase.auth().currentUser.uid)
 
     this.changedFields = []
     this.userRef = firebase
       .firestore()
       .collection("users")
-      .doc(this.props.user.id)
+      .doc(firebase.auth().currentUser.uid)
 
     this.unsubscribeUser = null
   }

@@ -10,6 +10,7 @@ import {
 } from "react-native"
 import firebase from "react-native-firebase"
 import Icon from "react-native-vector-icons/Ionicons"
+import { Icon as Icon2 } from "react-native-elements"
 
 import AppStyles from "../../AppStyles"
 import ChatIconView from "../../Components/ChatIconView/ChatIconView"
@@ -21,17 +22,14 @@ class HomeScreen extends React.Component {
   static navigationOptions = ({ navigation }) => ({
     title: "Chats",
     headerLeft: (
-      <TouchableOpacity
-        style={AppStyles.styleSet.menuBtn.container}
+      <Icon2
+        containerStyle={{ marginLeft: 12 }}
+        name="arrow-back"
+        color="#000"
         onPress={() => {
-          navigation.openDrawer()
+          navigation.goBack(null)
         }}
-      >
-        <Image
-          style={AppStyles.styleSet.menuBtn.icon}
-          source={AppStyles.iconSet.menu}
-        />
-      </TouchableOpacity>
+      />
     ),
     headerRight: (
       <TouchableOpacity
@@ -63,7 +61,6 @@ class HomeScreen extends React.Component {
     this.userRef = firebase.firestore().collection("users")
 
     this.heAcceptedFriendshipsRef = firebase
-      .firestore()
       .firestore()
       .collection("friendships")
       .where("user1", "==", firebase.auth().currentUser.uid)
@@ -141,7 +138,9 @@ class HomeScreen extends React.Component {
     self.onTokenRefreshListener = firebase
       .messaging()
       .onTokenRefresh(fcmToken => {
-        self.userRef.doc(self.props.user.id).update({ pushToken: fcmToken })
+        self.userRef
+          .doc(firebase.auth().currentUser.uid)
+          .update({ pushToken: fcmToken })
       })
 
     self.props.navigation.setParams({

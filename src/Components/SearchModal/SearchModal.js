@@ -32,25 +32,25 @@ class SearchModal extends React.Component {
     this.heAcceptedFriendshipsRef = firebase
       .firestore()
       .collection("friendships")
-      .where("user1", "==", this.props.user.id)
+      .where("user1", "==", firebase.auth().currentUser.uid)
     this.heAcceptedFriendshipssUnsubscribe = null
 
     this.iAcceptedFriendshipsRef = firebase
       .firestore()
       .collection("friendships")
-      .where("user2", "==", this.props.user.id)
+      .where("user2", "==", firebase.auth().currentUser.uid)
     this.iAcceptedFriendshipssUnsubscribe = null
 
     this.toMePendingFriendshipsRef = firebase
       .firestore()
       .collection("pending_friendships")
-      .where("user2", "==", this.props.user.id)
+      .where("user2", "==", firebase.auth().currentUser.uid)
     this.toMePendingFriendshipssUnsubscribe = null
 
     this.toHimPendingFriendshipsRef = firebase
       .firestore()
       .collection("pending_friendships")
-      .where("user1", "==", this.props.user.id)
+      .where("user1", "==", firebase.auth().currentUser.uid)
     this.toHimPendingFriendshipssUnsubscribe = null
 
     this.state = {
@@ -152,7 +152,7 @@ class SearchModal extends React.Component {
       })
       if (temp.length > 0) {
         user.pendingId = temp[0].id
-        if (temp[0].user1 == this.props.user.id) {
+        if (temp[0].user1 == firebase.auth().currentUser.uid) {
           user.pending = REQUEST_TO_HIM
         } else {
           user.pending = REQUEST_TO_ME
@@ -174,7 +174,7 @@ class SearchModal extends React.Component {
     const data = []
     querySnapshot.forEach(doc => {
       const user = doc.data()
-      if (doc.id != this.props.user.id) {
+      if (doc.id != firebase.auth().currentUser.uid) {
         data.push({ ...user, id: doc.id })
       }
     })
@@ -215,7 +215,7 @@ class SearchModal extends React.Component {
 
   onAdd = item => {
     const data = {
-      user1: this.props.user.id,
+      user1: firebase.auth().currentUser.uid,
       user2: item.id,
       created_at: firebase.firestore.FieldValue.serverTimestamp()
     }
@@ -235,7 +235,7 @@ class SearchModal extends React.Component {
   onAccept = item => {
     const data = {
       user1: item.id,
-      user2: this.props.user.id
+      user2: firebase.auth().currentUser.uid
     }
     Keyboard.dismiss()
 

@@ -29,7 +29,7 @@ const ProfileStack = createStackNavigator({
       ),
       headerRight: (
         <Text
-          onPress={() => navigation.navigate("Chat")}
+          onPress={() => navigation.navigate("ChatHome")}
           style={{ marginLeft: 12 }}
         >
           chat
@@ -43,8 +43,11 @@ const ProfileStack = createStackNavigator({
   ViewDog: {
     screen: DogDetails
   },
-  Chat: {
-    screen: ChatNavigation
+  ChatHome: {
+    screen: ChatNavigation,
+    navigationOptions: ({}) => ({
+      header: null
+    })
   }
 })
 

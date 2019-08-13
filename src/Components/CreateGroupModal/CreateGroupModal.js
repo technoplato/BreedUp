@@ -32,13 +32,13 @@ class CreateGroupModal extends React.Component {
     this.heAcceptedFriendshipsRef = firebase
       .firestore()
       .collection("friendships")
-      .where("user1", "==", this.props.user.id)
+      .where("user1", "==", firebase.auth().currentUser.uid)
     this.heAcceptedFriendshipssUnsubscribe = null
 
     this.iAcceptedFriendshipsRef = firebase
       .firestore()
       .collection("friendships")
-      .where("user2", "==", this.props.user.id)
+      .where("user2", "==", firebase.auth().currentUser.uid)
     this.iAcceptedFriendshipssUnsubscribe = null
   }
 
@@ -152,7 +152,7 @@ class CreateGroupModal extends React.Component {
 
   onSubmitName = text => {
     const channelData = {
-      creator_id: this.props.user.id,
+      creator_id: firebase.auth().currentUser.uid,
       name: text,
       lastMessage: "Created Group",
       lastMessageDate: firebase.firestore.FieldValue.serverTimestamp()
