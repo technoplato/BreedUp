@@ -266,6 +266,14 @@ export default class Profile extends React.Component {
       .then(snapshot => snapshot.downloadURL)
       .then(url => {
         updatedUrl = url
+        firebase
+          .firestore()
+          .collection("users")
+          .doc(id)
+          .update({
+            profileURL: updatedUrl,
+            photoURL: updatedUrl
+          })
         return currentUserProfileRef.update({
           profileURL: updatedUrl,
           photoURL: updatedUrl
