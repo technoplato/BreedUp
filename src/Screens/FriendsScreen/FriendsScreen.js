@@ -206,8 +206,8 @@ class FriendsScreen extends React.Component {
     if (keyword) {
       return this.state.users.filter(user => {
         return (
-          user.firstName &&
-          user.firstName.toLowerCase().indexOf(keyword.toLowerCase()) >= 0
+          user.username &&
+          user.username.toLowerCase().indexOf(keyword.toLowerCase()) >= 0
         )
       })
     }
@@ -285,7 +285,7 @@ class FriendsScreen extends React.Component {
     let id1 = firebase.auth().currentUser.uid
     let id2 = friend.id
     let channel = {
-      name: friend.firstName,
+      name: friend.username,
       id: id1 < id2 ? id1 + id2 : id2 + id1,
       participants: [firebase.auth().currentUser, friend]
     }
@@ -301,7 +301,7 @@ class FriendsScreen extends React.Component {
           imageStyle={styles.photo}
           participants={[item]}
         />
-        <Text style={styles.name}>{item.firstName}</Text>
+        <Text style={styles.name}>{item.username}</Text>
         <TextButton style={styles.add} onPress={() => this.onTapBtn(item)}>
           {this.getBtnText(item)}
         </TextButton>

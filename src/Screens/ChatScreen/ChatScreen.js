@@ -2,6 +2,7 @@ import React from "react"
 import {
   FlatList,
   Image,
+  Text,
   Platform,
   TextInput,
   TouchableOpacity,
@@ -26,7 +27,7 @@ class ChatScreen extends React.Component {
     let isOne2OneChannel = false
     if (!title) {
       isOne2OneChannel = true
-      title = navigation.state.params.channel.participants[0].firstName
+      title = navigation.state.params.channel.participants[0].username
     }
     const options = {
       title
@@ -54,8 +55,6 @@ class ChatScreen extends React.Component {
       channel,
       threads: [],
       input: "",
-      photo: "null",
-      downloadUrl: "",
       isImageViewerVisible: false,
       tappedImage: []
     }
@@ -146,6 +145,7 @@ class ChatScreen extends React.Component {
 
   onPressChat = chat => {
     if (chat.url !== "") {
+      console.log("onPressChat")
       this.displayChatImage(chat.url)
     }
   }
@@ -172,13 +172,7 @@ class ChatScreen extends React.Component {
       lastMessageDate: new Date()
     }
 
-    const { uid, displayName, profileURL } = firebase.auth().currentUser
-
-    // const { id, firstName, profilePictureURL } = this.props.user
-    const id = uid
-    const firstName = displayName
-    const profilePictureURL = profileURL
-
+    const { uid, displayName, photoURL } = firebase.auth().currentUser
     const that = this
 
     firebase
@@ -192,7 +186,7 @@ class ChatScreen extends React.Component {
 
         const participationData = {
           channel: docRef.id,
-          user: that.props.user.id
+          user: firebase.auth().currentUser.uid
         }
         firebase
           .firestore()
@@ -202,7 +196,7 @@ class ChatScreen extends React.Component {
         channelData.participants.forEach(friend => {
           const participationData = {
             channel: docRef.id,
-            user: friend.id
+            user: friend.uid
           }
           firebase
             .firestore()
@@ -212,15 +206,12 @@ class ChatScreen extends React.Component {
           const data = {
             content: that.state.input,
             created,
-            recipientFirstName: friend.firstName,
-            recipientID: friend.id,
-            recipientLastName: "",
-            recipientProfilePictureURL: friend.profilePictureURL,
-            senderFirstName: firstName,
-            senderID: id,
-            senderLastName: "",
-            senderProfilePictureURL: profilePictureURL,
-            url: that.state.downloadUrl
+            recipientID: friend.uid,
+            recipientProfileURL: friend.photoURL,
+            senderUsername: displayName,
+            senderID: uid,
+            senderProfileURL: photoURL
+            // url: that.state.downloadUrl
           }
 
           firebase
@@ -247,53 +238,47 @@ class ChatScreen extends React.Component {
           that.onThreadsCollectionUpdate
         )
 
-        that.setState({ input: "", downloadUrl: "", photo: "" })
+        that.setState({ input: "" })
       })
       .catch(function(error) {
         alert(error)
       })
   }
 
-  uploadPromise = () => {
-    const uri = this.state.photo
-    return new Promise((resolve, reject) => {
-      const filename = uri.substring(uri.lastIndexOf("/") + 1)
-      const uploadUri = Platform.OS === "ios" ? uri.replace("file://", "") : uri
-      firebase
-        .storage()
-        .ref(filename)
-        .putFile(uploadUri)
-        .then(function(snapshot) {
-          resolve(snapshot.downloadURL)
-        })
-    })
-  }
+  // uploadPromise = () => {
+  //   const uri = this.state.photo
+  //   return new Promise((resolve, reject) => {
+  //     const filename = uri.substring(uri.lastIndexOf("/") + 1)
+  //     const uploadUri = Platform.OS === "ios" ? uri.replace("file://", "") : uri
+  //     firebase
+  //       .storage()
+  //       .ref(filename)
+  //       .putFile(uploadUri)
+  //       .then(function(snapshot) {
+  //         resolve(snapshot.downloadURL)
+  //       })
+  //   })
+  // }
 
   _send = () => {
     if (!this.state.channel.id) {
       this.createOne2OneChannel()
     } else {
-      const { uid, displayName, profileURL } = firebase.auth().currentUser
-
-      // const { id, firstName, profilePictureURL } = this.props.user
-      const id = uid
-      const firstName = displayName
-      const profilePictureURL = profileURL
+      const { uid, displayName, photoURL } = firebase.auth().currentUser
+      console.log(firebase.auth().currentUser)
 
       const created = Date.now()
       this.state.channel.participants.forEach(friend => {
         const data = {
           content: this.state.input,
           created,
-          recipientFirstName: friend.firstName,
-          recipientID: friend.id,
-          recipientLastName: "",
-          recipientProfilePictureURL: friend.profilePictureURL,
-          senderFirstName: firstName,
-          senderID: id,
-          senderLastName: "",
-          senderProfilePictureURL: profilePictureURL,
-          url: this.state.downloadUrl
+          recipientFirstName: friend.username,
+          recipientID: friend.uid,
+          recipientProfileURL: friend.photoURL,
+          senderUsername: displayName,
+          senderID: uid,
+          senderProfileURL: photoURL
+          // url: this.state.downloadUrl
         }
 
         firebase
@@ -310,7 +295,8 @@ class ChatScreen extends React.Component {
           })
       })
 
-      let lastMessage = this.state.downloadUrl
+      // let lastMessage = this.state.downloadUrl
+      let lastMessage
       if (!lastMessage) {
         lastMessage = this.state.input
       }
@@ -326,7 +312,7 @@ class ChatScreen extends React.Component {
         .collection("channels")
         .doc(this.state.channel.id)
         .set(channel)
-      this.setState({ input: "", downloadUrl: "", photo: "" })
+      this.setState({ input: "" })
     }
   }
 
@@ -334,52 +320,45 @@ class ChatScreen extends React.Component {
     this._send()
   }
 
-  onSelect = () => {
-    const options = {
-      title: "Select a photo",
-      storageOptions: {
-        skipBackup: true,
-        path: "images"
-      }
-    }
-
-    const { uid, displayName, profileURL } = firebase.auth().currentUser
-
-    // const { id, firstName, profilePictureURL } = this.props.user
-    const id = uid
-    const firstName = displayName
-    const profilePictureURL = profileURL
-
-    ImagePicker.showImagePicker(options, response => {
-      if (response.didCancel) {
-        console.log("User cancelled image picker")
-      } else if (response.error) {
-        console.log("ImagePicker Error: ", response.error)
-      } else if (response.customButton) {
-        console.log("User tapped custom button: ", response.customButton)
-      } else {
-        const data = {
-          content: "",
-          created: Date.now(),
-          senderFirstName: firstName,
-          senderID: id,
-          senderLastName: "",
-          senderProfilePictureURL: profilePictureURL,
-          url: "http://fake"
-        }
-
-        this.setState({
-          photo: response.uri,
-          threads: [data, ...this.state.threads]
-        })
-
-        this.uploadPromise().then(url => {
-          this.setState({ downloadUrl: url })
-          this._send()
-        })
-      }
-    })
-  }
+  // onSelect = () => {
+  //   const options = {
+  //     title: "Select a photo",
+  //     storageOptions: {
+  //       skipBackup: true,
+  //       path: "images"
+  //     }
+  //   }
+  //
+  //   const { uid, displayName, photoURL } = firebase.auth().currentUser
+  //
+  //   ImagePicker.showImagePicker(options, response => {
+  //     if (response.didCancel) {
+  //       console.log("User cancelled image picker")
+  //     } else if (response.error) {
+  //       console.log("ImagePicker Error: ", response.error)
+  //     } else if (response.customButton) {
+  //       console.log("User tapped custom button: ", response.customButton)
+  //     } else {
+  //       const data = {
+  //         content: "",
+  //         created: Date.now(),
+  //         senderFirstName: displayName,
+  //         senderID: uid,
+  //         senderProfileURL: photoURL
+  //       }
+  //
+  //       this.setState({
+  //         photo: response.uri,
+  //         threads: [data, ...this.state.threads]
+  //       })
+  //
+  //       this.uploadPromise().then(url => {
+  //         this.setState({ downloadUrl: url })
+  //         this._send()
+  //       })
+  //     }
+  //   })
+  // }
 
   showRenameDialog = show => {
     this.setState({ isRenameDialogVisible: show })
@@ -407,25 +386,25 @@ class ChatScreen extends React.Component {
       })
   }
 
-  renderChatItem = ({ item }) => (
-    <TouchableOpacity onPress={() => this.onPressChat(item)}>
-      {item.senderID === firebase.auth().currentUser.uid && (
-        <View style={styles.sendItemContainer}>
-          {item.url !== "" && (
-            <View
-              style={[
-                styles.itemContent,
-                styles.sendItemContent,
-                { padding: 0 }
-              ]}
-            >
-              <Image
-                style={styles.sendPhotoMessage}
-                source={{ uri: item.url }}
-              />
-            </View>
-          )}
-          {item.url === "" && (
+  renderChatItem = ({ item }) => {
+    return (
+      <TouchableOpacity onPress={() => this.onPressChat(item)}>
+        {item.senderID === firebase.auth().currentUser.uid && (
+          <View style={styles.sendItemContainer}>
+            {/*{item.url !== "" && (*/}
+            {/*  <View*/}
+            {/*    style={[*/}
+            {/*      styles.itemContent,*/}
+            {/*      styles.sendItemContent,*/}
+            {/*      { padding: 0 }*/}
+            {/*    ]}*/}
+            {/*  >*/}
+            {/*    <Image*/}
+            {/*      style={styles.sendPhotoMessage}*/}
+            {/*      source={{ uri: item.url }}*/}
+            {/*    />*/}
+            {/*  </View>*/}
+            {/*)}*/}
             <View style={[styles.itemContent, styles.sendItemContent]}>
               <Autolink
                 style={styles.sendTextMessage}
@@ -434,38 +413,37 @@ class ChatScreen extends React.Component {
                 phone={false}
               />
             </View>
-          )}
-          {item.senderProfilePictureURL !== null && (
+            {item.senderProfileURL != null && (
+              <ChatIconView
+                style={styles.userIcon}
+                imageStyle={styles.userIcon}
+                participants={[item]}
+              />
+            )}
+          </View>
+        )}
+        {item.senderID !== firebase.auth().currentUser.uid && (
+          <View style={styles.receiveItemContainer}>
             <ChatIconView
               style={styles.userIcon}
               imageStyle={styles.userIcon}
               participants={[item]}
             />
-          )}
-        </View>
-      )}
-      {item.senderID !== firebase.auth().currentUser.uid && (
-        <View style={styles.receiveItemContainer}>
-          <ChatIconView
-            style={styles.userIcon}
-            imageStyle={styles.userIcon}
-            participants={[item]}
-          />
-          {item.url !== "" && (
-            <View
-              style={[
-                styles.itemContent,
-                styles.receiveItemContent,
-                { padding: 0 }
-              ]}
-            >
-              <Image
-                style={styles.receivePhotoMessage}
-                source={{ uri: item.url }}
-              />
-            </View>
-          )}
-          {item.url === "" && (
+            {/*{item.url !== "" && (*/}
+            {/*  <View*/}
+            {/*    style={[*/}
+            {/*      styles.itemContent,*/}
+            {/*      styles.receiveItemContent,*/}
+            {/*      { padding: 0 }*/}
+            {/*    ]}*/}
+            {/*  >*/}
+            {/*    <Image*/}
+            {/*      style={styles.receivePhotoMessage}*/}
+            {/*      source={{ uri: item.url }}*/}
+            {/*    />*/}
+            {/*  </View>*/}
+            {/*)}*/}
+
             <View style={[styles.itemContent, styles.receiveItemContent]}>
               <Autolink
                 style={styles.receiveTextMessage}
@@ -474,11 +452,11 @@ class ChatScreen extends React.Component {
                 phone={false}
               />
             </View>
-          )}
-        </View>
-      )}
-    </TouchableOpacity>
-  )
+          </View>
+        )}
+      </TouchableOpacity>
+    )
+  }
 
   isDisable = () => {
     return !this.state.input
@@ -508,15 +486,15 @@ class ChatScreen extends React.Component {
           />
 
           <View style={styles.inputBar}>
-            <TouchableOpacity
-              style={styles.btnContainer}
-              onPress={this.onSelect}
-            >
-              <Image
-                style={styles.icon}
-                source={AppStyles.iconSet.camera_filled}
-              />
-            </TouchableOpacity>
+            {/*<TouchableOpacity*/}
+            {/*  style={styles.btnContainer}*/}
+            {/*  onPress={this.onSelect}*/}
+            {/*>*/}
+            {/*  <Image*/}
+            {/*    style={styles.icon}*/}
+            {/*    source={AppStyles.iconSet.camera_filled}*/}
+            {/*  />*/}
+            {/*</TouchableOpacity>*/}
             <TextInput
               style={styles.input}
               value={this.state.input}
@@ -567,11 +545,11 @@ class ChatScreen extends React.Component {
             this.showRenameDialog(false)
           }}
         />
-        <ImageView
-          images={this.state.tappedImage}
-          isVisible={this.state.isImageViewerVisible}
-          onClose={() => this.setState({ isImageViewerVisible: false })}
-        />
+        {/*<ImageView*/}
+        {/*  images={this.state.tappedImage}*/}
+        {/*  isVisible={this.state.isImageViewerVisible}*/}
+        {/*  onClose={() => this.setState({ isImageViewerVisible: false })}*/}
+        {/*/>*/}
       </SafeAreaView>
     )
   }

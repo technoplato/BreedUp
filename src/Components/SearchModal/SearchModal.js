@@ -23,8 +23,6 @@ class SearchModal extends React.Component {
   constructor(props) {
     super(props)
 
-    console.log("Constructor Search Modal")
-
     this.usersRef = firebase.firestore().collection("users")
     this.usersUnsubscribe = null
 
@@ -188,8 +186,8 @@ class SearchModal extends React.Component {
     if (keyword) {
       return this.state.users.filter(user => {
         return (
-          user.firstName &&
-          user.firstName.toLowerCase().indexOf(keyword.toLowerCase()) >= 0
+          user.username &&
+          user.username.toLowerCase().indexOf(keyword.toLowerCase()) >= 0
         )
       })
     }
@@ -261,19 +259,50 @@ class SearchModal extends React.Component {
   }
 
   renderItem = ({ item }) => {
-    if (item.profilePictureURL && item.firstName) {
+    if (item.profileURL && item.username) {
       return (
         <TouchableOpacity onPress={() => this.onPressUser(item)}>
           <View style={styles.container}>
             <Image
               style={styles.photo}
               source={
-                item.profilePictureURL
-                  ? { uri: item.profilePictureURL }
+                item.photoURL
+                  ? { uri: item.photoURL }
                   : AppStyles.iconSet.userAvatar
               }
             />
-            <Text style={styles.name}>{item.firstName}</Text>
+            <Text style={styles.name}>{item.username}</Text>
+
+            {!item.isFriend && item.pending == REQUEST_NONE && (
+              <TextButton
+                style={[styles.request, styles.add]}
+                onPress={() => this.onAdd(item)}
+              >
+                Add
+              </TextButton>
+            )}
+            {!item.isFriend && item.pending == REQUEST_TO_ME && (
+              <TextButton
+                style={[styles.request, styles.accept]}
+                onPress={() => this.onAccept(item)}
+              >
+                Accept
+              </TextButton>
+            )}
+            {!item.isFriend && item.pending == REQUEST_TO_HIM && (
+              <TextButton style={[styles.request, styles.sent]} disabled>
+                Sent
+              </TextButton>
+            )}
+            <View style={styles.divider} />
+          </View>
+        </TouchableOpacity>
+      )
+    } else {
+      return (
+        <TouchableOpacity onPress={() => this.onPressUser(item)}>
+          <View style={styles.container}>
+            <Text style={styles.name}>{item.username}</Text>
 
             {!item.isFriend && item.pending == REQUEST_NONE && (
               <TextButton

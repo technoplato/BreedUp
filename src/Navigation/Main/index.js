@@ -67,9 +67,6 @@ function shouldShowTabBar(navigation) {
   const dest = routes && routes[1]
   const name = dest && dest.routeName
 
-  console.log("Navigation object: ", navigation)
-  console.log("Should we show the navigation bar for this screen? ", name)
-
   return !(
     name === "PublicProfile" ||
     name === "ViewDog" ||

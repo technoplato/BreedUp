@@ -30,9 +30,9 @@ const ProfileStack = createStackNavigator({
       headerRight: (
         <Text
           onPress={() => navigation.navigate("ChatHome")}
-          style={{ marginLeft: 12 }}
+          style={{ marginRight: 12 }}
         >
-          chat
+          Chat
         </Text>
       )
     })

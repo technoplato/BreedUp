@@ -43,12 +43,13 @@ export default class SignUpScreen extends React.Component {
             .doc(data.user.uid)
             .set({
               username: username,
-              displayName: data.user.displayName,
               email: data.user.email,
               emailVerified: data.user.emailVerified,
               uid: data.user.uid,
               metadata: data.user.metadata,
-              profilePictureURL:
+              profileURL:
+                "https://www.instamobile.io/wp-content/uploads/2019/05/default-avatar.jpg",
+              photoURL:
                 "https://www.instamobile.io/wp-content/uploads/2019/05/default-avatar.jpg"
             })
           return firebase
@@ -57,19 +58,29 @@ export default class SignUpScreen extends React.Component {
             .child(data.user.uid)
             .set({
               username: username,
-              displayName: data.user.displayName,
               email: data.user.email,
               emailVerified: data.user.emailVerified,
               uid: data.user.uid,
               metadata: data.user.metadata,
-              profilePictureURL:
+              profileURL:
+                "https://www.instamobile.io/wp-content/uploads/2019/05/default-avatar.jpg",
+              photoURL:
                 "https://www.instamobile.io/wp-content/uploads/2019/05/default-avatar.jpg"
             })
         })
         .then(() => {
-          return firebase.auth().currentUser.updateProfile({
-            displayName: username
-          })
+          return firebase
+            .auth()
+            .currentUser.updateProfile({
+              displayName: username,
+              profileURL:
+                "https://www.instamobile.io/wp-content/uploads/2019/05/default-avatar.jpg",
+              photoURL:
+                "https://www.instamobile.io/wp-content/uploads/2019/05/default-avatar.jpg"
+            })
+            .then(() => {
+              console.log("current user: ", firebase.auth().currentUser)
+            })
         })
         .then(() => {
           return firebase
@@ -79,7 +90,7 @@ export default class SignUpScreen extends React.Component {
             .child(userData.uid)
             .set({ username, uid: userData.uid })
         })
-        .then(() => this.props.navigation.navigate("ChooseImage"))
+        .then(() => this.props.navigation.navigate("Feed"))
         .catch(error => {
           this.setState({ errorMsg: error.message })
         })

@@ -168,7 +168,7 @@ class CreateGroupModal extends React.Component {
       .then(function(docRef) {
         const participationData = {
           channel: docRef.id,
-          user: that.props.user.id
+          user: firebase.auth().currentUser.uid
         }
         firebase
           .firestore()
@@ -179,7 +179,7 @@ class CreateGroupModal extends React.Component {
         checkedFriends.forEach(friend => {
           const participationData = {
             channel: docRef.id,
-            user: friend.id
+            user: friend.uid
           }
           firebase
             .firestore()
@@ -203,7 +203,7 @@ class CreateGroupModal extends React.Component {
           imageStyle={styles.photo}
           participants={[item]}
         />
-        <Text style={styles.name}>{item.firstName}</Text>
+        <Text style={styles.name}>{item.username}</Text>
         {item.checked && (
           <Image style={styles.checked} source={AppStyles.iconSet.checked} />
         )}
@@ -213,11 +213,6 @@ class CreateGroupModal extends React.Component {
 
   onCancel = () => {
     this.props.onCancel()
-  }
-
-  onImageError = () => {
-    this.setState({ isImgErr: true })
-    console.log("oops an error occured")
   }
 
   render() {
@@ -248,7 +243,7 @@ class CreateGroupModal extends React.Component {
           <FlatList
             data={this.state.friends}
             renderItem={this.renderItem}
-            keyExtractor={item => `${item.id}`}
+            keyExtractor={item => `${item.uid}`}
             initialNumToRender={5}
           />
           <DialogInput

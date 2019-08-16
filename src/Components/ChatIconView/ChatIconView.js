@@ -1,6 +1,5 @@
 import React from "react"
-import { Image, Text, TouchableHighlight, View } from "react-native"
-import FastImage from "react-native-fast-image"
+import { Image, View } from "react-native"
 import AppStyles from "../../AppStyles"
 import styles from "./styles"
 
@@ -41,8 +40,8 @@ export default class ChatIconView extends React.Component {
                 this.state.isImgErr == false
                   ? {
                       uri:
-                        this.props.participants[0].profilePictureURL ||
-                        this.props.participants[0].senderProfilePictureURL
+                        this.props.participants[0].profileURL ||
+                        this.props.participants[0].senderProfileURL
                     }
                   : AppStyles.iconSet.userAvatar
               }
@@ -59,7 +58,7 @@ export default class ChatIconView extends React.Component {
               onError={this.onImageError}
               source={
                 this.state.isImgErr == false
-                  ? { uri: this.props.participants[0].profilePictureURL }
+                  ? { uri: this.props.participants[0].photoURL }
                   : AppStyles.iconSet.userAvatar
               }
             />
@@ -69,7 +68,7 @@ export default class ChatIconView extends React.Component {
               onError={() => this.setState({ isSecondImgErr: true })}
               source={
                 this.state.isSecondImgErr == false
-                  ? { uri: this.props.participants[1].profilePictureURL }
+                  ? { uri: this.props.participants[1].photoURL }
                   : AppStyles.iconSet.userAvatar
               }
             />

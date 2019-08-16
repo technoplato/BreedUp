@@ -377,7 +377,7 @@ class HomeScreen extends React.Component {
       <TouchableOpacity onPress={() => this.onPressFriend(item)}>
         <View style={styles.friendItemContainer}>
           <ChatIconView style={styles.chatItemIcon} participants={[item]} />
-          <Text style={styles.friendName}>{item.firstName.split(" ")[0]}</Text>
+          <Text style={styles.friendName}>{item.username}</Text>
         </View>
       </TouchableOpacity>
     )
@@ -402,7 +402,7 @@ class HomeScreen extends React.Component {
     let title = item.name
     if (!title) {
       if (item.participants.length > 0) {
-        title = item.participants[0].firstName
+        title = item.participants[0].username
       }
     }
     return (

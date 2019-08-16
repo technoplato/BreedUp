@@ -193,6 +193,7 @@ export default class Profile extends React.Component {
       .update({
         description: modifiedDescription,
         profileURL: modifiedAvatarURL,
+        photoURL: modifiedAvatarURL,
         username: modifiedUsername.toLowerCase()
       })
       .then(() => {
@@ -266,7 +267,8 @@ export default class Profile extends React.Component {
       .then(url => {
         updatedUrl = url
         return currentUserProfileRef.update({
-          profileURL: updatedUrl
+          profileURL: updatedUrl,
+          photoURL: updatedUrl
         })
       })
       .then(() => {
