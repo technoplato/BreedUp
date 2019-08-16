@@ -1,12 +1,5 @@
 import React from "react"
-import {
-  Text,
-  TextInput,
-  View,
-  Alert,
-  ImageBackground,
-  Image
-} from "react-native"
+import { Text, TextInput, View, Alert, ImageBackground } from "react-native"
 import { Button } from "react-native-elements"
 import firebase from "react-native-firebase"
 
@@ -40,9 +33,24 @@ export default class SignUpScreen extends React.Component {
     } else {
       firebase
         .auth()
-        .createUserAndRetrieveDataWithEmailAndPassword(email, password)
+        .createUserWithEmailAndPassword(email, password)
         .then(data => {
           userData = data.user
+
+          firebase
+            .firestore()
+            .collection("users")
+            .doc(data.user.uid)
+            .set({
+              username: username,
+              displayName: data.user.displayName,
+              email: data.user.email,
+              emailVerified: data.user.emailVerified,
+              uid: data.user.uid,
+              metadata: data.user.metadata,
+              profilePictureURL:
+                "https://www.instamobile.io/wp-content/uploads/2019/05/default-avatar.jpg"
+            })
           return firebase
             .database()
             .ref("users")
@@ -53,7 +61,9 @@ export default class SignUpScreen extends React.Component {
               email: data.user.email,
               emailVerified: data.user.emailVerified,
               uid: data.user.uid,
-              metadata: data.user.metadata
+              metadata: data.user.metadata,
+              profilePictureURL:
+                "https://www.instamobile.io/wp-content/uploads/2019/05/default-avatar.jpg"
             })
         })
         .then(() => {
@@ -152,7 +162,7 @@ export default class SignUpScreen extends React.Component {
           onPress={() => {
             const { email, password } = this.state
 
-            this.props.navigation.navigate("LoginScreen", {
+            this.props.navigation.navigate("Login", {
               email,
               password
             })

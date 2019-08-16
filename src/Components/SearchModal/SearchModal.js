@@ -9,12 +9,9 @@ import {
   Keyboard
 } from "react-native"
 import { SearchBar } from "react-native-elements"
-import FastImage from "react-native-fast-image"
 import TextButton from "react-native-button"
 import firebase from "react-native-firebase"
 import { SafeAreaView } from "react-navigation"
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view"
-import { KeyboardAwareView } from "react-native-keyboard-aware-view"
 import AppStyles from "../../AppStyles"
 import styles from "./styles"
 
@@ -25,6 +22,8 @@ const REQUEST_TO_ME = 2
 class SearchModal extends React.Component {
   constructor(props) {
     super(props)
+
+    console.log("Constructor Search Modal")
 
     this.usersRef = firebase.firestore().collection("users")
     this.usersUnsubscribe = null

@@ -161,11 +161,6 @@ class HomeScreen extends React.Component {
     this.onTokenRefreshListener()
   }
 
-  // getIdFromDevice = async() => {
-  //   const id = await AsyncStorage.getItem('@loggedInUserID:id');
-  //   return id;
-  // }
-
   showAlert(title, body) {
     Alert.alert(
       title,
@@ -375,11 +370,6 @@ class HomeScreen extends React.Component {
     }
 
     this.props.navigation.navigate("Chat", { channel })
-  }
-
-  onImageError = () => {
-    this.setState({ imageErr: true })
-    console.log("oops an error occured")
   }
 
   renderFriendItem = ({ item }) => {
