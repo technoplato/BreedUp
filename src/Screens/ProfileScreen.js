@@ -7,7 +7,7 @@ import {
   ActivityIndicator
 } from "react-native"
 import { Button } from "react-native-elements"
-import firebase from "react-native-firebase"
+import firebase, { Notification, NotificationOpen } from "react-native-firebase"
 import Modal from "react-native-modal"
 
 import RoundImage from "../Components/RoundImageView"
@@ -45,7 +45,7 @@ export default class Profile extends React.Component {
     this.onNewProfileImageChosen = this.onNewProfileImageChosen.bind(this)
   }
 
-  componentWillMount() {
+  async componentWillMount() {
     const privateProfile =
       this.props.navigation.state.routeName === "PrivateProfile"
 
@@ -63,6 +63,69 @@ export default class Profile extends React.Component {
     })
 
     this.loadUserProfile(profileId)
+
+    await this.setupNotificationPermissions()
+    self.removeNotificationDisplayedListener = firebase
+      .notifications()
+      .onNotificationDisplayed(notification => {
+        // Process your notification as required
+        // ANDROID: Remote notifications do not contain the channel ID. You will have to specify this manually if you'd like to re-display the notification.
+        const { title, body } = notification
+        self.showAlert(title, body)
+      })
+    self.removeNotificationListener = firebase
+      .notifications()
+      .onNotification(notification => {
+        // Process your notification as required
+        notification.android.setChannelId("test-channel")
+        const { title, body } = notification
+        this.showAlert(title, body)
+      })
+
+    self.removeNotificationOpenedListener = firebase
+      .notifications()
+      .onNotificationOpened(notificationOpen => {
+        // Get the action triggered by the notification being opened
+        const { action } = notificationOpen
+        // Get information about the notification that was opened
+        const { notification } = notificationOpen
+        console.log(notification)
+      })
+
+    console.log("Finished componentWillMount")
+  }
+
+  componentWillUnmount() {
+    this.removeNotificationDisplayedListener()
+    this.removeNotificationListener()
+    this.removeNotificationOpenedListener()
+  }
+
+  async setupNotificationPermissions() {
+    const enabled = await firebase.messaging().hasPermission()
+    console.log("Are permissions enabled: ", enabled)
+    if (enabled) {
+      firebase
+        .messaging()
+        .getToken()
+        .then(token => {
+          console.log("token====token", token)
+        })
+    } else {
+      try {
+        await firebase.messaging().requestPermission()
+
+        firebase
+          .messaging()
+          .getToken()
+          .then(token => {
+            console.log("token====token", token)
+          })
+        // User has authorised
+      } catch (error) {
+        // User has rejected permissions
+      }
+    }
   }
 
   loadUserProfile(profileId) {
