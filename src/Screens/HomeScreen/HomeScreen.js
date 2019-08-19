@@ -6,6 +6,7 @@ import {
   Text,
   Image,
   TouchableOpacity,
+  Alert,
   Platform
 } from "react-native"
 import firebase from "react-native-firebase"
@@ -45,6 +46,8 @@ class HomeScreen extends React.Component {
   })
 
   constructor(props) {
+    console.log(props.navigation.state.params)
+
     super(props)
     this.state = {
       searchModalVisible: false,
@@ -57,8 +60,6 @@ class HomeScreen extends React.Component {
       channels: [],
       imageErr: false
     }
-
-    this.userRef = firebase.firestore().collection("users")
 
     this.heAcceptedFriendshipsRef = firebase
       .firestore()
@@ -108,57 +109,9 @@ class HomeScreen extends React.Component {
       this.onChannelCollectionUpdate
     )
 
-    self.removeNotificationDisplayedListener = firebase
-      .notifications()
-      .onNotificationDisplayed((notification: Notification) => {
-        // Process your notification as required
-        // ANDROID: Remote notifications do not contain the channel ID. You will have to specify this manually if you'd like to re-display the notification.
-        const { title, body } = notification
-        self.showAlert(title, body)
-      })
-    self.removeNotificationListener = firebase
-      .notifications()
-      .onNotification((notification: Notification) => {
-        // Process your notification as required
-        notification.android.setChannelId("test-channel")
-        const { title, body } = notification
-        this.showAlert(title, body)
-      })
-
-    self.removeNotificationOpenedListener = firebase
-      .notifications()
-      .onNotificationOpened((notificationOpen: NotificationOpen) => {
-        // Get the action triggered by the notification being opened
-        const { action } = notificationOpen
-        // Get information about the notification that was opened
-        const { notification } = notificationOpen
-        console.log(notification)
-      })
-
-    self.onTokenRefreshListener = firebase
-      .messaging()
-      .onTokenRefresh(fcmToken => {
-        self.userRef
-          .doc(firebase.auth().currentUser.uid)
-          .update({ pushToken: fcmToken })
-      })
-
     self.props.navigation.setParams({
       onCreate: this.onCreate
     })
-  }
-
-  componentWillUnmount() {
-    this.usersUnsubscribe()
-    this.heAcceptedFriendshipsUnsubscribe()
-    this.iAcceptedFriendshipsUnsubscribe()
-    this.channelPaticipationUnsubscribe()
-    this.channelsUnsubscribe()
-
-    this.removeNotificationDisplayedListener()
-    this.removeNotificationListener()
-    this.removeNotificationOpenedListener()
-    this.onTokenRefreshListener()
   }
 
   showAlert(title, body) {
@@ -170,6 +123,14 @@ class HomeScreen extends React.Component {
         cancelable: false
       }
     )
+  }
+
+  componentWillUnmount() {
+    this.usersUnsubscribe()
+    this.heAcceptedFriendshipsUnsubscribe()
+    this.iAcceptedFriendshipsUnsubscribe()
+    this.channelPaticipationUnsubscribe()
+    this.channelsUnsubscribe()
   }
 
   onUsersCollectionUpdate = querySnapshot => {

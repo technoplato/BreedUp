@@ -12,14 +12,15 @@ import TextButton from "react-native-button"
 import ActionSheet from "react-native-actionsheet"
 import DialogInput from "react-native-dialog-input"
 import firebase from "react-native-firebase"
-import ImagePicker from "react-native-image-picker"
 import { SafeAreaView } from "react-navigation"
 import { KeyboardAwareView } from "react-native-keyboard-aware-view"
-import ImageView from "react-native-image-view"
 import Autolink from "react-native-autolink"
 import ChatIconView from "../../Components/ChatIconView/ChatIconView"
 import AppStyles from "../../AppStyles"
 import styles from "./styles"
+
+import ImagePicker from "react-native-image-picker"
+import ImageView from "react-native-image-view"
 
 class ChatScreen extends React.Component {
   static navigationOptions = ({ navigation }) => {

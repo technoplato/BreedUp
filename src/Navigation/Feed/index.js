@@ -6,6 +6,7 @@ import FeedScreen from "../../Screens/FeedScreen"
 import CommentsScreen from "../../Screens/CommentsScreen"
 
 import Profile from "../../Screens/ProfileScreen"
+import ChatNavigation from "../../navigations/ChatNavigation"
 
 export default createStackNavigator({
   Feed: {
@@ -38,6 +39,12 @@ export default createStackNavigator({
           onPress={() => navigation.goBack()}
         />
       )
+    })
+  },
+  NotificationChatHome: {
+    screen: ChatNavigation,
+    navigationOptions: ({}) => ({
+      header: null
     })
   }
 })
