@@ -81,7 +81,7 @@ export default class Main extends React.Component {
         // Process your notification as required
         // ANDROID: Remote notifications do not contain the channel ID. You will have to specify this manually if you'd like to re-display the notification.
         const { title, body } = notification
-        this.showAlert(title, body)
+        console.log(title, body)
       })
     this.removeNotificationListener = firebase
       .notifications()
@@ -92,7 +92,19 @@ export default class Main extends React.Component {
         // Process your notification as required
         notification.android.setChannelId("test-channel")
         const { title, body } = notification
-        this.showAlert(title, body)
+        // this.showAlert(title, body)
+        // Build notification as above
+        const notification1 = new firebase.notifications.Notification()
+          .setNotificationId("notificationId")
+          .setTitle(notification.title)
+          .setBody(notification.body)
+          .setData({
+            // Need to be set later if Kent wants to open chat log or friend request directly
+            key1: "value1",
+            key2: "value2"
+          })
+
+        firebase.notifications().displayNotification(notification1)
       })
 
     this.removeNotificationOpenedListener = firebase
@@ -104,6 +116,7 @@ export default class Main extends React.Component {
         // Get information about the notification that was opened
         const { notification } = notificationOpen
         console.log(notification)
+        this.props.navigation.navigate("NotificationChatHome")
       })
   }
   showAlert(title, body) {
