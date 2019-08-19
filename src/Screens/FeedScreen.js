@@ -1,5 +1,5 @@
 import React from "react"
-import { Alert, View } from "react-native"
+import { View } from "react-native"
 
 import FeedList from "../Components/FeedList"
 import styles from "../Styles/FeedScreenStyles"
@@ -119,16 +119,7 @@ export default class Main extends React.Component {
         this.props.navigation.navigate("NotificationChatHome")
       })
   }
-  showAlert(title, body) {
-    Alert.alert(
-      title,
-      body,
-      [{ text: "OK", onPress: () => console.log("OK Pressed") }],
-      {
-        cancelable: false
-      }
-    )
-  }
+
   render() {
     return (
       <View style={styles.container}>

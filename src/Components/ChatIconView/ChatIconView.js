@@ -17,9 +17,6 @@ export default class ChatIconView extends React.Component {
   }
 
   render() {
-    console.log("rendering chat icon view, props ===> ", this.props)
-    console.log("size of participants: ", this.props.participants.length)
-    console.log("photos: " + this.props.participants.map(u => u.photoURL))
     return (
       <View style={styles.container}>
         {this.props.participants.length == 0 && (

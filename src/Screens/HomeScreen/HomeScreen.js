@@ -114,17 +114,6 @@ class HomeScreen extends React.Component {
     })
   }
 
-  showAlert(title, body) {
-    Alert.alert(
-      title,
-      body,
-      [{ text: "OK", onPress: () => console.log("OK Pressed") }],
-      {
-        cancelable: false
-      }
-    )
-  }
-
   componentWillUnmount() {
     this.usersUnsubscribe()
     this.heAcceptedFriendshipsUnsubscribe()
@@ -312,6 +301,7 @@ class HomeScreen extends React.Component {
   }
 
   onPressFriend = friend => {
+    console.log("fgriend", friend)
     const one2OneChannel = this.state.channels.filter(channel => {
       return (
         channel.participants.length == 1 &&
@@ -349,6 +339,7 @@ class HomeScreen extends React.Component {
   }
 
   onPressChat = chat => {
+    console.log("chat:", chat)
     this.props.navigation.navigate("Chat", { channel: chat })
   }
 

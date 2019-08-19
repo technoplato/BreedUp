@@ -50,6 +50,7 @@ class ChatScreen extends React.Component {
     super(props)
 
     const channel = props.navigation.getParam("channel")
+    if (!channel) throw "We need a channel, no ifs ands or buts"
 
     this.state = {
       isRenameDialogVisible: false,
@@ -66,7 +67,6 @@ class ChatScreen extends React.Component {
       .doc(channel.id)
       .collection("threads")
       .orderBy("created", "desc")
-    this.threadsUnscribe = "null"
   }
 
   componentDidMount() {
@@ -212,7 +212,6 @@ class ChatScreen extends React.Component {
             senderUsername: displayName,
             senderID: uid,
             senderProfileURL: photoURL
-            // url: that.state.downloadUrl
           }
 
           firebase
