@@ -2,8 +2,6 @@ import React from "react"
 import {
   FlatList,
   Image,
-  Text,
-  Platform,
   TextInput,
   TouchableOpacity,
   View
@@ -19,16 +17,20 @@ import ChatIconView from "../../Components/ChatIconView/ChatIconView"
 import AppStyles from "../../AppStyles"
 import styles from "./styles"
 
-import ImagePicker from "react-native-image-picker"
-import ImageView from "react-native-image-view"
-
 class ChatScreen extends React.Component {
   static navigationOptions = ({ navigation }) => {
-    let title = navigation.state.params.channel.name
+    const channel = navigation.state.params.channel
+
+    let title = channel.name
     let isOne2OneChannel = false
+
+    if (channel.fromDeepLink) {
+      title = "Loading..."
+    }
+
     if (!title) {
       isOne2OneChannel = true
-      title = navigation.state.params.channel.participants[0].username
+      title = channel.participants[0].username
     }
     const options = {
       title
@@ -46,20 +48,30 @@ class ChatScreen extends React.Component {
     return options
   }
 
-  constructor(props) {
-    super(props)
+  state = {
+    isRenameDialogVisible: false,
+    threads: [],
+    input: "",
+    isImageViewerVisible: false,
+    tappedImage: []
+  }
 
-    const channel = props.navigation.getParam("channel")
-    if (!channel) throw "We need a channel, no ifs ands or buts"
+  async componentDidMount() {
+    const { getParam } = this.props.navigation
+    let channel = getParam("channel")
 
-    this.state = {
-      isRenameDialogVisible: false,
-      channel,
-      threads: [],
-      input: "",
-      isImageViewerVisible: false,
-      tappedImage: []
+    this.currentUid = firebase.auth().currentUser.uid
+    this.channelParticipation = firebase
+      .firestore()
+      .collection("channel_participation")
+      .where("channel", "==", channel.id)
+    this.usersCollection = firebase.firestore().collection("users")
+
+    if (channel.fromDeepLink) {
+      channel = await this.loadFullChannel(channel.id)
     }
+
+    if (!channel) throw "No channel loaded"
 
     this.threadsRef = firebase
       .firestore()
@@ -67,19 +79,74 @@ class ChatScreen extends React.Component {
       .doc(channel.id)
       .collection("threads")
       .orderBy("created", "desc")
-  }
 
-  componentDidMount() {
     this.threadsUnscribe = this.threadsRef.onSnapshot(
       this.onThreadsCollectionUpdate
     )
     this.props.navigation.setParams({
-      onSetting: this.onSetting
+      onSetting: this.onSetting,
+      channel
+    })
+
+    this.setState({ channel })
+  }
+
+  async loadFullChannel(channelId) {
+    const others = await this.loadParticipants(channelId)
+    const { name } = await firebase
+      .firestore()
+      .collection("channels")
+      .doc(channelId)
+      .get()
+      .then(snap => snap.data())
+
+    return {
+      name: name || others[0].username,
+      participants: others,
+      id: channelId
+    }
+  }
+
+  /**
+   * Loads a list of hydrated user objects
+   */
+  async loadParticipants(channelId) {
+    const ids = await this.loadOtherIds(channelId)
+
+    const userPromises = ids.map(
+      id =>
+        new Promise((resolve, reject) => {
+          self.usersCollection
+            .doc(id)
+            .get()
+            .then(snap => {
+              resolve(snap.data())
+            })
+            .catch(() => reject())
+        })
+    )
+
+    return await Promise.all(userPromises)
+  }
+
+  /**
+   * Loads an array of this channel's participants, not including the current user
+   */
+  async loadOtherIds() {
+    return await this.channelParticipation.get().then(snap => {
+      const data = []
+      snap.forEach(doc => {
+        const participantId = doc.data().user
+        if (participantId !== this.currentUid) {
+          data.push(participantId)
+        }
+      })
+      return data
     })
   }
 
   componentWillUnmount() {
-    this.threadsUnscribe()
+    this.threadsUnscribe && this.threadsUnscribe()
   }
 
   existSameSentMessage = (messages, newMessage) => {
@@ -146,7 +213,6 @@ class ChatScreen extends React.Component {
 
   onPressChat = chat => {
     if (chat.url !== "") {
-      console.log("onPressChat")
       this.displayChatImage(chat.url)
     }
   }
@@ -265,7 +331,6 @@ class ChatScreen extends React.Component {
       this.createOne2OneChannel()
     } else {
       const { uid, displayName, photoURL } = firebase.auth().currentUser
-      console.log(firebase.auth().currentUser)
 
       const created = Date.now()
       this.state.channel.participants.forEach(friend => {
@@ -320,46 +385,6 @@ class ChatScreen extends React.Component {
     this._send()
   }
 
-  // onSelect = () => {
-  //   const options = {
-  //     title: "Select a photo",
-  //     storageOptions: {
-  //       skipBackup: true,
-  //       path: "images"
-  //     }
-  //   }
-  //
-  //   const { uid, displayName, photoURL } = firebase.auth().currentUser
-  //
-  //   ImagePicker.showImagePicker(options, response => {
-  //     if (response.didCancel) {
-  //       console.log("User cancelled image picker")
-  //     } else if (response.error) {
-  //       console.log("ImagePicker Error: ", response.error)
-  //     } else if (response.customButton) {
-  //       console.log("User tapped custom button: ", response.customButton)
-  //     } else {
-  //       const data = {
-  //         content: "",
-  //         created: Date.now(),
-  //         senderFirstName: displayName,
-  //         senderID: uid,
-  //         senderProfileURL: photoURL
-  //       }
-  //
-  //       this.setState({
-  //         photo: response.uri,
-  //         threads: [data, ...this.state.threads]
-  //       })
-  //
-  //       this.uploadPromise().then(url => {
-  //         this.setState({ downloadUrl: url })
-  //         this._send()
-  //       })
-  //     }
-  //   })
-  // }
-
   showRenameDialog = show => {
     this.setState({ isRenameDialogVisible: show })
   }
@@ -391,20 +416,6 @@ class ChatScreen extends React.Component {
       <TouchableOpacity onPress={() => this.onPressChat(item)}>
         {item.senderID === firebase.auth().currentUser.uid && (
           <View style={styles.sendItemContainer}>
-            {/*{item.url !== "" && (*/}
-            {/*  <View*/}
-            {/*    style={[*/}
-            {/*      styles.itemContent,*/}
-            {/*      styles.sendItemContent,*/}
-            {/*      { padding: 0 }*/}
-            {/*    ]}*/}
-            {/*  >*/}
-            {/*    <Image*/}
-            {/*      style={styles.sendPhotoMessage}*/}
-            {/*      source={{ uri: item.url }}*/}
-            {/*    />*/}
-            {/*  </View>*/}
-            {/*)}*/}
             <View style={[styles.itemContent, styles.sendItemContent]}>
               <Autolink
                 style={styles.sendTextMessage}
@@ -535,7 +546,7 @@ class ChatScreen extends React.Component {
         <DialogInput
           isDialogVisible={this.state.isRenameDialogVisible}
           title="Change Name"
-          hintInput={this.state.channel.name}
+          hintInput={this.state.channel ? this.state.channel.name : ""}
           textInputProps={{ selectTextOnFocus: true }}
           submitText="OK"
           submitInput={inputText => {
@@ -545,11 +556,6 @@ class ChatScreen extends React.Component {
             this.showRenameDialog(false)
           }}
         />
-        {/*<ImageView*/}
-        {/*  images={this.state.tappedImage}*/}
-        {/*  isVisible={this.state.isImageViewerVisible}*/}
-        {/*  onClose={() => this.setState({ isImageViewerVisible: false })}*/}
-        {/*/>*/}
       </SafeAreaView>
     )
   }

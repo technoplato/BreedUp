@@ -6,8 +6,9 @@ admin.initializeApp()
 const firestore = admin.firestore()
 
 exports.sendChatPushNotification = functions.firestore
-  .document("channels/{some_channel_document}/threads/{some_thread_document}")
+  .document("channels/{channelId}/threads/{threadId}")
   .onWrite((change, context) => {
+    const channelId = context.params.channelId
     const data = change.after.data()
     const senderUsername = data.senderUsername
     const content = data.content
@@ -17,6 +18,9 @@ exports.sendChatPushNotification = functions.firestore
       notification: {
         title: "New message",
         body: `${senderUsername}: ${content}`
+      },
+      data: {
+        channelId
       }
     }
 

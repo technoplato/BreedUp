@@ -91,32 +91,22 @@ export default class Main extends React.Component {
 
         // Process your notification as required
         notification.android.setChannelId("test-channel")
-        const { title, body } = notification
-        // this.showAlert(title, body)
-        // Build notification as above
-        const notification1 = new firebase.notifications.Notification()
-          .setNotificationId("notificationId")
-          .setTitle(notification.title)
-          .setBody(notification.body)
-          .setData({
-            // Need to be set later if Kent wants to open chat log or friend request directly
-            key1: "value1",
-            key2: "value2"
-          })
 
-        firebase.notifications().displayNotification(notification1)
+        firebase.notifications().displayNotification(notification)
       })
 
     this.removeNotificationOpenedListener = firebase
       .notifications()
       .onNotificationOpened(notificationOpen => {
         console.log("onNotificationOpened")
-        // Get the action triggered by the notification being opened
-        const { action } = notificationOpen
-        // Get information about the notification that was opened
         const { notification } = notificationOpen
         console.log(notification)
-        this.props.navigation.navigate("NotificationChatHome")
+        this.props.navigation.navigate("Chat", {
+          channel: {
+            fromDeepLink: true,
+            id: notification.data.channelId
+          }
+        })
       })
   }
 

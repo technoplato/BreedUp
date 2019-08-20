@@ -46,8 +46,6 @@ class HomeScreen extends React.Component {
   })
 
   constructor(props) {
-    console.log(props.navigation.state.params)
-
     super(props)
     this.state = {
       searchModalVisible: false,
@@ -300,8 +298,19 @@ class HomeScreen extends React.Component {
     this.setState({ createGroupModalVisible: true })
   }
 
+  /**
+   * Called when a chat item is clicked
+   * @param chat
+   */
+  onPressChat = chat => {
+    this.props.navigation.navigate("Chat", { channel: chat })
+  }
+
+  /**
+   * Called when a singular friend is clicked from the top of the page
+   * @param friend
+   */
   onPressFriend = friend => {
-    console.log("fgriend", friend)
     const one2OneChannel = this.state.channels.filter(channel => {
       return (
         channel.participants.length == 1 &&
@@ -336,11 +345,6 @@ class HomeScreen extends React.Component {
 
   renderFriendSeparator = () => {
     return <View style={styles.friendDivider} />
-  }
-
-  onPressChat = chat => {
-    console.log("chat:", chat)
-    this.props.navigation.navigate("Chat", { channel: chat })
   }
 
   formatMessage = item => {

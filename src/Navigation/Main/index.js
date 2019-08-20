@@ -70,7 +70,8 @@ function shouldShowTabBar(navigation) {
   return !(
     name === "PublicProfile" ||
     name === "ViewDog" ||
-    name === "ChatHome"
+    name === "ChatHome" ||
+    name === "NotificationChatHome"
   )
 }
 
