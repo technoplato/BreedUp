@@ -440,20 +440,6 @@ class ChatScreen extends React.Component {
               imageStyle={styles.userIcon}
               participants={[item]}
             />
-            {/*{item.url !== "" && (*/}
-            {/*  <View*/}
-            {/*    style={[*/}
-            {/*      styles.itemContent,*/}
-            {/*      styles.receiveItemContent,*/}
-            {/*      { padding: 0 }*/}
-            {/*    ]}*/}
-            {/*  >*/}
-            {/*    <Image*/}
-            {/*      style={styles.receivePhotoMessage}*/}
-            {/*      source={{ uri: item.url }}*/}
-            {/*    />*/}
-            {/*  </View>*/}
-            {/*)}*/}
 
             <View style={[styles.itemContent, styles.receiveItemContent]}>
               <Autolink
@@ -497,15 +483,6 @@ class ChatScreen extends React.Component {
           />
 
           <View style={styles.inputBar}>
-            {/*<TouchableOpacity*/}
-            {/*  style={styles.btnContainer}*/}
-            {/*  onPress={this.onSelect}*/}
-            {/*>*/}
-            {/*  <Image*/}
-            {/*    style={styles.icon}*/}
-            {/*    source={AppStyles.iconSet.camera_filled}*/}
-            {/*  />*/}
-            {/*</TouchableOpacity>*/}
             <TextInput
               style={styles.input}
               value={this.state.input}
