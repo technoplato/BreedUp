@@ -5,7 +5,9 @@
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "test": "jest",
-    "prettier": "prettier --write '**/*.{ts,js,json }'"
+    "prettier": "prettier --write '**/*.{ts,js,json }'",
+    "xr": "react-native run-ios --simulator=\"iPhone Xʀ\" --port=8088",
+    "xs": "react-native run-ios --simulator=\"iPhone XS\" --port=8089"
   },
   "dependencies": {
     "ajv": "^6.0.0",
