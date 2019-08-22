@@ -45,7 +45,7 @@ export default class Profile extends React.Component {
     this.onNewProfileImageChosen = this.onNewProfileImageChosen.bind(this)
   }
 
-  componentWillMount() {
+  async componentWillMount() {
     const privateProfile =
       this.props.navigation.state.routeName === "PrivateProfile"
 
@@ -193,6 +193,7 @@ export default class Profile extends React.Component {
       .update({
         description: modifiedDescription,
         profileURL: modifiedAvatarURL,
+        photoURL: modifiedAvatarURL,
         username: modifiedUsername.toLowerCase()
       })
       .then(() => {
@@ -265,8 +266,17 @@ export default class Profile extends React.Component {
       .then(snapshot => snapshot.downloadURL)
       .then(url => {
         updatedUrl = url
+        firebase
+          .firestore()
+          .collection("users")
+          .doc(id)
+          .update({
+            profileURL: updatedUrl,
+            photoURL: updatedUrl
+          })
         return currentUserProfileRef.update({
-          profileURL: updatedUrl
+          profileURL: updatedUrl,
+          photoURL: updatedUrl
         })
       })
       .then(() => {

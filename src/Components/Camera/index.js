@@ -48,6 +48,7 @@ export default class Camera extends React.Component {
   renderCamera() {
     return (
       <RNCamera
+        captureAudio={false}
         ref={ref => {
           this.camera = ref
         }}

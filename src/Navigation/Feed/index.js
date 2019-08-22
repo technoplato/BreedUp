@@ -4,28 +4,20 @@ import { createStackNavigator } from "react-navigation"
 
 import FeedScreen from "../../Screens/FeedScreen"
 import CommentsScreen from "../../Screens/CommentsScreen"
-import ChatScreen from "../../Screens/ChatScreen"
 
 import Profile from "../../Screens/ProfileScreen"
+import ChatScreen from "../../Screens/ChatScreen/ChatScreen"
+import ChatHomeScreen from "../../Screens/ChatHomeScreen/ChatHomeScreen"
 
 export default createStackNavigator({
   Feed: {
     screen: FeedScreen
   },
+  ChatHome: {
+    screen: ChatHomeScreen
+  },
   Chat: {
-    screen: ChatScreen,
-    navigationOptions: ({ navigation }) => ({
-      headerVisible: "false",
-      title: "CHAT",
-      headerLeft: (
-        <Icon
-          containerStyle={{ marginLeft: 12 }}
-          name="arrow-back"
-          color="#000"
-          onPress={() => navigation.goBack()}
-        />
-      )
-    })
+    screen: ChatScreen
   },
   Comments: {
     screen: CommentsScreen,
@@ -56,4 +48,10 @@ export default createStackNavigator({
       )
     })
   }
+  // NotificationChatHome: {
+  //   screen: ChatNavigation,
+  //   navigationOptions: ({}) => ({
+  //     header: null
+  //   })
+  // }
 })

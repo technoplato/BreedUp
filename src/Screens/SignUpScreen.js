@@ -1,12 +1,5 @@
 import React from "react"
-import {
-  Text,
-  TextInput,
-  View,
-  Alert,
-  ImageBackground,
-  Image
-} from "react-native"
+import { Text, TextInput, View, Alert, ImageBackground } from "react-native"
 import { Button } from "react-native-elements"
 import firebase from "react-native-firebase"
 
@@ -40,26 +33,54 @@ export default class SignUpScreen extends React.Component {
     } else {
       firebase
         .auth()
-        .createUserAndRetrieveDataWithEmailAndPassword(email, password)
+        .createUserWithEmailAndPassword(email, password)
         .then(data => {
           userData = data.user
+
+          firebase
+            .firestore()
+            .collection("users")
+            .doc(data.user.uid)
+            .set({
+              username: username,
+              email: data.user.email,
+              emailVerified: data.user.emailVerified,
+              uid: data.user.uid,
+              metadata: data.user.metadata,
+              profileURL:
+                "https://www.instamobile.io/wp-content/uploads/2019/05/default-avatar.jpg",
+              photoURL:
+                "https://www.instamobile.io/wp-content/uploads/2019/05/default-avatar.jpg"
+            })
           return firebase
             .database()
             .ref("users")
             .child(data.user.uid)
             .set({
               username: username,
-              displayName: data.user.displayName,
               email: data.user.email,
               emailVerified: data.user.emailVerified,
               uid: data.user.uid,
-              metadata: data.user.metadata
+              metadata: data.user.metadata,
+              profileURL:
+                "https://www.instamobile.io/wp-content/uploads/2019/05/default-avatar.jpg",
+              photoURL:
+                "https://www.instamobile.io/wp-content/uploads/2019/05/default-avatar.jpg"
             })
         })
         .then(() => {
-          return firebase.auth().currentUser.updateProfile({
-            displayName: username
-          })
+          return firebase
+            .auth()
+            .currentUser.updateProfile({
+              displayName: username,
+              profileURL:
+                "https://www.instamobile.io/wp-content/uploads/2019/05/default-avatar.jpg",
+              photoURL:
+                "https://www.instamobile.io/wp-content/uploads/2019/05/default-avatar.jpg"
+            })
+            .then(() => {
+              console.log("current user: ", firebase.auth().currentUser)
+            })
         })
         .then(() => {
           return firebase
@@ -69,7 +90,7 @@ export default class SignUpScreen extends React.Component {
             .child(userData.uid)
             .set({ username, uid: userData.uid })
         })
-        .then(() => this.props.navigation.navigate("ChooseImage"))
+        .then(() => this.props.navigation.navigate("Feed"))
         .catch(error => {
           this.setState({ errorMsg: error.message })
         })

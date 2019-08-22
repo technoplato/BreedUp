@@ -1,7 +1,7 @@
 import React from "react"
 import { createStackNavigator } from "react-navigation"
 import firebase from "react-native-firebase"
-import { Text, View } from "react-native"
+import { View } from "react-native"
 import { Icon } from "react-native-elements"
 
 import Search from "../../Screens/SearchScreen"
@@ -13,7 +13,8 @@ import DogDetailsScreen from "../../Screens/DogDetailsScreen"
 import AddEventScreen from "../../Screens/AddEventScreen"
 import EventsScreen from "../../Screens/EventsScreen"
 import EventDetails from "../../Screens/EventDetailsScreen"
-import ChatScreen from "../../Screens/ChatScreen"
+import ChatHomeScreen from "../../Screens/ChatHomeScreen/ChatHomeScreen"
+import ChatScreen from "../../Screens/ChatScreen/ChatScreen"
 
 const ProfileStack = createStackNavigator({
   PrivateProfile: {
@@ -26,7 +27,7 @@ const ProfileStack = createStackNavigator({
             containerStyle={{ marginRight: 12 }}
             name="chat"
             color="#000"
-            onPress={() => navigation.navigate("Chat")}
+            onPress={() => navigation.navigate("ProfileChatHome")}
           />
           <Icon
             onPress={() => firebase.auth().signOut()}
@@ -38,20 +39,11 @@ const ProfileStack = createStackNavigator({
       )
     })
   },
+  ProfileChatHome: {
+    screen: ChatHomeScreen
+  },
   Chat: {
-    screen: ChatScreen,
-    navigationOptions: ({ navigation }) => ({
-      headerVisible: "false",
-      title: "CHAT",
-      headerLeft: (
-        <Icon
-          containerStyle={{ marginLeft: 12 }}
-          name="arrow-back"
-          color="#000"
-          onPress={() => navigation.goBack()}
-        />
-      )
-    })
+    screen: ChatScreen
   },
   AddDog: {
     screen: AddDogScreen
