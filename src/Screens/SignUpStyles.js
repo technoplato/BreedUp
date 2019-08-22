@@ -12,7 +12,7 @@ export default StyleSheet.create({
   topBar: {
     top: 0,
     position: "absolute",
-    backgroundColor: "white",
+    backgroundColor: Colors.white,
     alignItems: "center",
     width: "100%",
     minHeight: 24,
@@ -21,13 +21,15 @@ export default StyleSheet.create({
   textInput: {
     height: 48,
     padding: 4,
-    backgroundColor: "white",
+    backgroundColor: Colors.white,
     borderRadius: 12,
+    borderColor: Colors.black,
+    borderWidth: 2,
     width: "80%",
     marginTop: 8
   },
   button: {
-    backgroundColor: Colors.dogBoneBlue,
+    backgroundColor: Colors.black,
     width: 300,
     height: 45,
     marginTop: 12,
@@ -40,6 +42,6 @@ export default StyleSheet.create({
   },
   headerText: {
     fontSize: 60,
-    color: "white"
+    color: Colors.darkGrey
   }
 })

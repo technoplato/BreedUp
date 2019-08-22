@@ -1,5 +1,5 @@
 import React from "react"
-import { Text, TextInput, View, Alert, ImageBackground } from "react-native"
+import { Text, TextInput, Alert, ImageBackground } from "react-native"
 
 import { Button } from "react-native-elements"
 
@@ -74,7 +74,8 @@ export default class Login extends React.Component {
   render() {
     return (
       <ImageBackground
-        source={Images.onboardingBackground}
+        blurRadius={10}
+        source={Images.blackDog}
         style={styles.container}
       >
         <Text style={styles.headerText}>Breed Up</Text>
@@ -111,7 +112,7 @@ export default class Login extends React.Component {
           onPress={() => {
             const { email, password } = this.state
 
-            this.props.navigation.navigate("SignUpScreen", { email, password })
+            this.props.navigation.navigate("SignUp", { email, password })
           }}
         />
         <Button
@@ -119,9 +120,6 @@ export default class Login extends React.Component {
           title="Forgot your password?"
           onPress={this.handlePasswordReset}
         />
-        <View style={styles.topBar}>
-          <View style={styles.headerImage} />
-        </View>
       </ImageBackground>
     )
   }

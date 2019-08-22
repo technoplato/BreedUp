@@ -129,7 +129,8 @@ export default class SignUpScreen extends React.Component {
   render() {
     return (
       <ImageBackground
-        source={Images.onboardingBackground}
+        blurRadius={10}
+        source={Images.blackDog}
         style={styles.container}
       >
         <Text style={styles.headerText}>Breed Up</Text>
@@ -184,9 +185,6 @@ export default class SignUpScreen extends React.Component {
           title="Forgot your password?"
           onPress={this.handlePasswordReset}
         />
-        <View style={styles.topBar}>
-          <View style={styles.headerImage} />
-        </View>
       </ImageBackground>
     )
   }
