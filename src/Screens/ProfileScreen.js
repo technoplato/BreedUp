@@ -162,9 +162,9 @@ export default class Profile extends React.Component {
               title={this.state.modalSaving ? "Saving..." : "Save Info"}
               loading={this.state.modalSaving}
               disabled={this.state.modalSaving}
-              onPress={() => {
+              onPress={async () => {
                 if (this.state.hasProfileChanged) {
-                  this.saveProfileData()
+                  await this.saveProfileData()
                 } else {
                   this.setTextEditingModalVisible(false)
                 }
@@ -176,7 +176,7 @@ export default class Profile extends React.Component {
     )
   }
 
-  saveProfileData() {
+  async saveProfileData() {
     this.setTextEditingModalVisible(false)
     this.setSaving(false)
 
@@ -185,6 +185,20 @@ export default class Profile extends React.Component {
       modifiedAvatarURL,
       modifiedUsername
     } = this.state
+
+    const petImageArray = await firebase
+      .database()
+      .ref()
+      .child("dogs")
+      .child(this.state.uid)
+      .once("value")
+      .then(snap => {
+        const keysArray = Object.keys(snap.val() || [])
+        const results = keysArray
+          .map(key => snap.val()[key])
+          .map(dog => dog.imageUri)
+        return results
+      })
 
     firebase
       .database()
@@ -214,7 +228,13 @@ export default class Profile extends React.Component {
       .child("names")
       .child("users")
       .child(this.state.uid)
-      .set({ username: modifiedUsername.toLowerCase(), uid: this.state.uid })
+      .set({
+        username: modifiedUsername.toLowerCase(),
+        uid: this.state.uid,
+        dogs: petImageArray,
+        description: modifiedDescription,
+        photoURL: modifiedAvatarURL
+      })
   }
 
   render() {
@@ -234,7 +254,7 @@ export default class Profile extends React.Component {
     return (
       <CameraModal
         onPictureApproved={this.onNewProfileImageChosen}
-        isVisible={this.state.photoEditModalVisible}
+        isModalVisible={this.state.photoEditModalVisible}
         cancel={() => this.showPhotoModal(false)}
       />
     )
@@ -267,6 +287,15 @@ export default class Profile extends React.Component {
       .then(url => {
         updatedUrl = url
         firebase
+          .database()
+          .ref()
+          .child("names")
+          .child("users")
+          .child(id)
+          .set({
+            photoURL: updatedUrl
+          })
+        firebase
           .firestore()
           .collection("users")
           .doc(id)
@@ -293,6 +322,7 @@ export default class Profile extends React.Component {
   }
 
   showPhotoModal(doShow) {
+    console.log("show photo modal: ", doShow)
     this.setState({
       photoEditModalVisible: doShow
     })
@@ -320,7 +350,9 @@ export default class Profile extends React.Component {
       <View style={styles.header.container}>
         <View style={styles.header.avatarContainer}>
           <RoundImage
-            onPress={this.state.currentUserProfile && this.showPhotoModal}
+            onPress={() => {
+              this.state.currentUserProfile && this.showPhotoModal(true)
+            }}
             size={92}
             source={{
               uri:
@@ -414,7 +446,6 @@ export default class Profile extends React.Component {
           userId={this.state.uid}
           onAvatarPressed={this.onAvatarPressed}
         />
-        )
       </View>
     )
   }

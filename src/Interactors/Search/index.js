@@ -8,10 +8,10 @@ const HIGH_UNICODE_VAL = "\uf8ff"
  *
  * Returns array of results.
  */
-searchUser = usernamePrefix => {
+const searchUsers = async usernamePrefix => {
   if (!usernamePrefix) return []
 
-  return userNamesRef
+  const usersArray = await userNamesRef
     .orderByChild("username")
     .startAt(usernamePrefix)
     .endAt(usernamePrefix + HIGH_UNICODE_VAL)
@@ -22,6 +22,8 @@ searchUser = usernamePrefix => {
       const results = keysArray.map(key => snap.val()[key])
       return results
     })
+
+  return normalizeUsers(usersArray)
 }
 
 /**
@@ -29,10 +31,10 @@ searchUser = usernamePrefix => {
  *
  * Returns array of results.
  */
-searchDog = dogNamePrefix => {
+const searchDogs = async dogNamePrefix => {
   if (!dogNamePrefix) return []
 
-  return dogNamesRef
+  const dogArray = await dogNamesRef
     .orderByChild("dogName")
     .startAt(dogNamePrefix)
     .endAt(dogNamePrefix + HIGH_UNICODE_VAL)
@@ -43,6 +45,29 @@ searchDog = dogNamePrefix => {
       const results = keysArray.map(key => snap.val()[key])
       return results
     })
+
+  return normalizeDogs(dogArray)
 }
 
-export { searchUser, searchDog }
+const normalizeDogs = dogs => {
+  return dogs.map(dog => ({
+    owner: dog.owner,
+    dogs: [dog.dog.imageUri]
+  }))
+}
+
+const normalizeUsers = users => {
+  return users.map(user => {
+    return {
+      owner: {
+        description: user.description,
+        uid: user.uid,
+        name: user.username,
+        photoURL: user.photoURL
+      },
+      dogs: user.dogs
+    }
+  })
+}
+
+export { searchUsers, searchDogs }

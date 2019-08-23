@@ -1,19 +1,28 @@
+import firebase from "react-native-firebase"
+import _ from "lodash"
+
 import {
   dogsRef,
   uploadImage,
   deleteImage,
-  dogNamesRef,
-  currentUser
+  dogNamesRef
 } from "../../Utils/FirebaseUtils"
 
 /**
  * Adds a dog to a user's list of dogs.
  */
-addDog = async (ownerId, name, breed, imageUri) => {
+const addDog = async (ownerId, name, breed, imageUri) => {
   // Get new dog ref
   const newDogRef = dogsRef.child(ownerId).push()
   // Upload image of dog
   const url = await uploadImage(imageUri, ownerId, "dogs/" + newDogRef.key)
+  const owner = await firebase
+    .database()
+    .ref()
+    .child("users")
+    .child(ownerId)
+    .once("value")
+    .then(snap => snap.val())
 
   // Store new dog at /dogs/ { userId } / { new dog ID }
   const newDog = {
@@ -21,28 +30,57 @@ addDog = async (ownerId, name, breed, imageUri) => {
     imageUri: url,
     breed: breed,
     ownerId: ownerId,
-    key: newDogRef.key
+    id: newDogRef.key
   }
 
-  const newDogSnap = await newDogRef.set(newDog)
-  const dogNameSnap = await dogNamesRef.child(newDog.key).set({
-    dogId: newDog.key,
-    ownerId: ownerId,
+  const dogImagesRef = firebase
+    .database()
+    .ref()
+    .child("names/users")
+    .child(ownerId)
+    .child("dogs")
+
+  const dogImages = await dogImagesRef
+    .once("value")
+    .then(snap => snap.val() || [])
+
+  console.log(dogImages)
+
+  dogImages.push(newDog.imageUri)
+  dogImagesRef.set(dogImages)
+
+  await newDogRef.set(newDog)
+  await dogNamesRef.child(newDog.id).set({
+    dog: newDog,
+    dogName: newDog.name,
     owner: {
       uid: ownerId,
-      name: currentUser().displayName
-    },
-    dogName: newDog.name
+      name: owner.username,
+      photoURL: owner.photoURL,
+      description: owner.description
+    }
   })
 
   return Promise.resolve(newDog)
 }
 
-updateDog = (oldDog, newDog) => {
+const updateDog = async (oldDog, newDog) => {
   // Get a reference to the old dog ref
   const newDogRef = dogsRef.child(oldDog.ownerId).child(oldDog.key)
   // Check if we need to upload new image
   if (oldDog.imageUri !== newDog.imageUri) {
+    const dogImagesRef = firebase
+      .database()
+      .ref()
+      .child("names/users")
+      .child(ownerId)
+      .child("dogs")
+
+    const oldDogImages = await dogImagesRef
+      .once("value")
+      .then(snap => snap.val() || [])
+    _.delete(oldDogImages, oldDog.imageUri)
+
     // Delete old image
     deleteImage(oldDog.ownerId, "dogs/" + newDogRef.key)
     return uploadImage(
@@ -50,7 +88,8 @@ updateDog = (oldDog, newDog) => {
       oldDog.ownerId,
       "dogs/" + newDogRef.key
     ).then(url => {
-      // Store new dog at /dogs/ { userId } / { new dog ID }
+      oldDogImages.push(url)
+      dogImagesRef.set(oldDogImages)
       newDog["imageUri"] = url
       return newDogRef.set(newDog).then(() => {
         return newDog
@@ -61,7 +100,7 @@ updateDog = (oldDog, newDog) => {
   }
 }
 
-fetchDogsForUser = async ownerId => {
+const fetchDogsForUser = async ownerId => {
   const dogsSnap = await dogsRef.child(ownerId).once("value")
 
   return Object.values(dogsSnap.val() || {})

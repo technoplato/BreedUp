@@ -157,7 +157,7 @@ export default class DogDetailsScreen extends React.Component {
     return (
       <CameraModal
         onPictureApproved={this.onNewDogImageUri}
-        isVisible={this.state.photoEditModalVisible}
+        isModalVisible={this.state.photoEditModalVisible}
         cancel={() => this.showPhotoModal(false)}
       />
     )

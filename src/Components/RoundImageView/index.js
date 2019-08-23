@@ -20,7 +20,7 @@ export default class RoundImageView extends React.Component {
     const { onPress } = this.props
     if (onPress) {
       image = (
-        <TouchableWithoutFeedback onPress={onPress}>
+        <TouchableWithoutFeedback style={this.props.style} onPress={onPress}>
           {image}
         </TouchableWithoutFeedback>
       )

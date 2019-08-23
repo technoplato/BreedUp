@@ -88,7 +88,12 @@ export default class SignUpScreen extends React.Component {
             .ref("names")
             .child("users")
             .child(userData.uid)
-            .set({ username, uid: userData.uid })
+            .set({
+              username,
+              uid: userData.uid,
+              profileURL:
+                "https://www.instamobile.io/wp-content/uploads/2019/05/default-avatar.jpg"
+            })
         })
         .then(() => this.props.navigation.navigate("Feed"))
         .catch(error => {

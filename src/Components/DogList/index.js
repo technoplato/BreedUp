@@ -126,5 +126,5 @@ export default class DogList extends React.Component {
     return this.state.loading ? this.renderLoading() : this.renderList()
   }
 
-  keyExtractor = item => item.key
+  keyExtractor = item => item.id
 }

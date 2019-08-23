@@ -16,11 +16,6 @@ export default class Camera extends React.Component {
     ratio: "16:9"
   }
 
-  getRatios = async function() {
-    const ratios = await this.camera.getSupportedRatios()
-    return ratios
-  }
-
   toggleFacing() {
     this.setState({
       type: this.state.type === "back" ? "front" : "back"
@@ -91,16 +86,5 @@ export default class Camera extends React.Component {
         {this.renderButtons()}
       </View>
     )
-  }
-
-  pickImage = () => {
-    ImagePicker.launchImageLibrary(null, response => {
-      if (response.didCancel) {
-      } else if (response.error) {
-      } else if (response.customButton) {
-      } else {
-        this.props.onNewPhotoUri(response.uri)
-      }
-    })
   }
 }
