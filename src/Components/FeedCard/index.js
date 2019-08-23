@@ -101,6 +101,7 @@ export default class FeedCard extends React.Component {
           buttonStyle={styles.button}
           textStyle={styles.buttonText}
           title="Like"
+          titleStyle={{ color: likeColor }}
           icon={{ name: "thumb-up", color: likeColor }}
           onPress={() =>
             this.props.onLikePressed(this.props.item.key, this.props.liked)
@@ -110,6 +111,7 @@ export default class FeedCard extends React.Component {
           buttonStyle={styles.button}
           textStyle={styles.buttonText}
           title="Comment"
+          titleStyle={{ color: "grey" }}
           icon={{ name: "comment", color: "grey" }}
           onPress={() => this.props.onCommentPressed(this.props.item)}
         />
@@ -117,6 +119,7 @@ export default class FeedCard extends React.Component {
           buttonStyle={styles.button}
           textStyle={styles.buttonText}
           title="Share"
+          titleStyle={{ color: "grey" }}
           icon={{ name: "share", color: "grey" }}
           onPress={() =>
             this.props.onSharePressed(this.props.item.key, this.props.item.text)
