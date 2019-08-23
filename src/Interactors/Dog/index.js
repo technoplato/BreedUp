@@ -66,7 +66,7 @@ const addDog = async (ownerId, name, breed, imageUri) => {
 
 const updateDog = async (oldDog, newDog) => {
   // Get a reference to the old dog ref
-  const newDogRef = dogsRef.child(oldDog.ownerId).child(oldDog.key)
+  const newDogRef = dogsRef.child(oldDog.ownerId).child(oldDog.id)
   // Check if we need to upload new image
   if (oldDog.imageUri !== newDog.imageUri) {
     const dogImagesRef = firebase

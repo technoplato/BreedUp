@@ -27,7 +27,7 @@
     "react-native-button": "^2.4.0",
     "react-native-camera": "^1.1.4",
     "react-native-dialog-input": "^1.0.7",
-    "react-native-elements": "^0.19.1",
+    "react-native-elements": "^1.1.0",
     "react-native-fast-image": "^7.0.2",
     "react-native-firebase": "^5.1.1",
     "react-native-image-picker": "^0.26.10",

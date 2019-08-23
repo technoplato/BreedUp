@@ -108,7 +108,7 @@ export default class SubmitPostScreen extends React.Component {
 
   onDogPress = dog => {
     const pendingDogs = this.state.pendingDogs || []
-    const index = _.findIndex(pendingDogs, { key: dog.key })
+    const index = _.findIndex(pendingDogs, { id: dog.id })
     if (index !== -1) {
       // Remove dog from pending dogs
       pendingDogs.splice(index, 1)

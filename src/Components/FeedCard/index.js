@@ -10,11 +10,13 @@ export default class FeedCard extends React.Component {
   render() {
     return (
       <Card containerStyle={styles.cardContainer}>
-        {this.renderCardHeader()}
-        {this.renderText()}
-        {this.renderImage()}
-        {this.renderButtons()}
-        {this.renderComments()}
+        <View>
+          {this.renderCardHeader()}
+          {this.renderText()}
+          {this.renderImage()}
+          {this.renderButtons()}
+          {this.renderComments()}
+        </View>
       </Card>
     )
   }
@@ -50,7 +52,7 @@ export default class FeedCard extends React.Component {
               )
             }
             rounded
-            size={350}
+            size={35}
             source={{ uri: author_img_url }}
           />
           <View style={styles.postMetadata}>

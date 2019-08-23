@@ -131,7 +131,7 @@ export default class Profile extends React.Component {
         onBackdropPress={() => this.setTextEditingModalVisible(false)}
         style={{ justifyContent: "center", alignItems: "center" }}
       >
-        <View style={{ width: "100%", height: "100%" }}>
+        <View style={{ width: "100%", height: "70%" }}>
           <View style={{ padding: 12, backgroundColor: "white" }}>
             <Text>Username</Text>
             <TextInput
@@ -322,7 +322,6 @@ export default class Profile extends React.Component {
   }
 
   showPhotoModal(doShow) {
-    console.log("show photo modal: ", doShow)
     this.setState({
       photoEditModalVisible: doShow
     })
@@ -353,7 +352,7 @@ export default class Profile extends React.Component {
             onPress={() => {
               this.state.currentUserProfile && this.showPhotoModal(true)
             }}
-            size={92}
+            size={120}
             source={{
               uri:
                 this.state.avatarURL ||
@@ -364,37 +363,12 @@ export default class Profile extends React.Component {
         <View style={styles.header.textAndButtonContainer}>
           <View style={styles.header.topRow}>
             <View style={styles.header.usernameContainer}>
-              <Text
-                onPress={() => {
-                  {
-                    if (this.state.currentUserProfile) {
-                      this.setTextEditingModalVisible(true)
-                    }
-                  }
-                }}
-                style={styles.header.username}
-              >
-                {this.state.username}
-              </Text>
+              <Text style={styles.header.username}>{this.state.username}</Text>
             </View>
             <View style={styles.header.buttonContainer}>
-              {!this.state.currentUserProfile && (
-                <Button
-                  buttonStyle={{ backgroundColor: Colors.dogBoneBlue }}
-                  title={!this.state.isFollowed ? "Add to Pack" : "Unfollow"}
-                  onPress={() => {
-                    if (!this.state.isFollowed) {
-                      followUser(this.state.uid).then(followed => {
-                        this.setState({ isFollowed: true })
-                      })
-                    } else {
-                      unfollowUser(this.state.uid).then(followed => {
-                        this.setState({ isFollowed: false })
-                      })
-                    }
-                  }}
-                />
-              )}
+              {this.state.currentUserProfile
+                ? this.renderEditProfileButton()
+                : this.renderFollowButton()}
             </View>
           </View>
 
@@ -405,6 +379,50 @@ export default class Profile extends React.Component {
           </View>
         </View>
       </View>
+    )
+  }
+
+  renderEditProfileButton() {
+    return (
+      <Button
+        type="outline"
+        titleStyle={{ color: "black" }}
+        buttonStyle={{
+          backgroundColor: "white",
+          borderWidth: 2,
+          borderColor: Colors.dogBoneBlue
+        }}
+        title={"Edit Profile"}
+        onPress={() => {
+          this.setTextEditingModalVisible(true)
+        }}
+      />
+    )
+  }
+
+  renderFollowButton() {
+    return (
+      <Button
+        type="outline"
+        titleStyle={{ color: "black" }}
+        buttonStyle={{
+          backgroundColor: "white",
+          borderWidth: 2,
+          borderColor: Colors.dogBoneBlue
+        }}
+        title={!this.state.isFollowed ? "Add to Pack" : "Unfollow"}
+        onPress={() => {
+          if (!this.state.isFollowed) {
+            followUser(this.state.uid).then(followed => {
+              this.setState({ isFollowed: true })
+            })
+          } else {
+            unfollowUser(this.state.uid).then(followed => {
+              this.setState({ isFollowed: false })
+            })
+          }
+        }}
+      />
     )
   }
 
@@ -465,6 +483,7 @@ const styles = {
   header: StyleSheet.create({
     container: {
       flexDirection: "row",
+      backgroundColor: "white",
       width: "100%"
     },
     textAndButtonContainer: {
@@ -478,8 +497,8 @@ const styles = {
     },
     avatarContainer: {
       margin: 12,
-      height: 92,
-      width: 92
+      height: 120,
+      width: 120
     },
     usernameContainer: {
       alignItems: "center",
@@ -500,8 +519,10 @@ const styles = {
 
   dogList: StyleSheet.create({
     container: {
-      height: 90,
-      width: "100%"
+      height: 96,
+      width: "100%",
+      borderTopWidth: 1,
+      borderColor: "grey"
     },
     list: {
       flex: 1,
@@ -511,9 +532,7 @@ const styles = {
   }),
 
   postList: StyleSheet.create({
-    container: {
-      flex: 1
-    },
+    container: {},
     list: {
       flex: 1,
       justifyContent: "center",

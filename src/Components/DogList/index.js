@@ -1,12 +1,15 @@
 import React from "react"
-import { View, Button, FlatList, ActivityIndicator } from "react-native"
+import { View, FlatList, ActivityIndicator } from "react-native"
 import _ from "lodash"
 
 import DogListItem from "../DogListItem"
+import RoundPlus from "../RoundPlus"
 import styles from "./DogListStyles"
+
 import { Colors } from "../../Themes"
 
 import { fetchDogsForUser } from "../../Interactors/Dog"
+import { Text } from "react-native-elements"
 
 export default class DogList extends React.Component {
   constructor(props) {
@@ -36,6 +39,7 @@ export default class DogList extends React.Component {
   renderItem = ({ item }) => {
     return (
       <DogListItem
+        size={64}
         onDogPress={this.props.onDogPress}
         onAddDogPress={this.onAddDogPress}
         item={item}
@@ -54,16 +58,7 @@ export default class DogList extends React.Component {
     return (
       this.props.currentUser &&
       this.props.canAddDog && (
-        <View
-          style={{
-            height: "100%",
-            width: 96,
-            alignItems: "center",
-            justifyContent: "center"
-          }}
-        >
-          <Button onPress={this.onAddDogPress} title="Add Dog" />
-        </View>
+        <RoundPlus onPress={this.onAddDogPress} size={64} />
       )
     )
   }
@@ -98,16 +93,31 @@ export default class DogList extends React.Component {
    */
   renderList = () => {
     return (
-      <View style={{ flex: 1, flexDirection: "row", paddingLeft: 24 }}>
+      <View
+        style={{
+          flex: 1,
+          height: 44 * 1.1,
+          flexDirection: "row",
+          alignItems: "center",
+          paddingLeft: 24,
+          backgroundColor: "white"
+        }}
+      >
         {this.renderAddButton()}
-        <FlatList
-          horizontal
-          style={styles.container}
-          data={this.state.dogs}
-          extraData={this.state}
-          renderItem={this.renderItem}
-          keyExtractor={this.keyExtractor}
-        />
+        {this.state.dogs.length > 0 ? (
+          <FlatList
+            horizontal
+            style={styles.container}
+            data={this.state.dogs}
+            extraData={this.state}
+            renderItem={this.renderItem}
+            keyExtractor={this.keyExtractor}
+          />
+        ) : (
+          <Text style={{ marginLeft: 12, fontSize: 26, fontStyle: "italic" }}>
+            No dogs added yet
+          </Text>
+        )}
       </View>
     )
   }

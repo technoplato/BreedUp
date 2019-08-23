@@ -5,7 +5,8 @@ import { Image, TouchableWithoutFeedback } from "react-native"
 export default class RoundImageView extends React.Component {
   static propTypes = {
     size: PropTypes.number.isRequired,
-    source: PropTypes.objectOf(PropTypes.string).isRequired
+    source: PropTypes.objectOf(PropTypes.string).isRequired,
+    onPress: PropTypes.func
   }
 
   render() {
@@ -20,7 +21,10 @@ export default class RoundImageView extends React.Component {
     const { onPress } = this.props
     if (onPress) {
       image = (
-        <TouchableWithoutFeedback style={this.props.style} onPress={onPress}>
+        <TouchableWithoutFeedback
+          style={{ ...this.props.style }}
+          onPress={onPress}
+        >
           {image}
         </TouchableWithoutFeedback>
       )
