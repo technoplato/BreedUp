@@ -350,8 +350,12 @@ class SearchModal extends React.Component {
                 AppStyles.styleSet.searchBar.container,
                 { marginLeft: 0 }
               ]}
-              inputStyle={AppStyles.styleSet.searchBar.input}
-              showLoading
+              inputStyle={[
+                AppStyles.styleSet.searchBar.input,
+                {
+                  color: "white"
+                }
+              ]}
               autoFocus
               clearIcon
               searchIcon
