@@ -53,13 +53,14 @@ const SearchResultUser = ({ item, onResultPress }) => {
           </View>
         </View>
         <View style={{ flexDirection: "row" }}>
-          {item.dogs.map(dogImageUri => (
-            <RoundImageView
-              key={dogImageUri}
-              size={24}
-              source={{ uri: dogImageUri }}
-            />
-          ))}
+          {item.dogs &&
+            item.dogs.map(dogImageUri => (
+              <RoundImageView
+                key={dogImageUri}
+                size={24}
+                source={{ uri: dogImageUri }}
+              />
+            ))}
         </View>
       </View>
     </TouchableHighlight>

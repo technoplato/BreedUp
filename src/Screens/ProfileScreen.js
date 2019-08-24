@@ -376,17 +376,16 @@ export default class Profile extends React.Component {
             <View style={styles.header.usernameContainer}>
               <Text style={styles.header.username}>{this.state.username}</Text>
             </View>
-            <View style={styles.header.buttonContainer}>
-              {this.state.currentUserProfile
-                ? this.renderEditProfileButton()
-                : this.renderFollowButton()}
-            </View>
           </View>
 
           <View style={styles.descriptionContainer}>
-            <Text onPress={() => this.setTextEditingModalVisible(true)}>
-              {this.state.description}
-            </Text>
+            <Text>{this.state.description}</Text>
+          </View>
+
+          <View style={styles.header.buttonContainer}>
+            {this.state.currentUserProfile
+              ? this.renderEditProfileButton()
+              : this.renderFollowButton()}
           </View>
         </View>
       </View>
@@ -515,10 +514,7 @@ const styles = {
       alignItems: "center",
       justifyContent: "center"
     },
-    buttonContainer: {
-      alignItems: "center",
-      justifyContent: "center"
-    },
+    buttonContainer: { padding: 8 },
     avatar: {
       height: 92,
       borderRadius: 46,
