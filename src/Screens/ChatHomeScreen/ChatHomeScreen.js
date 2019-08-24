@@ -6,8 +6,8 @@ import {
   Text,
   Image,
   TouchableOpacity,
-  Alert,
-  Platform
+  Platform,
+  Keyboard
 } from "react-native"
 import firebase from "react-native-firebase"
 import Icon from "react-native-vector-icons/Ionicons"
@@ -18,6 +18,11 @@ import ChatIconView from "../../Components/ChatIconView/ChatIconView"
 import SearchModal from "../../Components/SearchModal/SearchModal"
 import CreateGroupModal from "../../Components/CreateGroupModal/CreateGroupModal"
 import styles from "./styles"
+import TextButton from "react-native-button"
+
+const REQUEST_NONE = 0
+const REQUEST_TO_HIM = 1
+const REQUEST_TO_ME = 2
 
 class ChatHomeScreen extends React.Component {
   static navigationOptions = ({ navigation }) => ({
@@ -53,7 +58,9 @@ class ChatHomeScreen extends React.Component {
       heAcceptedFriendships: [],
       hiAcceptedFriendships: [],
       friends: [],
+      pendingFriends: [],
       chats: [],
+      users: [],
       channelParticipations: [],
       channels: [],
       imageErr: false
@@ -71,6 +78,12 @@ class ChatHomeScreen extends React.Component {
       .where("user2", "==", firebase.auth().currentUser.uid)
     this.iAcceptedFriendshipsUnsubscribe = null
 
+    this.toMePendingFriendshipsRef = firebase
+      .firestore()
+      .collection("pending_friendships")
+      .where("user2", "==", firebase.auth().currentUser.uid)
+    this.toMePendingFriendshipssUnsubscribe = null
+
     this.channelPaticipationRef = firebase
       .firestore()
       .collection("channel_participation")
@@ -85,7 +98,6 @@ class ChatHomeScreen extends React.Component {
   }
 
   async componentDidMount() {
-    const self = this
     const channel = new firebase.notifications.Android.Channel(
       "test-channel",
       "Test Channel",
@@ -94,20 +106,23 @@ class ChatHomeScreen extends React.Component {
 
     firebase.notifications().android.createChannel(channel)
 
-    self.heAcceptedFriendshipsUnsubscribe = this.heAcceptedFriendshipsRef.onSnapshot(
+    this.heAcceptedFriendshipsUnsubscribe = this.heAcceptedFriendshipsRef.onSnapshot(
       this.onHeAcceptedFriendShipsCollectionUpdate
     )
-    self.iAcceptedFriendshipsUnsubscribe = this.iAcceptedFriendshipsRef.onSnapshot(
+    this.iAcceptedFriendshipsUnsubscribe = this.iAcceptedFriendshipsRef.onSnapshot(
       this.onIAcceptedFriendShipsCollectionUpdate
     )
-    self.channelPaticipationUnsubscribe = this.channelPaticipationRef.onSnapshot(
+    this.toMePendingFriendshipssUnsubscribe = this.toMePendingFriendshipsRef.onSnapshot(
+      this.onPendingFriendShipsCollectionUpdate
+    )
+    this.channelPaticipationUnsubscribe = this.channelPaticipationRef.onSnapshot(
       this.onChannelParticipationCollectionUpdate
     )
-    self.channelsUnsubscribe = this.channelsRef.onSnapshot(
+    this.channelsUnsubscribe = this.channelsRef.onSnapshot(
       this.onChannelCollectionUpdate
     )
 
-    self.props.navigation.setParams({
+    this.props.navigation.setParams({
       onCreate: this.onCreate
     })
   }
@@ -116,8 +131,22 @@ class ChatHomeScreen extends React.Component {
     this.usersUnsubscribe()
     this.heAcceptedFriendshipsUnsubscribe()
     this.iAcceptedFriendshipsUnsubscribe()
+    this.toMePendingFriendshipssUnsubscribe()
     this.channelPaticipationUnsubscribe()
     this.channelsUnsubscribe()
+  }
+
+  onPendingFriendShipsCollectionUpdate = querySnapshot => {
+    const data = []
+    querySnapshot.forEach(doc => {
+      const temp = doc.data()
+      temp.id = doc.id
+      data.push(temp)
+    })
+
+    this.setState({
+      pendingFriends: data
+    })
   }
 
   onUsersCollectionUpdate = querySnapshot => {
@@ -388,6 +417,59 @@ class ChatHomeScreen extends React.Component {
     )
   }
 
+  renderFriendRequest = ({ item }) => {
+    return (
+      <TouchableOpacity onPress={() => this.onPressUser(item)}>
+        <View style={styles.pendingFriendContainer}>
+          <Image
+            style={styles.userPhoto}
+            source={
+              item.user2imageUrl
+                ? { uri: item.user2imageUrl }
+                : AppStyles.iconSet.userAvatar
+            }
+          />
+          <Text style={styles.name}>{item.user2name}</Text>
+
+          <TextButton
+            style={[styles.request, styles.accept]}
+            onPress={() => this.onAccept(item)}
+          >
+            Accept
+          </TextButton>
+        </View>
+      </TouchableOpacity>
+    )
+  }
+
+  onAccept = item => {
+    const data = {
+      user1: item.id,
+      user2: firebase.auth().currentUser.uid
+    }
+    Keyboard.dismiss()
+
+    firebase
+      .firestore()
+      .collection("pending_friendships")
+      .doc(item.id)
+      .delete()
+    firebase
+      .firestore()
+      .collection("friendships")
+      .add(data)
+      .then(function(docRef) {
+        alert("Successfully accept friend request!")
+      })
+      .catch(function(error) {
+        alert(error)
+      })
+  }
+
+  onPressUser = item => {
+    Keyboard.dismiss()
+  }
+
   onTapSearch = () => {
     this.setState({ searchModalVisible: true })
   }
@@ -422,6 +504,15 @@ class ChatHomeScreen extends React.Component {
             data={this.state.friends}
             showsHorizontalScrollIndicator={false}
             renderItem={this.renderFriendItem}
+            keyExtractor={item => `${item.id}`}
+          />
+        </View>
+        <View>
+          <FlatList
+            vertical
+            showsVerticalScrollIndicator={false}
+            data={this.state.pendingFriends}
+            renderItem={this.renderFriendRequest}
             keyExtractor={item => `${item.id}`}
           />
         </View>

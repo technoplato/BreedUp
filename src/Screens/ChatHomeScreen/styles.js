@@ -25,6 +25,14 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     flex: 1
   },
+  pendingFriendContainer: {
+    backgroundColor: "white",
+    flex: 1,
+    padding: 10,
+    justifyContent: "space-between",
+    alignItems: "center",
+    flexDirection: "row"
+  },
   userPhoto: {
     width: 40,
     height: 40,
@@ -49,6 +57,14 @@ const styles = StyleSheet.create({
   friendName: {
     marginTop: 10,
     alignSelf: "center"
+  },
+  name: {
+    marginLeft: 20,
+    alignSelf: "center",
+    flex: 1,
+    fontSize: 17,
+    fontWeight: "bold",
+    color: AppStyles.colorSet.mainTextColor
   },
   chats: {
     flex: 1,

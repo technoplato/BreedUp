@@ -211,9 +211,12 @@ class SearchModal extends React.Component {
   }
 
   onAdd = item => {
+    console.log(item)
     const data = {
       user1: firebase.auth().currentUser.uid,
       user2: item.id,
+      user2name: firebase.auth().currentUser.displayName,
+      user2imageUrl: firebase.auth().currentUser.photoURL,
       created_at: firebase.firestore.FieldValue.serverTimestamp()
     }
     Keyboard.dismiss()

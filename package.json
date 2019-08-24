@@ -7,7 +7,7 @@
     "test": "jest",
     "prettier": "prettier --write '**/*.{ts,js,json }'",
     "xr": "react-native run-ios --simulator=\"iPhone Xʀ\" --port=8088",
-    "xs": "react-native run-ios --simulator=\"iPhone XS\" --port=8089",
+    "xs": "react-native run-ios --simulator=\"iPhone Xs\" --port=8089",
     "phone": "react-native run-ios --device --port=8123"
   },
   "dependencies": {

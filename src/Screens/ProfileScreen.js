@@ -223,6 +223,17 @@ export default class Profile extends React.Component {
       })
 
     firebase
+      .firestore()
+      .collection("users")
+      .doc(this.state.uid)
+      .update({
+        username: modifiedUsername.toLowerCase(),
+        uid: this.state.uid,
+        photoURL: modifiedAvatarURL,
+        profileURL: modifiedAvatarURL
+      })
+
+    firebase
       .database()
       .ref()
       .child("names")

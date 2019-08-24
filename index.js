@@ -4,6 +4,7 @@ YellowBox.ignoreWarnings([
   "Unable to symbolicate",
   "Warning: isMounted(...)",
   "Module RCTImageLoader",
-  "Warning: In next release empty"
+  "Warning: In next release empty",
+  "Class RCTCxxModule"
 ])
 AppRegistry.registerComponent("BreedUp", () => App)
