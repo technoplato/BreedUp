@@ -17,11 +17,13 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.0.3</string>
+	<string>1.0.5</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>4</string>
+	<string>6</string>
+	<key>LSApplicationCategoryType</key>
+	<string></string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
@@ -39,6 +41,8 @@
 	</dict>
 	<key>NSCameraUsageDescription</key>
 	<string>We need your permission to take photos of you and your pooch!</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>We need to access your location to tag your posts correctly and show you relevant information.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>We need your permission to access location to create an event near you!</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
@@ -77,8 +81,6 @@
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
-		<string>UIInterfaceOrientationLandscapeLeft</string>
-		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
