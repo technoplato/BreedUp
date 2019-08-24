@@ -1,10 +1,18 @@
 import React from "react"
 import { Card, Avatar, Button } from "react-native-elements"
-import { View, Text, Image, TouchableWithoutFeedback } from "react-native"
+import {
+  View,
+  Text,
+  Image,
+  TouchableWithoutFeedback,
+  Alert
+} from "react-native"
 import moment from "moment"
 
 import styles from "./FeedCardStyles"
 import { Colors } from "../../Themes"
+
+import firebase from "react-native-firebase"
 
 export default class FeedCard extends React.Component {
   render() {
@@ -25,10 +33,10 @@ export default class FeedCard extends React.Component {
     const {
       author_username,
       author_img_url,
-      time_posted,
+      timestamp,
       view_count
     } = this.props.item
-    const time_since_post = moment(time_posted).fromNow()
+    const time_since_post = moment(timestamp).fromNow()
     /* We add 1 to the view_count here and take care of that on the backend as a hack */
     const fudgedViewCount = (view_count || 0) + 1
     const viewCountSuffix = fudgedViewCount == 1 ? "view" : "views"
@@ -70,6 +78,41 @@ export default class FeedCard extends React.Component {
               {time_since_post} | {fudgedViewCount + " " + viewCountSuffix}
             </Text>
             {dogNameTextView}
+          </View>
+          <View
+            style={{
+              flexDirection: "row",
+              flex: 1,
+              justifyContent: "flex-end"
+            }}
+          >
+            <Text
+              onPress={() => {
+                Alert.alert(
+                  "Report post?",
+                  "Do you really want to report this post?",
+                  [
+                    {
+                      text: "Cancel",
+                      onPress: () => console.log("Cancel Pressed"),
+                      style: "cancel"
+                    },
+                    {
+                      text: "Yes, report this post",
+                      onPress: () => {
+                        firebase
+                          .firestore()
+                          .collection("reported")
+                          .add(this.props.item)
+                      }
+                    }
+                  ],
+                  { cancelable: false }
+                )
+              }}
+            >
+              REPORT
+            </Text>
           </View>
         </View>
       </View>
