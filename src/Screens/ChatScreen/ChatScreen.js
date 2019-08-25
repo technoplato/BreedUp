@@ -111,7 +111,7 @@ class ChatScreen extends React.Component {
       .then(snap => snap.data())
 
     return {
-      name: name || others[0].username,
+      name: name,
       participants: others,
       id: channelId
     }

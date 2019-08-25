@@ -180,11 +180,7 @@ export default class Profile extends React.Component {
     this.setTextEditingModalVisible(false)
     this.setSaving(false)
 
-    const {
-      modifiedDescription,
-      modifiedAvatarURL,
-      modifiedUsername
-    } = this.state
+    const { modifiedDescription, modifiedUsername } = this.state
 
     const petImageArray = await firebase
       .database()
@@ -206,13 +202,10 @@ export default class Profile extends React.Component {
       .child(`users/${this.state.uid}`)
       .update({
         description: modifiedDescription,
-        profileURL: modifiedAvatarURL,
-        photoURL: modifiedAvatarURL,
         username: modifiedUsername.toLowerCase()
       })
       .then(() => {
         this.setState({
-          avatarURL: modifiedAvatarURL,
           username: modifiedUsername,
           description: modifiedDescription,
 
@@ -228,9 +221,7 @@ export default class Profile extends React.Component {
       .doc(this.state.uid)
       .update({
         username: modifiedUsername.toLowerCase(),
-        uid: this.state.uid,
-        photoURL: modifiedAvatarURL,
-        profileURL: modifiedAvatarURL
+        uid: this.state.uid
       })
 
     firebase
@@ -243,8 +234,7 @@ export default class Profile extends React.Component {
         username: modifiedUsername.toLowerCase(),
         uid: this.state.uid,
         dogs: petImageArray,
-        description: modifiedDescription,
-        photoURL: modifiedAvatarURL
+        description: modifiedDescription
       })
   }
 
