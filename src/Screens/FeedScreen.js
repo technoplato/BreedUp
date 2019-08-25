@@ -98,6 +98,8 @@ export default class FeedScreen extends React.Component {
     this.removeNotificationListener = firebase
       .notifications()
       .onNotification(notification => {
+        if (global.activeChatChannelId === notification.data.channelId) return
+
         // Process your notification as required
         notification.android.setChannelId("test-channel")
 

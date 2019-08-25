@@ -83,6 +83,8 @@ class ChatScreen extends React.Component {
 
     if (!channel) throw "No channel loaded"
 
+    global.activeChatChannelId = channel.id
+
     this.threadsRef = firebase
       .firestore()
       .collection("channels")
@@ -157,6 +159,7 @@ class ChatScreen extends React.Component {
 
   componentWillUnmount() {
     this.threadsUnscribe && this.threadsUnscribe()
+    global.activeChatChannelId = ""
   }
 
   existSameSentMessage = (messages, newMessage) => {
