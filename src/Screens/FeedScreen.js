@@ -108,12 +108,16 @@ export default class FeedScreen extends React.Component {
       .notifications()
       .onNotificationOpened(notificationOpen => {
         const { notification } = notificationOpen
-        this.props.navigation.navigate("Chat", {
-          channel: {
-            fromDeepLink: true,
-            id: notification.data.channelId
-          }
-        })
+        if (notification.title.includes("New message")) {
+          this.props.navigation.navigate("Chat", {
+            channel: {
+              fromDeepLink: true,
+              id: notification.data.channelId
+            }
+          })
+        } else if (notification.title.includes("New Friend Request")) {
+          this.props.navigation.navigate("ChatHome")
+        }
       })
   }
 

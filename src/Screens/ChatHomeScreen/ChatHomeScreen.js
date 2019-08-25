@@ -424,12 +424,12 @@ class ChatHomeScreen extends React.Component {
           <Image
             style={styles.userPhoto}
             source={
-              item.user2imageUrl
-                ? { uri: item.user2imageUrl }
+              item.user1imageUrl
+                ? { uri: item.user1imageUrl }
                 : AppStyles.iconSet.userAvatar
             }
           />
-          <Text style={styles.name}>{item.user2name}</Text>
+          <Text style={styles.name}>{item.user1name}</Text>
 
           <TextButton
             style={[styles.request, styles.accept]}
@@ -442,17 +442,17 @@ class ChatHomeScreen extends React.Component {
     )
   }
 
-  onAccept = item => {
+  onAccept = pendingFriendRequest => {
     const data = {
-      user1: item.id,
-      user2: firebase.auth().currentUser.uid
+      user1: pendingFriendRequest.user1,
+      user2: pendingFriendRequest.user2
     }
     Keyboard.dismiss()
 
     firebase
       .firestore()
       .collection("pending_friendships")
-      .doc(item.id)
+      .doc(pendingFriendRequest.id)
       .delete()
     firebase
       .firestore()
@@ -482,9 +482,31 @@ class ChatHomeScreen extends React.Component {
     this.setState({ createGroupModalVisible: false })
   }
 
+  deleteCollection = collectionRef => {
+    collectionRef.onSnapshot(snap =>
+      snap.forEach(doc => collectionRef.doc(doc.id).delete())
+    )
+  }
+
   render() {
     return (
       <ScrollView style={styles.container} keyboardShouldPersistTaps="always">
+        {/*<TouchableOpacity*/}
+        {/*  style={{ height: 100, width: "100%", backgroundColor: "red" }}*/}
+        {/*  onPress={() => {*/}
+        {/*    const collections = [*/}
+        {/*      "friendships",*/}
+        {/*      "channel_participation",*/}
+        {/*      "pending_friendships",*/}
+        {/*      "channels"*/}
+        {/*    ]*/}
+        {/*    collections.forEach(c =>*/}
+        {/*      this.deleteCollection(firebase.firestore().collection(c))*/}
+        {/*    )*/}
+        {/*  }}*/}
+        {/*>*/}
+        {/*  BLOW EVERYTHING UP*/}
+        {/*</TouchableOpacity>*/}
         <TouchableOpacity onPress={this.onTapSearch}>
           <View style={styles.searchSection}>
             <Icon
@@ -504,7 +526,9 @@ class ChatHomeScreen extends React.Component {
             data={this.state.friends}
             showsHorizontalScrollIndicator={false}
             renderItem={this.renderFriendItem}
-            keyExtractor={item => `${item.id}`}
+            keyExtractor={item => {
+              return `${item.id}`
+            }}
           />
         </View>
         <View>
@@ -513,7 +537,9 @@ class ChatHomeScreen extends React.Component {
             showsVerticalScrollIndicator={false}
             data={this.state.pendingFriends}
             renderItem={this.renderFriendRequest}
-            keyExtractor={item => `${item.id}`}
+            keyExtractor={item => {
+              return `${item.id}`
+            }}
           />
         </View>
         <View style={styles.chats}>
@@ -522,7 +548,9 @@ class ChatHomeScreen extends React.Component {
             showsVerticalScrollIndicator={false}
             data={this.state.channels}
             renderItem={this.renderChatItem}
-            keyExtractor={item => `${item.id}`}
+            keyExtractor={item => {
+              return `${item.id}`
+            }}
           />
         </View>
         {this.state.searchModalVisible && (

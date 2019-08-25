@@ -191,9 +191,11 @@ class ChatScreen extends React.Component {
   onSettingActionDone = index => {
     if (index === 0) {
       this.showRenameDialog(true)
-    } else if (index === 1) {
-      this.onLeave()
     }
+
+    // else if (index === 1) {
+    //   this.onLeave()
+    // }
   }
 
   onConfirmActionDone = index => {
@@ -513,9 +515,8 @@ class ChatScreen extends React.Component {
         <ActionSheet
           ref={o => (this.settingActionSheet = o)}
           title="Group Settings"
-          options={["Rename Group", "Leave Group", "Cancel"]}
+          options={["Rename Group", "Cancel"]}
           cancelButtonIndex={2}
-          destructiveButtonIndex={1}
           onPress={index => {
             this.onSettingActionDone(index)
           }}

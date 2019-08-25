@@ -211,12 +211,13 @@ class SearchModal extends React.Component {
   }
 
   onAdd = item => {
-    console.log(item)
     const data = {
+      // user1 should be called sender
       user1: firebase.auth().currentUser.uid,
+      user1name: firebase.auth().currentUser.displayName,
+      user1imageUrl: firebase.auth().currentUser.photoURL,
+      // user2 should be called recipient
       user2: item.id,
-      user2name: firebase.auth().currentUser.displayName,
-      user2imageUrl: firebase.auth().currentUser.photoURL,
       created_at: firebase.firestore.FieldValue.serverTimestamp()
     }
     Keyboard.dismiss()
