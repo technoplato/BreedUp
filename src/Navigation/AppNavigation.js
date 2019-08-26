@@ -5,17 +5,38 @@ import Main from "./Main"
 
 import Fiddling from "../Screens/Fiddling"
 import React from "react"
+import { Text } from "react-native-elements"
+import * as firebase from "firebase-admin"
 
-const RootNav = createSwitchNavigator(
-  {
-    Onboarding: Onboarding,
-    Main: Main,
-    Fiddling: Fiddling
-  },
-  {
-    initialRouteName: "Onboarding"
+class Testing extends React.Component {
+  async componentDidMount() {
+    const fs = firebase.firestore()
+    const c1 = fs.collection("testing1")
+    const c2 = fs.collection("testing2")
+
+    await c1
+      .doc("test1")
+      .collection("sub")
+      .add({ name: "foo", type: "bar" })
+    await c2
+      .doc("test2")
+      .collection("sub")
+      .add({ name: "foo", type: "bar" })
+
+    fs.collectionGroup("sub")
   }
-)
+
+  render() {
+    return <Text>Testing... look at the console</Text>
+  }
+}
+
+const RootNav = createSwitchNavigator({
+  Testing: Testing,
+  Onboarding: Onboarding,
+  Main: Main,
+  Fiddling: Fiddling
+})
 
 // gets the current screen from navigation state
 function getActiveRouteName(navigationState) {
