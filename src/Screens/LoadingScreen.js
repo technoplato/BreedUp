@@ -11,7 +11,7 @@ export default class Loading extends React.Component {
     firebase.auth().onAuthStateChanged(async user => {
       if (user) {
         updateUserLocation(user.uid)
-        this.props.navigation.navigate("Search")
+        this.props.navigation.navigate("Feed")
       } else {
         this.props.navigation.navigate("SignUp")
       }

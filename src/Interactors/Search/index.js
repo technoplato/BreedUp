@@ -61,7 +61,9 @@ const searchNearbyUsers = async (usernamePrefix, km = 15) => {
         .once("value")
         .then(snap => snap.val())
         .then(user => {
-          if (user.username.startsWith(usernamePrefix)) {
+          console.log("searchNearbyUsers")
+          console.log(user)
+          if (user && user.username.startsWith(usernamePrefix)) {
             return user
           }
         })
