@@ -1,9 +1,14 @@
 import React from "react"
 import { View, Text, FlatList, TouchableHighlight } from "react-native"
-import { SearchBar } from "react-native-elements"
+import { SearchBar, CheckBox } from "react-native-elements"
 
 import styles from "./SearchStyle"
-import { searchUsers, searchDogs } from "../Interactors/Search"
+import {
+  searchUsers,
+  searchDogs,
+  searchNearbyUsers,
+  searchNearbyDogs
+} from "../Interactors/Search"
 import RoundImageView from "../Components/RoundImageView"
 
 const ListEmptyComponent = ({ query }) => {
@@ -29,12 +34,8 @@ const ItemSeparatorComponent = () => {
 }
 
 const SearchResultUser = ({ item, onResultPress }) => {
-  console.log(item)
   return (
-    <TouchableHighlight
-      onPress={() => onResultPress(item)}
-      key={item.owner.uid}
-    >
+    <TouchableHighlight onPress={() => onResultPress(item)}>
       <View
         style={{
           flex: 1,
@@ -67,6 +68,41 @@ const SearchResultUser = ({ item, onResultPress }) => {
   )
 }
 
+const SearchResultDog = ({ item, onResultPress }) => {
+  const dog = item.dogs[0]
+  const owner = item.owner
+  return (
+    <TouchableHighlight onPress={() => onResultPress(item)}>
+      <View
+        style={{
+          flex: 1,
+          padding: 12,
+          flexDirection: "column",
+          backgroundColor: "white"
+        }}
+      >
+        <View style={{ flexDirection: "row", marginBottom: 12 }}>
+          <View style={{}}>
+            <RoundImageView size={64} source={{ uri: dog.imageUri }} />
+          </View>
+          <View style={{ marginLeft: 12, flexDirection: "column" }}>
+            <Text style={{ fontWeight: "bold", fontSize: 22 }}>{dog.name}</Text>
+          </View>
+        </View>
+        <View style={{ flexDirection: "row" }}>
+          <RoundImageView
+            key={owner.photoURL}
+            size={24}
+            source={{ uri: owner.photoURL }}
+          />
+          <Text
+            style={{ marginLeft: 8, fontWeight: "300", fontSize: 14 }}
+          >{`${owner.name}'s ${dog.breed}`}</Text>
+        </View>
+      </View>
+    </TouchableHighlight>
+  )
+}
 export default class SearchScreen extends React.Component {
   static navigationOptions = {
     header: null
@@ -74,8 +110,10 @@ export default class SearchScreen extends React.Component {
 
   state = {
     query: "",
-    results: []
+    results: [],
+    localSearch: false
   }
+
   render() {
     return (
       <View style={styles.screen}>
@@ -89,6 +127,23 @@ export default class SearchScreen extends React.Component {
           onClear={this.onClear}
           placeholder="Search for dog or user"
         />
+        <View>
+          <CheckBox
+            onPress={this.onLocalSearchToggle}
+            containerStyle={{
+              backgroundColor: "white",
+              width: "95%",
+              flexDirection: "row"
+            }}
+            title={
+              this.state.localSearch
+                ? "Uncheck to search everywhere!"
+                : "Check to search locally!"
+            }
+            checked={this.state.localSearch}
+          />
+        </View>
+
         <View style={styles.main}>
           <FlatList
             renderItem={this.renderResult}
@@ -102,26 +157,63 @@ export default class SearchScreen extends React.Component {
     )
   }
 
-  renderResult = ({ item }) => (
-    <SearchResultUser item={item} onResultPress={this.onResultPress} />
-  )
+  onLocalSearchToggle = () => {
+    this.setState({ localSearch: !this.state.localSearch }, () => {
+      this.performSearch(this.state.query)
+    })
+  }
 
-  onResultPress = result => {
+  renderResult = ({ item }) => {
+    if (item.type === "dog") {
+      return <SearchResultDog item={item} onResultPress={this.onDogPress} />
+    } else if (item.type === "person") {
+      return <SearchResultUser item={item} onResultPress={this.onUserPress} />
+    }
+  }
+
+  extractKey = item => {
+    if (item.type === "dog") {
+      return item.dogs[0].id
+    } else if (item.type === "person") {
+      return item.owner.uid
+    }
+  }
+
+  onUserPress = result => {
     this.props.navigation.navigate("PublicProfile", {
       userId: result.owner.uid,
       username: result.owner.name
     })
   }
 
-  extractKey = result => result.owner.uid
+  onDogPress = result => {
+    this.props.navigation.navigate("PublicProfile", {
+      userId: result.owner.uid,
+      username: result.owner.name
+    })
+  }
 
   onChangeText = async text => {
     this.setState({ query: text.toLowerCase() })
-    const users = await searchUsers(text)
-    // If Kent wants to search for dogs
-    // const dogs = await searchDogs(text)
-    // console.log(dogs)
-    this.setState({ results: users })
+    this.performSearch(text)
+  }
+
+  performSearch = async query => {
+    if (!query) {
+      this.setState({ results: [] })
+      return
+    }
+    const { localSearch } = this.state
+
+    const users = localSearch
+      ? await searchNearbyUsers(query)
+      : await searchUsers(query)
+
+    const dogs = localSearch
+      ? await searchNearbyDogs(query)
+      : await searchDogs(query)
+
+    this.setState({ results: users.concat(dogs) })
   }
 
   onClear = () => {

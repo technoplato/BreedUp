@@ -45,6 +45,8 @@
 	<string>We need to access your location to tag your posts correctly and show you relevant information.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>We need your permission to access location to create an event near you!</string>
+    <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+    <string>We need your permission to access location to create an event near you!</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>We need your permission to access your photos of you and your pooch!</string>
 	<key>NSPhotoLibraryUsageDescription</key>

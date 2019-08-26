@@ -293,7 +293,7 @@ export default class Profile extends React.Component {
           .child("names")
           .child("users")
           .child(id)
-          .set({
+          .update({
             photoURL: updatedUrl
           })
         firebase

@@ -8,13 +8,16 @@ import {
   dogNamesRef
 } from "../../Utils/FirebaseUtils"
 
+import { updateUserLocation } from "../Location"
+
 /**
  * Adds a dog to a user's list of dogs.
  */
 const addDog = async (ownerId, name, breed, imageUri) => {
   // Get new dog ref
+  // const newDogRef = firebase.firestore().collection("users").doc(ownerId).collection("dogs").doc()
   const newDogRef = dogsRef.child(ownerId).push()
-  // Upload image of dog
+
   const url = await uploadImage(imageUri, ownerId, "dogs/" + newDogRef.key)
   const owner = await firebase
     .database()
@@ -24,9 +27,8 @@ const addDog = async (ownerId, name, breed, imageUri) => {
     .once("value")
     .then(snap => snap.val())
 
-  // Store new dog at /dogs/ { userId } / { new dog ID }
   const newDog = {
-    name: name.toLowerCase(),
+    name: name,
     imageUri: url,
     breed: breed,
     ownerId: ownerId,
@@ -44,8 +46,6 @@ const addDog = async (ownerId, name, breed, imageUri) => {
     .once("value")
     .then(snap => snap.val() || [])
 
-  console.log(dogImages)
-
   dogImages.push(newDog.imageUri)
   dogImagesRef.set(dogImages)
 
@@ -60,6 +60,7 @@ const addDog = async (ownerId, name, breed, imageUri) => {
       description: owner.description
     }
   })
+  await updateUserLocation(ownerId)
 
   return Promise.resolve(newDog)
 }

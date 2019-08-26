@@ -1,4 +1,7 @@
 import { userNamesRef, dogNamesRef } from "../../Utils/FirebaseUtils"
+import GeoFire from "geofire"
+import firebase from "react-native-firebase"
+import { getCurrentLocation } from "../Location"
 
 // This seems very random but is used to limit search to prefixes of search content
 const HIGH_UNICODE_VAL = "\uf8ff"
@@ -26,6 +29,50 @@ const searchUsers = async usernamePrefix => {
   return normalizeUsers(usersArray)
 }
 
+const searchNearbyUsers = async (usernamePrefix, km = 15) => {
+  const usernameLocationsRef = firebase.database().ref("locations/users")
+
+  const geofire = new GeoFire(usernameLocationsRef)
+
+  const currentLocation = await getCurrentLocation()
+
+  const query = geofire.query({
+    center: currentLocation,
+    radius: km
+  })
+
+  const nearbyUserLocations = []
+
+  query.on("key_entered", (key, location, distance) => {
+    nearbyUserLocations.push({
+      key,
+      location,
+      distance
+    })
+  })
+
+  await new Promise(resolve => query.on("ready", () => resolve()))
+
+  const nearbyUserPromises = []
+  nearbyUserLocations.forEach(user => {
+    nearbyUserPromises.push(
+      userNamesRef
+        .child(user.key)
+        .once("value")
+        .then(snap => snap.val())
+        .then(user => {
+          if (user.username.startsWith(usernamePrefix)) {
+            return user
+          }
+        })
+    )
+  })
+
+  const nearbyUsers = await Promise.all(nearbyUserPromises)
+
+  return normalizeUsers(nearbyUsers)
+}
+
 /**
  * Searches for dog based on starting text of dog name.
  *
@@ -49,25 +96,75 @@ const searchDogs = async dogNamePrefix => {
   return normalizeDogs(dogArray)
 }
 
+export const searchNearbyDogs = async (dognamePrefix, km = 15) => {
+  const dogLocationsRef = firebase.database().ref("locations/dogs")
+
+  const geofire = new GeoFire(dogLocationsRef)
+
+  const currentLocation = await getCurrentLocation()
+
+  const query = geofire.query({
+    center: currentLocation,
+    radius: km
+  })
+
+  const nearbyDogLocations = []
+
+  query.on("key_entered", (key, location, distance) => {
+    nearbyDogLocations.push({
+      key,
+      location,
+      distance
+    })
+  })
+
+  await new Promise(resolve => query.on("ready", () => resolve()))
+
+  const nearbyDogPromises = []
+  nearbyDogLocations.forEach(dogLocation => {
+    nearbyDogPromises.push(
+      dogNamesRef
+        .child(dogLocation.key)
+        .once("value")
+        .then(snap => snap.val())
+        .then(dog => {
+          if (dog.dogName.startsWith(dognamePrefix)) {
+            return dog
+          }
+        })
+    )
+  })
+
+  const nearbyUsers = await Promise.all(nearbyDogPromises)
+
+  return normalizeDogs(nearbyUsers)
+}
+
 const normalizeDogs = dogs => {
-  return dogs.map(dog => ({
-    owner: dog.owner,
-    dogs: [dog.dog.imageUri]
-  }))
+  return dogs
+    .filter(d => !!d)
+    .map(dog => ({
+      type: "dog",
+      owner: dog.owner,
+      dogs: [dog.dog]
+    }))
 }
 
 const normalizeUsers = users => {
-  return users.map(user => {
-    return {
-      owner: {
-        description: user.description,
-        uid: user.uid,
-        name: user.username,
-        photoURL: user.photoURL
-      },
-      dogs: user.dogs
-    }
-  })
+  return users
+    .filter(u => !!u)
+    .map(user => {
+      return {
+        type: "person",
+        owner: {
+          description: user.description,
+          uid: user.uid,
+          name: user.username,
+          photoURL: user.photoURL
+        },
+        dogs: user.dogs
+      }
+    })
 }
 
-export { searchUsers, searchDogs }
+export { searchUsers, searchNearbyUsers, searchDogs }
