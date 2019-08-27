@@ -1169,6 +1169,14 @@
     "@react-native-firebase/app-types" "0.2.3"
     "@react-native-firebase/common" "0.2.3"
 
+"@react-native-firebase/storage@^0.2.3":
+  version "0.2.3"
+  resolved "https://registry.yarnpkg.com/@react-native-firebase/storage/-/storage-0.2.3.tgz#363c0d08d5b5ff5376defee49b4fea60a91b2c77"
+  integrity sha512-RSenu7krd5KyGkyubc9wqiRpmKCIy50NHo+8EoI8hJPct8hoo5SOvzUThb6YjmbImMIw+OtNNVCjigR/G8o0RQ==
+  dependencies:
+    "@react-native-firebase/app-types" "0.2.3"
+    "@react-native-firebase/common" "0.2.3"
+
 "@types/caseless@*":
   version "0.12.1"
   resolved "https://registry.yarnpkg.com/@types/caseless/-/caseless-0.12.1.tgz#9794c69c8385d0192acc471a540d1f8e0d16218a"
