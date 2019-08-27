@@ -1,0 +1,33 @@
+{
+  "name": "RNFBStorage",
+  "version": "0.2.3",
+  "description": "React Native Firebase - Cloud Storage for Firebase is a powerful, simple, and cost-effective object storage service built for Google scale.",
+  "summary": "A well tested feature rich Firebase implementation for React Native, supporting iOS & Android.",
+  "homepage": "http://invertase.io/oss/react-native-firebase",
+  "license": "Apache-2.0",
+  "authors": "Invertase Limited",
+  "source": {
+    "git": "https://github.com/invertase/react-native-firebase.git",
+    "tag": "v0.2.3"
+  },
+  "social_media_url": "http://twitter.com/invertaseio",
+  "platforms": {
+    "ios": "9.0"
+  },
+  "source_files": "ios/**/*.{h,m}",
+  "dependencies": {
+    "React": [
+
+    ],
+    "Firebase/Core": [
+      "~> 6.5.0"
+    ],
+    "Firebase/Storage": [
+      "~> 6.5.0"
+    ],
+    "RNFBApp": [
+
+    ]
+  },
+  "static_framework": false
+}
