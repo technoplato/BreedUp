@@ -1161,6 +1161,14 @@
   resolved "https://registry.yarnpkg.com/@react-native-firebase/common/-/common-0.2.3.tgz#0009e3c5de875fa380c3a46ff36d250262bb18a7"
   integrity sha512-CyvRTD5fODD65ywGThleB+WP7E9wrQv/XB+cy+R8KgEkf3AKDPnI5mjS7t9P8jGLzYZQWy7VU/ynp6f6H/5laQ==
 
+"@react-native-firebase/firestore@^0.2.3":
+  version "0.2.3"
+  resolved "https://registry.yarnpkg.com/@react-native-firebase/firestore/-/firestore-0.2.3.tgz#86285d26c96de538224d939871bc375719bf0dcf"
+  integrity sha512-jjMZgY26sxoqHCu2c9+ERPx92ewn06GSwMuUfHv66SalLe1dN//5CflCSx6yB+vBq/pmRVSiqde5rmTMcEJZEg==
+  dependencies:
+    "@react-native-firebase/app-types" "0.2.3"
+    "@react-native-firebase/common" "0.2.3"
+
 "@types/caseless@*":
   version "0.12.1"
   resolved "https://registry.yarnpkg.com/@types/caseless/-/caseless-0.12.1.tgz#9794c69c8385d0192acc471a540d1f8e0d16218a"

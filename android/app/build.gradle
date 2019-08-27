@@ -137,6 +137,7 @@ android {
 }
 
 dependencies {
+    implementation project(':@react-native-firebase_firestore')
     implementation project(':@react-native-firebase_auth')
     implementation project(':@react-native-firebase_app')
     compile fileTree(dir: "libs", include: ["*.jar"])
