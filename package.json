@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "start": "node node_modules/react-native/local-cli/cli.js start",
+    "start": "react-native start",
     "test": "jest",
     "prettier": "prettier --write '**/*.{ts,js,json }'",
     "xr": "react-native run-ios --simulator=\"iPhone Xʀ\" --port=8088",
@@ -11,7 +11,6 @@
     "phone": "react-native run-ios --device --port=8123"
   },
   "dependencies": {
-    "@babel/core": "^7.0.0",
     "@react-native-community/geolocation": "^2.0.2",
     "@react-native-firebase/app": "^0.2.3",
     "@react-native-firebase/auth": "^0.2.3",
@@ -21,7 +20,6 @@
     "ajv": "^6.0.0",
     "ajv-keywords": "^3.2.0",
     "axios": "^0.18.0",
-    "eslint": "^4.0.0",
     "firebase": "^6.4.2",
     "firebase-admin": "^6.3.0",
     "firebase-tools": "^7.2.3",
@@ -48,12 +46,15 @@
     "rxjs": "^6.2.2"
   },
   "devDependencies": {
-    "babel-jest": "23.2.0",
-    "babel-preset-react-native": "5.0.2",
-    "jest": "23.2.0",
-    "metro-react-native-babel-preset": "0.56.0",
+    "@babel/core": "^7.5.5",
+    "@babel/runtime": "^7.5.5",
+    "@react-native-community/eslint-config": "^0.0.5",
+    "babel-jest": "^24.9.0",
+    "jest": "^24.9.0",
+    "metro-react-native-babel-preset": "^0.56.0",
+
     "prettier": "1.18.2",
-    "react-test-renderer": "16.3.1"
+    "react-test-renderer": "16.8.6"
   },
   "jest": {
     "preset": "react-native"

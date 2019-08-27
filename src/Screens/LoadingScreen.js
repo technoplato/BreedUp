@@ -7,7 +7,7 @@ import '@react-native-firebase/firestore';
 import '@react-native-firebase/auth';
 
 import styles from "./LoadingStyles"
-import { updateUserLocation } from "../Interactors/Location"
+// import { updateUserLocation } from "../Interactors/Location"
 
 export default class Loading extends React.Component {
   componentDidMount() {
