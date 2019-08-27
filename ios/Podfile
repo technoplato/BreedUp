@@ -6,11 +6,13 @@ target 'BreedUp' do
   # use_frameworks!
 
   # Pods for BreedUp
-  pod 'Firebase/Core', '~> 5.18.0'
-  pod 'Firebase/Database', '~> 5.18.0'
-  pod 'Firebase/Storage', '~> 5.18.0'
-  pod 'Firebase/Auth', '~> 5.18.0'
-  pod 'Firebase/Firestore', '~> 5.18.0'
-  pod 'Firebase/Messaging'
+#  pod 'Firebase/Core', '~> 5.18.0'
+#  pod 'Firebase/Database', '~> 5.18.0'
+#  pod 'Firebase/Storage', '~> 5.18.0'
+#  pod 'Firebase/Auth', '~> 5.18.0'
+#  pod 'Firebase/Firestore', '~> 5.18.0'
+#  pod 'Firebase/Messaging'
+
+  pod 'RNFBApp', :path => '../node_modules/@react-native-firebase/app'
 
 end
