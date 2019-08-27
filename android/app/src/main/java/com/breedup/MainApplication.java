@@ -3,6 +3,7 @@ package com.breedup;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import io.invertase.firebase.database.ReactNativeFirebaseDatabasePackage;
 import io.invertase.firebase.storage.ReactNativeFirebaseStoragePackage;
 import io.invertase.firebase.firestore.ReactNativeFirebaseFirestorePackage;
 import io.invertase.firebase.auth.ReactNativeFirebaseAuthPackage;
@@ -27,6 +28,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new ReactNativeFirebaseDatabasePackage(),
             new ReactNativeFirebaseStoragePackage(),
             new ReactNativeFirebaseFirestorePackage(),
             new ReactNativeFirebaseAuthPackage(),

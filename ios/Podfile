@@ -21,4 +21,6 @@ target 'BreedUp' do
 
   pod 'RNFBStorage', :path => '../node_modules/@react-native-firebase/storage'
 
+  pod 'RNFBDatabase', :path => '../node_modules/@react-native-firebase/database'
+
 end
