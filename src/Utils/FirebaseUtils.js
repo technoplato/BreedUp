@@ -1,5 +1,7 @@
-import firebase from "react-native-firebase"
-
+import firebase from '@react-native-firebase/app';
+import '@react-native-firebase/database';
+import '@react-native-firebase/firestore';
+import '@react-native-firebase/auth';
 const rootRef = firebase.database().ref()
 
 const POSTS = "posts"

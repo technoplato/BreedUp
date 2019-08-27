@@ -4,7 +4,10 @@ import { Icon } from "react-native-elements"
 
 import FeedList from "../Components/FeedList"
 import styles from "../Styles/FeedScreenStyles"
-import firebase from "react-native-firebase"
+import firebase from '@react-native-firebase/app';
+import '@react-native-firebase/database';
+import '@react-native-firebase/firestore';
+import '@react-native-firebase/auth';
 
 export default class FeedScreen extends React.Component {
   static navigationOptions = ({ navigation }) => ({

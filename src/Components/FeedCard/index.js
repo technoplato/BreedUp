@@ -12,7 +12,8 @@ import moment from "moment"
 import styles from "./FeedCardStyles"
 import { Colors } from "../../Themes"
 
-import firebase from "react-native-firebase"
+import firebase from '@react-native-firebase/app';
+import '@react-native-firebase/firestore';
 
 export default class FeedCard extends React.Component {
   render() {

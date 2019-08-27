@@ -1,6 +1,9 @@
 import React from "react"
 import { createStackNavigator } from "react-navigation"
-import firebase from "react-native-firebase"
+import firebase from '@react-native-firebase/app';
+import '@react-native-firebase/database';
+import '@react-native-firebase/firestore';
+import '@react-native-firebase/auth';
 import { View } from "react-native"
 import { Icon } from "react-native-elements"
 

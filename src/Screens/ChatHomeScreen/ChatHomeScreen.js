@@ -9,7 +9,10 @@ import {
   Platform,
   Keyboard
 } from "react-native"
-import firebase from "react-native-firebase"
+import firebase from '@react-native-firebase/app';
+import '@react-native-firebase/database';
+import '@react-native-firebase/firestore';
+import '@react-native-firebase/auth';
 import Icon from "react-native-vector-icons/Ionicons"
 import { Icon as Icon2 } from "react-native-elements"
 

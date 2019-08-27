@@ -1,6 +1,9 @@
 import React from "react"
 import { ListView, Share, RefreshControl } from "react-native"
-import firebase from "react-native-firebase"
+
+import firebase from '@react-native-firebase/app';
+import '@react-native-firebase/database';
+import '@react-native-firebase/auth';
 
 import FeedCard from "../FeedCard"
 import styles from "./FeedListStyles"

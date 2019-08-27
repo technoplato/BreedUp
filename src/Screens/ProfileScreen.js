@@ -7,7 +7,10 @@ import {
   ActivityIndicator
 } from "react-native"
 import { Button } from "react-native-elements"
-import firebase from "react-native-firebase"
+import firebase from '@react-native-firebase/app';
+import '@react-native-firebase/database';
+import '@react-native-firebase/firestore';
+import '@react-native-firebase/auth';
 import Modal from "react-native-modal"
 
 import RoundImage from "../Components/RoundImageView"

@@ -9,7 +9,10 @@ import {
 import TextButton from "react-native-button"
 import ActionSheet from "react-native-actionsheet"
 import DialogInput from "react-native-dialog-input"
-import firebase from "react-native-firebase"
+import firebase from '@react-native-firebase/app';
+import '@react-native-firebase/database';
+import '@react-native-firebase/firestore';
+import '@react-native-firebase/auth';
 import { SafeAreaView } from "react-navigation"
 import { KeyboardAwareView } from "react-native-keyboard-aware-view"
 import Autolink from "react-native-autolink"

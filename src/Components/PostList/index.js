@@ -1,6 +1,7 @@
 import React from "react"
 import { ListView, Share, RefreshControl } from "react-native"
-import firebase from "react-native-firebase"
+import firebase from '@react-native-firebase/app';
+import '@react-native-firebase/database';
 import axios from "axios"
 import _ from "lodash"
 

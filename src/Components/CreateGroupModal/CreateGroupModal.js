@@ -9,7 +9,12 @@ import {
 } from "react-native"
 import FastImage from "react-native-fast-image"
 import TextButton from "react-native-button"
-import firebase from "react-native-firebase"
+
+import firebase from '@react-native-firebase/app';
+import '@react-native-firebase/auth';
+import '@react-native-firebase/firestore';
+
+
 import DialogInput from "react-native-dialog-input"
 import { SafeAreaView } from "react-navigation"
 import ChatIconView from "../ChatIconView/ChatIconView"

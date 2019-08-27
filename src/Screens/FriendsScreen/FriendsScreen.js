@@ -1,7 +1,10 @@
 import React from "react"
 import { FlatList, TouchableOpacity, Image, Text, View } from "react-native"
 import { SearchBar } from "react-native-elements"
-import firebase from "react-native-firebase"
+import firebase from '@react-native-firebase/app';
+import '@react-native-firebase/database';
+import '@react-native-firebase/firestore';
+import '@react-native-firebase/auth';
 import TextButton from "react-native-button"
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view"
 import ChatIconView from "../../Components/ChatIconView/ChatIconView"

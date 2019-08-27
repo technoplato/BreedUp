@@ -182,15 +182,17 @@ PODS:
     - React-cxxreact (= 0.60.5)
     - React-jsi (= 0.60.5)
   - React-jsinspector (0.60.5)
-  - react-native-camera (1.8.0):
+  - react-native-camera (3.3.0):
     - React
-    - react-native-camera/RCT (= 1.8.0)
-    - react-native-camera/RN (= 1.8.0)
-  - react-native-camera/RCT (1.8.0):
+    - react-native-camera/RCT (= 3.3.0)
+    - react-native-camera/RN (= 3.3.0)
+  - react-native-camera/RCT (3.3.0):
     - React
-  - react-native-camera/RN (1.8.0):
+  - react-native-camera/RN (3.3.0):
     - React
-  - react-native-image-picker (0.14.3):
+  - react-native-geolocation (2.0.2):
+    - React
+  - react-native-image-picker (1.0.2):
     - React
   - React-RCTActionSheet (0.60.5):
     - React-Core (= 0.60.5)
@@ -242,6 +244,8 @@ PODS:
     - Firebase/Storage (~> 6.5.0)
     - React
     - RNFBApp
+  - RNGestureHandler (1.4.1):
+    - React
   - RNVectorIcons (6.6.0):
     - React
   - SDWebImage (5.1.0):
@@ -264,6 +268,7 @@ DEPENDENCIES:
   - React-jsiexecutor (from `../node_modules/react-native/ReactCommon/jsiexecutor`)
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
   - react-native-camera (from `../node_modules/react-native-camera`)
+  - "react-native-geolocation (from `../node_modules/@react-native-community/geolocation`)"
   - react-native-image-picker (from `../node_modules/react-native-image-picker`)
   - React-RCTActionSheet (from `../node_modules/react-native/Libraries/ActionSheetIOS`)
   - React-RCTAnimation (from `../node_modules/react-native/Libraries/NativeAnimation`)
@@ -281,6 +286,7 @@ DEPENDENCIES:
   - "RNFBDatabase (from `../node_modules/@react-native-firebase/database`)"
   - "RNFBFirestore (from `../node_modules/@react-native-firebase/firestore`)"
   - "RNFBStorage (from `../node_modules/@react-native-firebase/storage`)"
+  - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
   - yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
@@ -332,6 +338,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/jsinspector"
   react-native-camera:
     :path: "../node_modules/react-native-camera"
+  react-native-geolocation:
+    :path: "../node_modules/@react-native-community/geolocation"
   react-native-image-picker:
     :path: "../node_modules/react-native-image-picker"
   React-RCTActionSheet:
@@ -366,6 +374,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-firebase/firestore"
   RNFBStorage:
     :path: "../node_modules/@react-native-firebase/storage"
+  RNGestureHandler:
+    :path: "../node_modules/react-native-gesture-handler"
   RNVectorIcons:
     :path: "../node_modules/react-native-vector-icons"
   yoga:
@@ -402,8 +412,9 @@ SPEC CHECKSUMS:
   React-jsi: 4d8c9efb6312a9725b18d6fc818ffc103f60fec2
   React-jsiexecutor: 90ad2f9db09513fc763bc757fdc3c4ff8bde2a30
   React-jsinspector: e08662d1bf5b129a3d556eb9ea343a3f40353ae4
-  react-native-camera: f6438db547e63c3732fc88ead3d365e02b3db047
-  react-native-image-picker: 3693786b3d5958c8f71deed66ec068b323565e0d
+  react-native-camera: a6c0ca5653cbcd9ea1c1894966207346cfeebe09
+  react-native-geolocation: c956aeb136625c23e0dce0467664af2c437888c9
+  react-native-image-picker: 5c15ac0251475ae0b9f21e17d08d7c28db847abc
   React-RCTActionSheet: b0f1ea83f4bf75fb966eae9bfc47b78c8d3efd90
   React-RCTAnimation: 359ba1b5690b1e87cc173558a78e82d35919333e
   React-RCTBlob: 5e2b55f76e9a1c7ae52b826923502ddc3238df24
@@ -420,11 +431,12 @@ SPEC CHECKSUMS:
   RNFBDatabase: 55d572562c2e93d0d83f0b16e435cfe1dfef596e
   RNFBFirestore: efef9ea79f659ffc0f3b56a8eab00311bd579772
   RNFBStorage: e9843ce5945ab05d5c0fbc2d8922c013353ad613
+  RNGestureHandler: 4cb47a93019c1a201df2644413a0a1569a51c8aa
   RNVectorIcons: 0bb4def82230be1333ddaeee9fcba45f0b288ed4
   SDWebImage: fb387001955223213dde14bc08c8b73f371f8d8f
   SDWebImageWebPCoder: 7568737603c50f6237850afedd7e9e28e5917e6b
   yoga: 312528f5bbbba37b4dcea5ef00e8b4033fdd9411
 
-PODFILE CHECKSUM: e44ca0f85dc2174f88be6cb6400dcfbbc6b93e8b
+PODFILE CHECKSUM: abcd42068677ca8bc924297d3bfc407a9d7eb9d3
 
 COCOAPODS: 1.6.1

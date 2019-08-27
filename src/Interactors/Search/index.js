@@ -1,7 +1,9 @@
 import { userNamesRef, dogNamesRef } from "../../Utils/FirebaseUtils"
 import GeoFire from "geofire"
-import firebase from "react-native-firebase"
 import { getCurrentLocation } from "../Location"
+import database from '@react-native-firebase/database';
+
+
 
 // This seems very random but is used to limit search to prefixes of search content
 const HIGH_UNICODE_VAL = "\uf8ff"
@@ -30,7 +32,7 @@ const searchUsers = async usernamePrefix => {
 }
 
 const searchNearbyUsers = async (usernamePrefix, km = 15) => {
-  const usernameLocationsRef = firebase.database().ref("locations/users")
+  const usernameLocationsRef = database().ref("locations/users")
 
   const geofire = new GeoFire(usernameLocationsRef)
 
@@ -99,7 +101,7 @@ const searchDogs = async dogNamePrefix => {
 }
 
 export const searchNearbyDogs = async (dognamePrefix, km = 15) => {
-  const dogLocationsRef = firebase.database().ref("locations/dogs")
+  const dogLocationsRef = database().ref("locations/dogs")
 
   const geofire = new GeoFire(dogLocationsRef)
 

@@ -10,7 +10,12 @@ import {
 } from "react-native"
 import { SearchBar } from "react-native-elements"
 import TextButton from "react-native-button"
-import firebase from "react-native-firebase"
+
+import firebase from '@react-native-firebase/app';
+import '@react-native-firebase/auth';
+import '@react-native-firebase/firestore';
+
+
 import { SafeAreaView } from "react-navigation"
 import AppStyles from "../../AppStyles"
 import styles from "./styles"
