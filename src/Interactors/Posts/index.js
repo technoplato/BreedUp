@@ -11,7 +11,7 @@ import {
 /**
  * Utility method for creating a post. Also uploads image for post
  */
-createPost = async (imageUri, text, dogs) => {
+const createPost = async (imageUri, text, dogs) => {
   const { uid, displayName, photoURL } = currentUser()
   // First, I need to upload the image
   const postImgUrl = await uploadImageForPost(imageUri, uid)
@@ -39,7 +39,7 @@ createPost = async (imageUri, text, dogs) => {
  *
  * Returns post after succesful upload.
  */
-submitPost = async post => {
+const submitPost = async post => {
   updatePostsForFollowers(post)
   const postSnap = await addOrUpdatePost(post)
   return post
@@ -48,7 +48,7 @@ submitPost = async post => {
 /**
  * Uploads an image for a post and returns the URL
  */
-uploadImageForPost = async (postImgUri, authorId) => {
+const uploadImageForPost = async (postImgUri, authorId) => {
   return await uploadImage(postImgUri, authorId, postImageUploadPath)
 }
 
@@ -56,7 +56,7 @@ uploadImageForPost = async (postImgUri, authorId) => {
  * Adds or updates post to user's list of posts to be shown
  * on profile view.
  */
-addOrUpdatePost = post => {
+const addOrUpdatePost = post => {
   return postsRef
     .child(post.author_id)
     .child(post.key)
@@ -69,7 +69,7 @@ addOrUpdatePost = post => {
  * Also, early on we want to show every user every post and
  * so we do so here.
  */
-updatePostsForFollowers = async post => {
+const updatePostsForFollowers = async post => {
   // This is only going to be used early on, as we want to
   // show every post to every user.
   const globalFeedPostSnap = await postToGlobalFeed(post)
@@ -84,7 +84,7 @@ updatePostsForFollowers = async post => {
  *
  * Adds post to global feed.
  */
-postToGlobalFeed = async post => {
+const postToGlobalFeed = async post => {
   return await globalFeedRef.child(post.key).set(post)
 }
 
@@ -93,7 +93,7 @@ postToGlobalFeed = async post => {
  *
  * Currently used on ProfileScreen view.
  */
-getPosts = async userId => {
+const getPosts = async userId => {
   const postsSnap = await postsRef.child(userId).once("value")
   return Object.values(postsSnap.val())
 }

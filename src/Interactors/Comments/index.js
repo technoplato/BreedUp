@@ -3,7 +3,7 @@ import { map } from "rxjs/operators"
 import { commentsRef, postsRef, currentUser } from "../../Utils/FirebaseUtils"
 import { submitPost } from "../Posts"
 
-addComment = async (oldPost, text) => {
+export const addComment = async (oldPost, text) => {
   const newCommentRef = commentsRef.child(oldPost.key).push()
 
   const newComment = {
@@ -39,7 +39,7 @@ addComment = async (oldPost, text) => {
   return submitPost(newPost)
 }
 
-fetchCommentsForPost = async postId => {
+export const fetchCommentsForPost = async postId => {
   const snap = await commentsRef.child(postId).once("value")
   return {
     count: snap.numChildren() || 0,
@@ -49,7 +49,7 @@ fetchCommentsForPost = async postId => {
   }
 }
 
-observeCommentsForPost = postId => {
+export const observeCommentsForPost = postId => {
   return fromEvent(commentsRef.child(postId), "child_added").pipe(
     map(event => {
       return event[0].val()
@@ -57,13 +57,6 @@ observeCommentsForPost = postId => {
   )
 }
 
-stopObservingCommentsForPost = postId => {
+export const stopObservingCommentsForPost = postId => {
   commentsRef.child(postId).off
-}
-
-export {
-  addComment,
-  fetchCommentsForPost,
-  observeCommentsForPost,
-  stopObservingCommentsForPost
 }

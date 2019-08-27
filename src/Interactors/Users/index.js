@@ -4,7 +4,7 @@ import {
   followingRef
 } from "../../Utils/FirebaseUtils"
 
-followUser = userId => {
+export const followUser = userId => {
   return followingRef
     .child(currentUser.uid)
     .child(userId)
@@ -17,7 +17,7 @@ followUser = userId => {
     })
 }
 
-unfollowUser = userId => {
+export const unfollowUser = userId => {
   return followingRef
     .child(currentUser.uid)
     .child(userId)
@@ -30,7 +30,7 @@ unfollowUser = userId => {
     })
 }
 
-isFollowing = userId => {
+export const isFollowing = userId => {
   return followingRef
     .child(currentUser.uid)
     .child(userId)
@@ -44,9 +44,7 @@ isFollowing = userId => {
  * Return an array of users (uid's) that follow the
  * user whose userId is provided.
  */
-getFollowersForUser = async userId => {
+export const getFollowersForUser = async userId => {
   const followersRefForUser = await followersRef.child(userId).once("value")
   return Object.keys(followersRefForUser.val() || {})
 }
-
-export { followUser, unfollowUser, isFollowing, getFollowersForUser }

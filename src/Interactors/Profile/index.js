@@ -6,7 +6,7 @@ import {
   followingRef
 } from "../../Utils/FirebaseUtils"
 
-followUser = userId => {
+export const  followUser = userId => {
   return followingRef
     .child(currentUser().uid)
     .child(userId)
@@ -19,7 +19,7 @@ followUser = userId => {
     })
 }
 
-unfollowUser = userId => {
+export const unfollowUser = userId => {
   return followingRef
     .child(currentUser().uid)
     .child(userId)
@@ -32,7 +32,7 @@ unfollowUser = userId => {
     })
 }
 
-isFollowing = userId => {
+export const isFollowing = userId => {
   return followingRef
     .child(currentUser().uid)
     .child(userId)
@@ -42,4 +42,3 @@ isFollowing = userId => {
     })
 }
 
-export { followUser, unfollowUser, isFollowing }
