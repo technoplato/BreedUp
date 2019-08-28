@@ -1,18 +1,29 @@
-import { createSwitchNavigator, createAppContainer } from "react-navigation"
+import { createSwitchNavigator, createAppContainer } from 'react-navigation'
 
-import Onboarding from "./Onboarding"
-import Main from "./Main"
+import Onboarding from './Onboarding'
+import Main from './Main'
 
-import Fiddling from "../Screens/Fiddling"
-import React from "react"
-import { Text, View, Button } from "react-native"
-import { searchNearbyDogs } from "../Interactors/Search"
+import React from 'react'
+import { Text, View, Button } from 'react-native'
+import { searchNearbyDogs } from '../Interactors/Search'
 
-import database from '@react-native-firebase/database';
+import database from '@react-native-firebase/database'
 
 class Testing extends React.Component {
   async componentDidMount() {
-
+    // const start = Date.now()
+    // console.log('before')
+    // const [a, b] = await Promise.all([
+    //   new Promise(resolve => {
+    //     setTimeout(() => resolve('abc'), 1000)
+    //   }),
+    //   new Promise(resolve => {
+    //     setTimeout(() => resolve('def'), 1000)
+    //   })
+    // ])
+    // const end = Date.now() - start
+    // console.log(end, a, b)
+    // console.log('after')
   }
 
   render() {
@@ -20,12 +31,12 @@ class Testing extends React.Component {
       <View style={{ paddingTop: 40 }}>
         <Text style={{ marginTop: 100, fontSize: 82 }}>
           {(this.state && JSON.stringify(this.state)) ||
-            "Testing... look at the console"}
+            'Testing... look at the console'}
         </Text>
         <Button
           title="butt"
           onPress={() => {
-            console.log("clicked")
+            console.log('clicked')
           }}
         />
       </View>
@@ -34,10 +45,9 @@ class Testing extends React.Component {
 }
 
 const RootNav = createSwitchNavigator({
-  Testing: Testing,
   Onboarding: Onboarding,
-  // Main: Main,
-  // Fiddling: Fiddling
+  Testing: Testing,
+  Main: Main
 })
 
 export default createAppContainer(RootNav)

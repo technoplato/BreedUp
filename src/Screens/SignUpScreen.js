@@ -1,94 +1,54 @@
-import React from "react"
-import { Text, TextInput, View, Alert, ImageBackground } from "react-native"
-import { Button } from "react-native-elements"
+import React from 'react'
+import { Text, TextInput, View, Alert, ImageBackground } from 'react-native'
+import { Button } from 'react-native-elements'
 
-import auth from '@react-native-firebase/auth';
-import firestore from '@react-native-firebase/firestore';
+import auth from '@react-native-firebase/auth'
+import firestore from '@react-native-firebase/firestore'
 
+import styles from './SignUpStyles'
+import { Images } from '../Themes'
 
-import styles from "./SignUpStyles"
-import { Images } from "../Themes"
+const removeFuncs = obj => JSON.parse(JSON.stringify(obj))
 
 export default class SignUpScreen extends React.Component {
-  state = { email: "", password: "", username: "", errorMsg: null }
+  state = { email: '', password: '', username: '', errorMsg: null }
 
   componentDidMount = () => {
     if (this.props.navigation.state.params !== undefined) {
       const { email, password } = this.props.navigation.state.params
       this.setState({
-        email: email || "",
-        password: password || ""
+        email: email || '',
+        password: password || ''
       })
     }
   }
 
-  // TODO - refactor into cloud function listening to auth
-  // doc: https://firebase.google.com/docs/functions/auth-events
   handleSignUp = () => {
     let { email, password, username } = this.state
     let userData
     username = username.toLocaleLowerCase()
-
     if (!email) {
-      this.setState({ errorMsg: "Please enter a valid email." })
+      this.setState({ errorMsg: 'Please enter a valid email.' })
     } else if (!password) {
-      this.setState({ errorMsg: "Please enter a valid password." })
+      this.setState({ errorMsg: 'Please enter a valid password.' })
     } else if (!username) {
-      this.setState({ errorMsg: "Please enter a valid username." })
+      this.setState({ errorMsg: 'Please enter a valid username.' })
     } else {
       auth()
         .createUserWithEmailAndPassword(email, password)
-        .then(data => {
-          userData = data.user
+        .then(userRecord => {
+          const user = removeFuncs(userRecord.user)
           firestore()
-            .collection("users")
-            .doc(data.user.uid)
+            .collection('users')
+            .doc(user.uid)
             .set({
+              ...user,
               username: username,
-              email: data.user.email,
-              emailVerified: data.user.emailVerified,
-              uid: data.user.uid,
-              metadata: data.user.metadata,
               photoURL:
-                "https://www.instamobile.io/wp-content/uploads/2019/05/default-avatar.jpg"
-            })
-          return database()
-            .ref("users")
-            .child(data.user.uid)
-            .set({
-              username: username,
-              email: data.user.email,
-              emailVerified: data.user.emailVerified,
-              uid: data.user.uid,
-              metadata: data.user.metadata,
-              photoURL:
-                "https://www.instamobile.io/wp-content/uploads/2019/05/default-avatar.jpg"
+                'https://www.instamobile.io/wp-content/uploads/2019/05/default-avatar.jpg'
             })
         })
-        .then(() => {
-          return auth()
-            .currentUser.updateProfile({
-              displayName: username,
-              photoURL:
-                "https://www.instamobile.io/wp-content/uploads/2019/05/default-avatar.jpg"
-            })
-            .then(() => {
-              console.log("current user: ", auth().currentUser)
-            })
-        })
-        .then(() => {
-          return database()
-            .ref("names")
-            .child("users")
-            .child(userData.uid)
-            .set({
-              username,
-              uid: userData.uid,
-              photoURL:
-                "https://www.instamobile.io/wp-content/uploads/2019/05/default-avatar.jpg"
-            })
-        })
-        .then(() => this.props.navigation.navigate("Feed"))
+        .then(() => this.props.navigation.navigate('Feed'))
         .catch(error => {
           this.setState({ errorMsg: error.message })
         })
@@ -100,7 +60,7 @@ export default class SignUpScreen extends React.Component {
 
     if (!email) {
       const errorMsg =
-        "Please enter an email that we can send a password reset link to."
+        'Please enter an email that we can send a password reset link to.'
 
       this.setState({ errorMsg })
     } else {
@@ -109,16 +69,16 @@ export default class SignUpScreen extends React.Component {
         .sendPasswordResetEmail(email)
         .then(function() {
           Alert.alert(
-            "Reset password email sent",
-            "Please check your email to reset your password.",
-            [{ text: "Ok" }]
+            'Reset password email sent',
+            'Please check your email to reset your password.',
+            [{ text: 'Ok' }]
           )
         })
         .catch(function(error) {
           Alert.alert(
-            "An error occurred sending email",
-            "Please email support for help.",
-            [{ text: "Ok" }]
+            'An error occurred sending email',
+            'Please email support for help.',
+            [{ text: 'Ok' }]
           )
         })
     }
@@ -133,7 +93,7 @@ export default class SignUpScreen extends React.Component {
       >
         <Text style={styles.headerText}>Breed Up</Text>
         {this.state.errorMsg && (
-          <Text style={{ color: "white", padding: 24 }}>
+          <Text style={{ color: 'white', padding: 24 }}>
             {this.state.errorMsg}
           </Text>
         )}
@@ -141,7 +101,7 @@ export default class SignUpScreen extends React.Component {
           placeholder="Email"
           autoCapitalize="none"
           style={styles.textInput}
-          keyboardType={"email-address"}
+          keyboardType={'email-address'}
           onChangeText={email => this.setState({ email })}
           value={this.state.email}
         />
@@ -172,7 +132,7 @@ export default class SignUpScreen extends React.Component {
           onPress={() => {
             const { email, password } = this.state
 
-            this.props.navigation.navigate("Login", {
+            this.props.navigation.navigate('Login', {
               email,
               password
             })

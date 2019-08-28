@@ -1,15 +1,15 @@
-import React from "react"
-import { View, FlatList, ActivityIndicator } from "react-native"
-import _ from "lodash"
+import React from 'react'
+import { View, FlatList, ActivityIndicator } from 'react-native'
+import _ from 'lodash'
 
-import DogListItem from "../DogListItem"
-import RoundPlus from "../RoundPlus"
-import styles from "./DogListStyles"
+import DogListItem from '../DogListItem'
+import RoundPlus from '../RoundPlus'
+import styles from './DogListStyles'
 
-import { Colors } from "../../Themes"
+import { Colors } from '../../Themes'
 
-import { fetchDogsForUser } from "../../Interactors/Dog"
-import { Text } from "react-native-elements"
+import { fetchDogsForUser } from '../../Interactors/Dog'
+import { Text } from 'react-native-elements'
 
 export default class DogList extends React.Component {
   constructor(props) {
@@ -69,7 +69,7 @@ export default class DogList extends React.Component {
    * Only possible if viewing current user's dog list.
    */
   onAddDogPress = () => {
-    this.props.navigation.navigate("AddDog", {
+    this.props.navigation.navigate('AddDog', {
       userId: this.props.userId,
       onNewDogAdded: this.onNewDogAdded
     })
@@ -97,10 +97,10 @@ export default class DogList extends React.Component {
         style={{
           flex: 1,
           height: 44 * 1.1,
-          flexDirection: "row",
-          alignItems: "center",
+          flexDirection: 'row',
+          alignItems: 'center',
           paddingLeft: 24,
-          backgroundColor: "white"
+          backgroundColor: 'white'
         }}
       >
         {this.renderAddButton()}
@@ -114,7 +114,7 @@ export default class DogList extends React.Component {
             keyExtractor={this.keyExtractor}
           />
         ) : (
-          <Text style={{ marginLeft: 12, fontSize: 26, fontStyle: "italic" }}>
+          <Text style={{ marginLeft: 12, fontSize: 26, fontStyle: 'italic' }}>
             No dogs added yet
           </Text>
         )}
@@ -136,5 +136,5 @@ export default class DogList extends React.Component {
     return this.state.loading ? this.renderLoading() : this.renderList()
   }
 
-  keyExtractor = item => item.id
+  keyExtractor = (item, index) => item.id || index.toString()
 }

@@ -1,101 +1,104 @@
-import React from "react"
+import React from 'react'
 import {
   View,
   StyleSheet,
   Text,
   TextInput,
   ActivityIndicator
-} from "react-native"
-import { Button } from "react-native-elements"
-import firebase from '@react-native-firebase/app';
-import '@react-native-firebase/database';
-import '@react-native-firebase/firestore';
-import '@react-native-firebase/auth';
-import Modal from "react-native-modal"
+} from 'react-native'
+import { Button } from 'react-native-elements'
+import Modal from 'react-native-modal'
+import firestore from '@react-native-firebase/firestore'
+import auth from '@react-native-firebase/auth'
+import storage from '@react-native-firebase/storage'
 
-import RoundImage from "../Components/RoundImageView"
-import { Colors } from "../Themes"
-import PostList from "../Components/PostList"
-import DogList from "../Components/DogList"
+import RoundImage from '../Components/RoundImageView'
+import { Colors } from '../Themes'
+// import PostList from "../Components/PostList"
+import DogList from '../Components/DogList'
 
-import CameraModal from "../../lib/InstagramCameraModal"
+import CameraModal from '../../lib/InstagramCameraModal'
 
-import { followUser, unfollowUser, isFollowing } from "../Interactors/Users"
+import { followUser, unfollowUser, isFollowing } from '../Interactors/Users'
 
 export default class Profile extends React.Component {
-  state = {
-    avatarURL: "",
-    username: "",
-    description: "",
-    uid: "",
-    currentUserProfile: false,
-    modalVisible: false,
-    modalSaving: false,
-    modifiedUsername: "",
-    modifiedDescription: "",
-    modifiedAvatarURL: "",
-    hasProfileChanged: false,
-    loading: true,
-    photoEditModalVisible: false,
-    saveComplete: false,
-    isFollowed: false
-  }
+  state = {}
 
   constructor(props) {
     super(props)
 
     this.showPhotoModal = this.showPhotoModal.bind(this)
     this.onNewProfileImageChosen = this.onNewProfileImageChosen.bind(this)
-  }
 
-  async componentWillMount() {
     const privateProfile =
-      this.props.navigation.state.routeName === "PrivateProfile"
+      this.props.navigation.state.routeName === 'PrivateProfile'
 
-    const currentUid = firebase.auth().currentUser.uid
+    console.log(privateProfile)
+
+    const currentUid = auth().currentUser.uid
     const profileId = this.props.navigation.getParam(
-      "userId",
-      privateProfile ? currentUid : ""
+      'userId',
+      privateProfile ? currentUid : ''
     )
 
-    const currentUserProfile = currentUid === profileId
+    const myProfile = currentUid === profileId
+
+    this.state = {
+      uid: profileId,
+      myProfile: myProfile,
+      profileURL: '',
+      username: '',
+      description: '',
+      modalVisible: false,
+      modalSaving: false,
+      modifiedUsername: '',
+      modifiedDescription: '',
+      modifiedPhotoURL: '',
+      hasProfileChanged: false,
+      loading: true,
+      photoEditModalVisible: false,
+      saveComplete: false,
+      isFollowed: false
+    }
+
+    this.userRef = firestore()
+      .collection('users')
+      .doc(profileId)
+  }
+
+  async componentDidMount() {
+    const [user, iFollow] = await Promise.all([
+      this.loadUserProfile(),
+      this.amIFollowing()
+    ])
+
+    const { username, description, photoURL } = user
 
     this.setState({
-      uid: profileId,
-      currentUserProfile: currentUserProfile
-    })
+      photoURL,
+      username,
+      description,
 
-    this.loadUserProfile(profileId)
+      modifiedPhotoURL: photoURL,
+      modifiedUsername: username,
+      modifiedDescription: description,
+
+      isFollowed: iFollow,
+      loading: false
+    })
   }
 
-  loadUserProfile(profileId) {
-    firebase
-      .database()
-      .ref()
-      .child(`users/${profileId}`)
-      .once("value", snap => {
-        const { username, description, photoURL } = snap.val()
-
-        this.setState({
-           photoURL,
-           username,
-           description,
-
-          modifiedAvatarURL: photoURL,
-          modifiedUsername: username,
-          modifiedDescription: description,
-
-          loading: false
-        })
-      })
-
-    this.loadFollowing()
+  async loadUserProfile() {
+    return await this.userRef.get().then(doc => doc.data())
   }
 
-  loadFollowing() {
-    isFollowing(this.state.uid).then(follows => {
-      this.setState({ isFollowed: follows })
-    })
+  async amIFollowing() {
+    console.log(this.state)
+    try {
+      return await isFollowing(this.state.uid)
+    } catch (err) {
+      console.log(err)
+    }
   }
 
   setTextEditingModalVisible(visible) {
@@ -132,10 +135,10 @@ export default class Profile extends React.Component {
       <Modal
         isVisible={this.state.modalVisible && !this.state.saveComplete}
         onBackdropPress={() => this.setTextEditingModalVisible(false)}
-        style={{ justifyContent: "center", alignItems: "center" }}
+        style={{ justifyContent: 'center', alignItems: 'center' }}
       >
-        <View style={{ width: "100%", height: "70%" }}>
-          <View style={{ padding: 12, backgroundColor: "white" }}>
+        <View style={{ width: '100%', height: '70%' }}>
+          <View style={{ padding: 12, backgroundColor: 'white' }}>
             <Text>Username</Text>
             <TextInput
               maxLength={20}
@@ -157,12 +160,12 @@ export default class Profile extends React.Component {
               flex: 1,
               paddingBottom: 12,
               minHeight: 42,
-              backgroundColor: "grey",
-              justifyContent: "flex-end"
+              backgroundColor: 'grey',
+              justifyContent: 'flex-end'
             }}
           >
             <Button
-              title={this.state.modalSaving ? "Saving..." : "Save Info"}
+              title={this.state.modalSaving ? 'Saving...' : 'Save Info'}
               loading={this.state.modalSaving}
               disabled={this.state.modalSaving}
               onPress={async () => {
@@ -185,60 +188,59 @@ export default class Profile extends React.Component {
 
     const { modifiedDescription, modifiedUsername } = this.state
 
-    const petImageArray = await firebase
-      .database()
-      .ref()
-      .child("dogs")
-      .child(this.state.uid)
-      .once("value")
-      .then(snap => {
-        const keysArray = Object.keys(snap.val() || [])
-        const results = keysArray
-          .map(key => snap.val()[key])
-          .map(dog => dog.imageUri)
-        return results
-      })
+    // Modify this in Firebase functions -----------------
+    // const petImageArray = await firebase
+    //   .database()
+    //   .ref()
+    //   .child('dogs')
+    //   .child(this.state.uid)
+    //   .once('value')
+    //   .then(snap => {
+    //     const keysArray = Object.keys(snap.val() || [])
+    //     const results = keysArray
+    //       .map(key => snap.val()[key])
+    //       .map(dog => dog.imageUri)
+    //     return results
+    //   })
 
-    firebase
-      .database()
-      .ref()
-      .child(`users/${this.state.uid}`)
-      .update({
-        description: modifiedDescription,
-        username: modifiedUsername.toLowerCase()
-      })
-      .then(() => {
-        this.setState({
-          username: modifiedUsername,
-          description: modifiedDescription,
+    //!! I believe this is redundant. It looks like I can just use a query like the following:
+    /*
+    usersCollection
+      .where("name", ">=", query)
+      .where("name", "<=", query + HIGH_UNICODE)
 
-          hasProfileChanged: false,
-          usernameChange: false,
-          descriptionChange: false
-        })
-      })
+    in order to search user names. In order to get users by ID:
 
-    firebase
-      .firestore()
-      .collection("users")
-      .doc(this.state.uid)
-      .update({
-        username: modifiedUsername.toLowerCase(),
-        uid: this.state.uid
-      })
+    usersCollection
+      .where("uid", "==", id)
 
-    firebase
-      .database()
-      .ref()
-      .child("names")
-      .child("users")
-      .child(this.state.uid)
-      .set({
-        username: modifiedUsername.toLowerCase(),
-        uid: this.state.uid,
-        dogs: petImageArray,
-        description: modifiedDescription
-      })
+    */
+    // firebase
+    //   .database()
+    //   .ref()
+    //   .child('names')
+    //   .child('users')
+    //   .child(this.state.uid)
+    //   .set({
+    //     username: modifiedUsername.toLowerCase(),
+    //     uid: this.state.uid,
+    //     dogs: petImageArray,
+    //     description: modifiedDescription
+    //   })
+
+    await this.userRef.update({
+      description: modifiedDescription,
+      username: modifiedUsername.toLowerCase()
+    })
+
+    this.setState({
+      username: modifiedUsername,
+      description: modifiedDescription,
+
+      hasProfileChanged: false,
+      usernameChange: false,
+      descriptionChange: false
+    })
   }
 
   render() {
@@ -248,7 +250,7 @@ export default class Profile extends React.Component {
         {this.modal()}
         {this.header()}
         {this.dogList()}
-        {this.postsList()}
+        {/*{this.postsList()}*/}
         {this.state.loading && this.renderLoading()}
       </View>
     )
@@ -264,63 +266,28 @@ export default class Profile extends React.Component {
     )
   }
 
-  onNewProfileImageChosen(newProfileImageUri) {
+  async onNewProfileImageChosen(newProfileImageUri) {
     // Optimistically update image URI
     this.setState({
-      avatarURL: newProfileImageUri
+      profileURL: newProfileImageUri
     })
 
     // Store photo in storage
-    const storageRef = firebase.storage().ref()
+    const storageRef = storage().ref()
 
     const id = firebase.auth().currentUser.uid
 
-    const currentUserProfileRef = firebase
-      .database()
-      .ref()
-      .child(`users/${id}`)
+    const userProfileImageStorageRef = storageRef.child(id).child('profile_img')
 
-    const userProfileImageStorageRef = storageRef.child(id).child("profile_img")
-
-    let updatedUrl
-
-    // Save photo URL to Firebase database
-    return userProfileImageStorageRef
+    let updatedUrl = await userProfileImageStorageRef
       .put(newProfileImageUri)
       .then(snapshot => snapshot.downloadURL)
-      .then(url => {
-        updatedUrl = url
-        firebase
-          .database()
-          .ref()
-          .child("names")
-          .child("users")
-          .child(id)
-          .update({
-            photoURL: updatedUrl
-          })
-        firebase
-          .firestore()
-          .collection("users")
-          .doc(id)
-          .update({
-            photoURL: updatedUrl
-          })
-        return currentUserProfileRef.update({
-          photoURL: updatedUrl,
-        })
-      })
-      .then(() => {
-        firebase.auth().currentUser.updateProfile({
-          photoURL: updatedUrl
-        })
-      })
-      .then(() => {
-        const { avatarURL } = this.state
-        if (avatarURL !== updatedUrl) {
-          this.setState({ avatarURL: updatedUrl })
-        }
-      })
+
+    this.userRef.update({
+      photoURL: updatedUrl
+    })
+
+    this.setState({ profileURL: updatedUrl })
   }
 
   showPhotoModal(doShow) {
@@ -333,12 +300,12 @@ export default class Profile extends React.Component {
     return (
       <View
         style={{
-          backgroundColor: "white",
-          alignItems: "center",
-          justifyContent: "center",
-          position: "absolute",
-          width: "100%",
-          height: "100%"
+          backgroundColor: 'white',
+          alignItems: 'center',
+          justifyContent: 'center',
+          position: 'absolute',
+          width: '100%',
+          height: '100%'
         }}
       >
         <ActivityIndicator size="large" color={Colors.crimson} />
@@ -352,13 +319,13 @@ export default class Profile extends React.Component {
         <View style={styles.header.avatarContainer}>
           <RoundImage
             onPress={() => {
-              this.state.currentUserProfile && this.showPhotoModal(true)
+              this.state.myProfile && this.showPhotoModal(true)
             }}
             size={120}
             source={{
               uri:
-                this.state.avatarURL ||
-                "https://user-images.githubusercontent.com/6922904/43790322-455b8dda-9a40-11e8-800e-09b299ace3b3.png"
+                this.state.profileURL ||
+                'https://user-images.githubusercontent.com/6922904/43790322-455b8dda-9a40-11e8-800e-09b299ace3b3.png'
             }}
           />
         </View>
@@ -374,7 +341,7 @@ export default class Profile extends React.Component {
           </View>
 
           <View style={styles.header.buttonContainer}>
-            {this.state.currentUserProfile
+            {this.state.myProfile
               ? this.renderEditProfileButton()
               : this.renderFollowButton()}
           </View>
@@ -387,13 +354,13 @@ export default class Profile extends React.Component {
     return (
       <Button
         type="outline"
-        titleStyle={{ color: "black" }}
+        titleStyle={{ color: 'black' }}
         buttonStyle={{
-          backgroundColor: "white",
+          backgroundColor: 'white',
           borderWidth: 2,
           borderColor: Colors.dogBoneBlue
         }}
-        title={"Edit Profile"}
+        title={'Edit Profile'}
         onPress={() => {
           this.setTextEditingModalVisible(true)
         }}
@@ -405,13 +372,13 @@ export default class Profile extends React.Component {
     return (
       <Button
         type="outline"
-        titleStyle={{ color: "black" }}
+        titleStyle={{ color: 'black' }}
         buttonStyle={{
-          backgroundColor: "white",
+          backgroundColor: 'white',
           borderWidth: 2,
           borderColor: Colors.dogBoneBlue
         }}
-        title={!this.state.isFollowed ? "Add to Pack" : "Unfollow"}
+        title={!this.state.isFollowed ? 'Add to Pack' : 'Unfollow'}
         onPress={() => {
           if (!this.state.isFollowed) {
             followUser(this.state.uid).then(followed => {
@@ -433,8 +400,8 @@ export default class Profile extends React.Component {
         <DogList
           navigation={this.props.navigation}
           userId={this.state.uid}
-          currentUser={this.state.currentUserProfile}
-          canAddDog={this.state.currentUserProfile}
+          currentUser={this.state.myProfile}
+          canAddDog={this.state.myProfile}
           onDogPress={this.onDogPress}
         />
       </View>
@@ -442,9 +409,9 @@ export default class Profile extends React.Component {
   }
 
   onDogPress = dog => {
-    this.props.navigation.navigate("ViewDog", {
+    this.props.navigation.navigate('ViewDog', {
       dog: dog,
-      currentUser: this.state.currentUserProfile || false,
+      currentUser: this.state.myProfile,
       onDogUpdated: this.onDogUpdated
     })
   }
@@ -456,18 +423,18 @@ export default class Profile extends React.Component {
     this.setState({ dogs: dogs })
   }
 
-  postsList() {
-    return (
-      <View style={styles.postList.container}>
-        <PostList
-          style={styles.postList.list}
-          navigation={this.props.navigation}
-          userId={this.state.uid}
-          onAvatarPressed={this.onAvatarPressed}
-        />
-      </View>
-    )
-  }
+  // postsList() {
+  //   return (
+  //     <View style={styles.postList.container}>
+  //       <PostList
+  //         style={styles.postList.list}
+  //         navigation={this.props.navigation}
+  //         userId={this.state.uid}
+  //         onAvatarPressed={this.onAvatarPressed}
+  //       />
+  //     </View>
+  //   )
+  // }
 
   onAvatarPressed = () => {
     // ignored in profile view
@@ -483,9 +450,9 @@ const styles = {
 
   header: StyleSheet.create({
     container: {
-      flexDirection: "row",
-      backgroundColor: "white",
-      width: "100%"
+      flexDirection: 'row',
+      backgroundColor: 'white',
+      width: '100%'
     },
     textAndButtonContainer: {
       flex: 1,
@@ -493,8 +460,8 @@ const styles = {
     },
     topRow: {
       marginTop: 12,
-      justifyContent: "space-between",
-      flexDirection: "row"
+      justifyContent: 'space-between',
+      flexDirection: 'row'
     },
     avatarContainer: {
       margin: 12,
@@ -502,8 +469,8 @@ const styles = {
       width: 120
     },
     usernameContainer: {
-      alignItems: "center",
-      justifyContent: "center"
+      alignItems: 'center',
+      justifyContent: 'center'
     },
     buttonContainer: { padding: 8 },
     avatar: {
@@ -518,14 +485,14 @@ const styles = {
   dogList: StyleSheet.create({
     container: {
       height: 96,
-      width: "100%",
+      width: '100%',
       borderTopWidth: 1,
-      borderColor: "grey"
+      borderColor: 'grey'
     },
     list: {
       flex: 1,
-      justifyContent: "center",
-      alignItems: "center"
+      justifyContent: 'center',
+      alignItems: 'center'
     }
   }),
 
@@ -533,18 +500,18 @@ const styles = {
     container: {},
     list: {
       flex: 1,
-      justifyContent: "center",
-      alignItems: "center"
+      justifyContent: 'center',
+      alignItems: 'center'
     }
   }),
 
   modal: StyleSheet.create({
     bottomButtonContainer: {
-      position: "absolute",
+      position: 'absolute',
       right: 0,
       flex: 1,
       minHeight: 42,
-      backgroundColor: "grey"
+      backgroundColor: 'grey'
     }
   })
 }

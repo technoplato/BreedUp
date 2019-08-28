@@ -1,9 +1,10 @@
-import GeoFire from "geofire"
-import db from '@react-native-firebase/database';
+import GeoFire from 'geofire'
+import db from '@react-native-firebase/database'
+import Geolocation from '@react-native-community/geolocation'
 
-const dogsRef = db.ref("dogs")
-const dogLocationsRef = db.ref("locations/dogs")
-const usersLocationsRef = db.ref("locations/users")
+const dogsRef = db().ref('dogs')
+const dogLocationsRef = db().ref('locations/dogs')
+const usersLocationsRef = db().ref('locations/users')
 
 export const updateUserLocation = async userId => {
   const location = await getCurrentLocation()
@@ -20,7 +21,7 @@ export const updateUserLocation = async userId => {
  */
 export const getCurrentLocation = async () => {
   return await new Promise((resolve, reject) => {
-    navigator.geolocation.getCurrentPosition(
+    Geolocation.getCurrentPosition(
       loc => resolve([loc.coords.latitude, loc.coords.longitude]),
       error => reject(error)
     )
@@ -30,7 +31,7 @@ export const getCurrentLocation = async () => {
 const updateDogLocationsForUser = (userId, location) => {
   return dogsRef
     .child(userId)
-    .once("value")
+    .once('value')
     .then(dogs => {
       dogs.forEach(dogSnap => {
         const dogId = dogSnap.key

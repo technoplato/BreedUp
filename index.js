@@ -1,5 +1,5 @@
-import { AppRegistry, YellowBox } from "react-native"
-import App from "./src/Screens/App"
+import { AppRegistry, YellowBox } from 'react-native'
+import App from './src/Screens/App'
 // YellowBox.ignoreWarnings([
 //   "Unable to symbolicate",
 //   "Warning: isMounted(...)",
@@ -7,4 +7,4 @@ import App from "./src/Screens/App"
 //   "Warning: In next release empty",
 //   "Class RCTCxxModule"
 // ])
-AppRegistry.registerComponent("BreedUp", () => App)
+AppRegistry.registerComponent('BreedUp', () => App)

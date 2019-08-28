@@ -1,42 +1,45 @@
-import React from "react"
-import { Text, TextInput, Alert, ImageBackground } from "react-native"
+import React from 'react'
+import { Text, TextInput, Alert, ImageBackground } from 'react-native'
 
-import { Button } from "react-native-elements"
+import { Button } from 'react-native-elements'
 
-import auth from '@react-native-firebase/auth';
-import database from '@react-native-firebase/database';
-import firestore from '@react-native-firebase/firestore';
+import auth from '@react-native-firebase/auth'
+import database from '@react-native-firebase/database'
+import firestore from '@react-native-firebase/firestore'
 
-import styles from "./LoginStyles"
-import { Images } from "../Themes"
+import styles from './LoginStyles'
+import { Images } from '../Themes'
+
+const removeFuncs = obj => JSON.parse(JSON.stringify(obj))
 
 export default class Login extends React.Component {
-  state = { email: "", password: "", errorMsg: null }
+  state = { email: '', password: '', errorMsg: null }
 
   componentDidMount = () => {
     if (this.props.navigation.state.params !== undefined) {
       const { email, password } = this.props.navigation.state.params
       this.setState({
-        email: email || "",
-        password: password || ""
+        email: email || '',
+        password: password || ''
       })
     }
   }
 
   handleLogin = () => {
     const { email, password } = this.state
-      .auth()
+
+    auth()
       .signInWithEmailAndPassword(email, password)
-      .then(data => {
-        const user = JSON.parse(data.user.toJSON())
+      .then(userRecord => {
+        const user = removeFuncs(userRecord.user)
         firestore()
-          .collection("users")
-          .doc(data.user.uid)
+          .collection('users')
+          .doc(user.uid)
           .update({
             user
           })
       })
-      .then(() => this.props.navigation.navigate("Feed"))
+      .then(() => this.props.navigation.navigate('Feed'))
       .catch(error => this.setState({ errorMsg: error.message }))
   }
 
@@ -45,24 +48,24 @@ export default class Login extends React.Component {
 
     if (!email) {
       const errorMsg =
-        "Please enter an email that we can send a password reset link to."
+        'Please enter an email that we can send a password reset link to.'
 
       this.setState({ errorMsg })
     } else {
-        auth()
+      auth()
         .sendPasswordResetEmail(email)
         .then(function() {
           Alert.alert(
-            "Reset password email sent",
-            "Please check your email to reset your password.",
-            [{ text: "Ok" }]
+            'Reset password email sent',
+            'Please check your email to reset your password.',
+            [{ text: 'Ok' }]
           )
         })
         .catch(function(error) {
           Alert.alert(
-            "An error occurred sending email",
-            "Please email support for help.",
-            [{ text: "Ok" }]
+            'An error occurred sending email',
+            'Please email support for help.',
+            [{ text: 'Ok' }]
           )
         })
     }
@@ -77,7 +80,7 @@ export default class Login extends React.Component {
       >
         <Text style={styles.headerText}>Breed Up</Text>
         {this.state.errorMsg && (
-          <Text style={{ color: "white", padding: 12 }}>
+          <Text style={{ color: 'white', padding: 12 }}>
             {this.state.errorMsg}
           </Text>
         )}
@@ -85,7 +88,7 @@ export default class Login extends React.Component {
           style={styles.textInput}
           autoCapitalize="none"
           placeholder="Email"
-          keyboardType={"email-address"}
+          keyboardType={'email-address'}
           onChangeText={email => this.setState({ email })}
           value={this.state.email}
         />
@@ -109,7 +112,7 @@ export default class Login extends React.Component {
           onPress={() => {
             const { email, password } = this.state
 
-            this.props.navigation.navigate("SignUp", { email, password })
+            this.props.navigation.navigate('SignUp', { email, password })
           }}
         />
         <Button

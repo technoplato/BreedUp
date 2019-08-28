@@ -9,9 +9,10 @@ import { updateUserLocation } from '../Interactors/Location'
 export default class Loading extends React.Component {
   componentDidMount() {
     auth().onAuthStateChanged(async user => {
+      global.user = user
       if (user) {
         updateUserLocation(user.uid)
-        this.props.navigation.navigate('Feed')
+        this.props.navigation.navigate('PrivateProfile')
       } else {
         this.props.navigation.navigate('SignUp')
       }
@@ -20,7 +21,7 @@ export default class Loading extends React.Component {
 
   render() {
     return (
-      <View style={       styles.container}>
+      <View style={styles.container}>
         <Text>Loading</Text>
         <ActivityIndicator size="large" />
       </View>

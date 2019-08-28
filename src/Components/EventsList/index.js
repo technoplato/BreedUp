@@ -1,16 +1,16 @@
-import React, { Component } from "react"
-import { Text, TouchableWithoutFeedback, View } from "react-native"
-import GeoFire from "geofire"
+import React, { Component } from 'react'
+import { Text, TouchableWithoutFeedback, View } from 'react-native'
+import GeoFire from 'geofire'
 
-import { eventsRef } from "../../Utils/FirebaseUtils"
-import { getCoordinatesForAddress } from "../../Utils/location"
+import { eventsRef } from '../../Utils/FirebaseUtils'
+import { getCoordinatesForAddress } from '../../Utils/location'
 
 class EventsList extends Component {
   state = { events: [] }
 
   componentDidMount = async () => {
     const coordinates = await getCoordinatesForAddress(
-      "5368 Carrara Court, Saint Cloud Florida 34771"
+      '5368 Carrara Court, Saint Cloud Florida 34771'
     )
 
     const events = await getAllEventsByProximity(
@@ -43,7 +43,7 @@ class EventsList extends Component {
 
   handleEventPress = event => {
     console.log(this.props)
-    this.props.navigation.navigate("ViewEvent", {
+    this.props.navigation.navigate('ViewEvent', {
       id: event.key
     })
   }
@@ -71,7 +71,7 @@ const getAllEventsByProximity = async (center, radiusKm, eventsRef) => {
 
   const events = []
 
-  query.on("key_entered", (key, location, distance) => {
+  query.on('key_entered', (key, location, distance) => {
     events.push({
       key,
       location,
@@ -80,7 +80,7 @@ const getAllEventsByProximity = async (center, radiusKm, eventsRef) => {
   })
 
   await new Promise(resolve => {
-    query.on("ready", () => {
+    query.on('ready', () => {
       resolve()
     })
   })
@@ -90,7 +90,7 @@ const getAllEventsByProximity = async (center, radiusKm, eventsRef) => {
     eventPromises.push(
       eventsRef
         .child(event.key)
-        .once("value")
+        .once('value')
         .then(snap => snap.val())
         .then(fetchedEvent => {
           return {

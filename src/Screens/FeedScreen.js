@@ -1,13 +1,13 @@
-import React from "react"
-import { View, Text } from "react-native"
-import { Icon } from "react-native-elements"
+import React from 'react'
+import { View, Text } from 'react-native'
+import { Icon } from 'react-native-elements'
 
-import FeedList from "../Components/FeedList"
-import styles from "../Styles/FeedScreenStyles"
-import firebase from '@react-native-firebase/app';
-import '@react-native-firebase/database';
-import '@react-native-firebase/firestore';
-import '@react-native-firebase/auth';
+import FeedList from '../Components/FeedList'
+import styles from '../Styles/FeedScreenStyles'
+import firebase from '@react-native-firebase/app'
+import '@react-native-firebase/database'
+import '@react-native-firebase/firestore'
+import '@react-native-firebase/auth'
 
 export default class FeedScreen extends React.Component {
   static navigationOptions = ({ navigation }) => ({
@@ -15,10 +15,10 @@ export default class FeedScreen extends React.Component {
       <View
         style={{
           flex: 1,
-          alignItems: "center",
-          justifyContent: "space-between",
-          backgroundColor: "white",
-          flexDirection: "row",
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          backgroundColor: 'white',
+          flexDirection: 'row',
           height: 80,
           paddingTop: 24 /* only for IOS to give StatusBar Space */
         }}
@@ -29,16 +29,16 @@ export default class FeedScreen extends React.Component {
           containerStyle={{ marginRight: 12 }}
           name="chat"
           color="#000"
-          onPress={() => navigation.navigate("ChatHome")}
+          onPress={() => navigation.navigate('ChatHome')}
         />
       </View>
     )
   })
 
   async componentDidMount() {
-    this.handleInitialNotification()
-    this.listenForNotificationTokenRefresh()
-    this.setupNotificationPermissions()
+    // this.handleInitialNotification()
+    // this.listenForNotificationTokenRefresh()
+    // this.setupNotificationPermissions()
   }
 
   async handleInitialNotification() {
@@ -48,7 +48,7 @@ export default class FeedScreen extends React.Component {
     if (notificationOpen) {
       // App was opened by a notification
       const notification = notificationOpen.notification
-      this.props.navigation.navigate("Chat", {
+      this.props.navigation.navigate('Chat', {
         channel: {
           fromDeepLink: true,
           id: notification.data.channelId
@@ -73,7 +73,7 @@ export default class FeedScreen extends React.Component {
   onTokenRefresh = token => {
     firebase
       .firestore()
-      .collection("users")
+      .collection('users')
       .doc(firebase.auth().currentUser.uid)
       .update({ pushToken: token })
     this.beginListeningForNotifications()
@@ -104,7 +104,7 @@ export default class FeedScreen extends React.Component {
         if (global.activeChatChannelId === notification.data.channelId) return
 
         // Process your notification as required
-        notification.android.setChannelId("test-channel")
+        notification.android.setChannelId('test-channel')
 
         firebase.notifications().displayNotification(notification)
       })
@@ -113,15 +113,15 @@ export default class FeedScreen extends React.Component {
       .notifications()
       .onNotificationOpened(notificationOpen => {
         const { notification } = notificationOpen
-        if (notification.title.includes("New message")) {
-          this.props.navigation.navigate("Chat", {
+        if (notification.title.includes('New message')) {
+          this.props.navigation.navigate('Chat', {
             channel: {
               fromDeepLink: true,
               id: notification.data.channelId
             }
           })
-        } else if (notification.title.includes("New Friend Request")) {
-          this.props.navigation.navigate("ChatHome")
+        } else if (notification.title.includes('New Friend Request')) {
+          this.props.navigation.navigate('ChatHome')
         }
       })
   }

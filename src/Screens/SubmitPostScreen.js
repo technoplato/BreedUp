@@ -1,4 +1,4 @@
-import React from "react"
+import React from 'react'
 import {
   View,
   Text,
@@ -7,18 +7,18 @@ import {
   Keyboard,
   TouchableWithoutFeedback,
   StyleSheet
-} from "react-native"
+} from 'react-native'
 
-import { Button } from "react-native-elements"
+import { Button } from 'react-native-elements'
 
-import { createPost, submitPost } from "../Interactors/Posts"
-import DogList from "../Components/DogList"
-import { currentUser } from "../Utils/FirebaseUtils"
+import { createPost, submitPost } from '../Interactors/Posts'
+import DogList from '../Components/DogList'
+import { currentUser } from '../Utils/FirebaseUtils'
 
-import _ from "lodash"
+import _ from 'lodash'
 
 export default class SubmitPostScreen extends React.Component {
-  state = { postText: "", saving: false, pendingDogs: [] }
+  state = { postText: '', saving: false, pendingDogs: [] }
 
   constructor(props) {
     super(props)
@@ -31,11 +31,11 @@ export default class SubmitPostScreen extends React.Component {
     const { uri } = this.props
     return (
       <TouchableWithoutFeedback onPress={Keyboard.dismiss} style={{ flex: 1 }}>
-        <View style={{ flex: 1, backgroundColor: "white" }}>
+        <View style={{ flex: 1, backgroundColor: 'white' }}>
           <View
             style={{
-              width: "100%",
-              flexDirection: "row",
+              width: '100%',
+              flexDirection: 'row',
               padding: 16,
               marginTop: 24
             }}
@@ -52,7 +52,7 @@ export default class SubmitPostScreen extends React.Component {
           </View>
           {this.pendingDogs()}
           {this.dogListToAdd()}
-          <View style={{ flex: 1, justifyContent: "flex-end" }}>
+          <View style={{ flex: 1, justifyContent: 'flex-end' }}>
             <Button
               style={{ marginBottom: 24 }}
               title="Submit"
@@ -83,7 +83,7 @@ export default class SubmitPostScreen extends React.Component {
       default:
         let postText = `Dogs in this post:\n${pendingDogs
           .map(dog => dog.name)
-          .join("\n")}\n\nClick a dog on the list to remove it from this post.`
+          .join('\n')}\n\nClick a dog on the list to remove it from this post.`
         return postText
     }
   }
@@ -144,6 +144,6 @@ export default class SubmitPostScreen extends React.Component {
 const styles = StyleSheet.create({
   dogListContainer: {
     height: 90,
-    width: "100%"
+    width: '100%'
   }
 })

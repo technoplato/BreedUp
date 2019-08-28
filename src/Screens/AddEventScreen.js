@@ -1,15 +1,15 @@
-import React, { Component } from "react"
-import { View, Text, Button, TextInput } from "react-native"
-import { eventsRef, currentUser } from "../Utils/FirebaseUtils"
-import GeoFire from "geofire"
+import React, { Component } from 'react'
+import { View, Text, Button, TextInput } from 'react-native'
+import { eventsRef, currentUser } from '../Utils/FirebaseUtils'
+import GeoFire from 'geofire'
 
-import { getCoordinatesForAddress } from "../Utils/location"
+import { getCoordinatesForAddress } from '../Utils/location'
 
 export default class AddEventScreen extends Component {
   state = {
-    title: "",
-    description: "",
-    address: "5368 Carrara Court, Saint Cloud Florida 34771"
+    title: '',
+    description: '',
+    address: '5368 Carrara Court, Saint Cloud Florida 34771'
   }
 
   render() {
@@ -32,7 +32,7 @@ export default class AddEventScreen extends Component {
         <TextInput
           placeholder="Enter a address"
           onChangeText={address => this.setState({ address })}
-          value={"5368 Carrara Court, Saint Cloud Florida 34771"}
+          value={'5368 Carrara Court, Saint Cloud Florida 34771'}
         />
       </View>
     )
@@ -44,11 +44,11 @@ export default class AddEventScreen extends Component {
     const saved = await saveEvent(event)
     if (!saved) {
       this.setState({
-        error: "Could not find that address, please try again."
+        error: 'Could not find that address, please try again.'
       })
       return
     }
-    this.setState({ title: "", description: "", address: "" })
+    this.setState({ title: '', description: '', address: '' })
     this.props.navigation.state.params.onEventAdded(saved)
     this.props.navigation.goBack()
   }

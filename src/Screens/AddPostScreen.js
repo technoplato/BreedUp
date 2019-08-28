@@ -1,7 +1,7 @@
-import React from "react"
+import React from 'react'
 
-import SubmitPostScreen from "./SubmitPostScreen"
-import CameraModal from "../../lib/InstagramCameraModal"
+import SubmitPostScreen from './SubmitPostScreen'
+import CameraModal from '../../lib/InstagramCameraModal'
 
 export default class AddPostScreen extends React.Component {
   state = { modalVisible: true }
@@ -22,7 +22,7 @@ export default class AddPostScreen extends React.Component {
   }
 
   componentDidMount() {
-    this.props.navigation.addListener("didFocus", this.revealPhotoModal)
+    this.props.navigation.addListener('didFocus', this.revealPhotoModal)
   }
 
   cancelPhoto() {

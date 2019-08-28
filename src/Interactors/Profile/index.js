@@ -1,12 +1,12 @@
-import { fromEvent } from "rxjs"
-import { map } from "rxjs/operators"
+import { fromEvent } from 'rxjs'
+import { map } from 'rxjs/operators'
 import {
   currentUser,
   followersRef,
   followingRef
-} from "../../Utils/FirebaseUtils"
+} from '../../Utils/FirebaseUtils'
 
-export const  followUser = userId => {
+export const followUser = userId => {
   return followingRef
     .child(currentUser().uid)
     .child(userId)
@@ -36,9 +36,8 @@ export const isFollowing = userId => {
   return followingRef
     .child(currentUser().uid)
     .child(userId)
-    .once("value")
+    .once('value')
     .then(snap => {
       return !!snap.val()
     })
 }
-
