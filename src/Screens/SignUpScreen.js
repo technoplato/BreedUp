@@ -1,10 +1,10 @@
 import React from "react"
 import { Text, TextInput, View, Alert, ImageBackground } from "react-native"
 import { Button } from "react-native-elements"
-import firebase from '@react-native-firebase/app';
-import '@react-native-firebase/database';
-import '@react-native-firebase/firestore';
-import '@react-native-firebase/auth';
+
+import auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
+
 
 import styles from "./SignUpStyles"
 import { Images } from "../Themes"
@@ -22,6 +22,8 @@ export default class SignUpScreen extends React.Component {
     }
   }
 
+  // TODO - refactor into cloud function listening to auth
+  // doc: https://firebase.google.com/docs/functions/auth-events
   handleSignUp = () => {
     let { email, password, username } = this.state
     let userData
@@ -34,14 +36,11 @@ export default class SignUpScreen extends React.Component {
     } else if (!username) {
       this.setState({ errorMsg: "Please enter a valid username." })
     } else {
-      firebase
-        .auth()
+      auth()
         .createUserWithEmailAndPassword(email, password)
         .then(data => {
           userData = data.user
-
-          firebase
-            .firestore()
+          firestore()
             .collection("users")
             .doc(data.user.uid)
             .set({
@@ -50,13 +49,10 @@ export default class SignUpScreen extends React.Component {
               emailVerified: data.user.emailVerified,
               uid: data.user.uid,
               metadata: data.user.metadata,
-              profileURL:
-                "https://www.instamobile.io/wp-content/uploads/2019/05/default-avatar.jpg",
               photoURL:
                 "https://www.instamobile.io/wp-content/uploads/2019/05/default-avatar.jpg"
             })
-          return firebase
-            .database()
+          return database()
             .ref("users")
             .child(data.user.uid)
             .set({
@@ -65,36 +61,30 @@ export default class SignUpScreen extends React.Component {
               emailVerified: data.user.emailVerified,
               uid: data.user.uid,
               metadata: data.user.metadata,
-              profileURL:
-                "https://www.instamobile.io/wp-content/uploads/2019/05/default-avatar.jpg",
               photoURL:
                 "https://www.instamobile.io/wp-content/uploads/2019/05/default-avatar.jpg"
             })
         })
         .then(() => {
-          return firebase
-            .auth()
+          return auth()
             .currentUser.updateProfile({
               displayName: username,
-              profileURL:
-                "https://www.instamobile.io/wp-content/uploads/2019/05/default-avatar.jpg",
               photoURL:
                 "https://www.instamobile.io/wp-content/uploads/2019/05/default-avatar.jpg"
             })
             .then(() => {
-              console.log("current user: ", firebase.auth().currentUser)
+              console.log("current user: ", auth().currentUser)
             })
         })
         .then(() => {
-          return firebase
-            .database()
+          return database()
             .ref("names")
             .child("users")
             .child(userData.uid)
             .set({
               username,
               uid: userData.uid,
-              profileURL:
+              photoURL:
                 "https://www.instamobile.io/wp-content/uploads/2019/05/default-avatar.jpg"
             })
         })

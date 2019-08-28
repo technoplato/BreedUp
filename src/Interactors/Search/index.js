@@ -3,8 +3,6 @@ import GeoFire from "geofire"
 import { getCurrentLocation } from "../Location"
 import database from '@react-native-firebase/database';
 
-
-
 // This seems very random but is used to limit search to prefixes of search content
 const HIGH_UNICODE_VAL = "\uf8ff"
 

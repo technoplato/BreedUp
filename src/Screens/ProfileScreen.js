@@ -74,14 +74,14 @@ export default class Profile extends React.Component {
       .ref()
       .child(`users/${profileId}`)
       .once("value", snap => {
-        const { username, description, profileURL } = snap.val()
+        const { username, description, photoURL } = snap.val()
 
         this.setState({
-          avatarURL: profileURL,
-          username: username,
-          description: description,
+           photoURL,
+           username,
+           description,
 
-          modifiedAvatarURL: profileURL,
+          modifiedAvatarURL: photoURL,
           modifiedUsername: username,
           modifiedDescription: description,
 
@@ -304,12 +304,10 @@ export default class Profile extends React.Component {
           .collection("users")
           .doc(id)
           .update({
-            profileURL: updatedUrl,
             photoURL: updatedUrl
           })
         return currentUserProfileRef.update({
-          profileURL: updatedUrl,
-          photoURL: updatedUrl
+          photoURL: updatedUrl,
         })
       })
       .then(() => {

@@ -8,13 +8,11 @@ import React from "react"
 import { Text, View, Button } from "react-native"
 import { searchNearbyDogs } from "../Interactors/Search"
 
-// import * as  firebase from '@react-native-firebase/app'
 import database from '@react-native-firebase/database';
 
 class Testing extends React.Component {
   async componentDidMount() {
-    // updateUserLocation(kentId)
-    console.log(await database().ref("users").once("value").then(snap => JSON.stringify(snap.val())));
+
   }
 
   render() {
@@ -37,7 +35,7 @@ class Testing extends React.Component {
 
 const RootNav = createSwitchNavigator({
   Testing: Testing,
-  // Onboarding: Onboarding,
+  Onboarding: Onboarding,
   // Main: Main,
   // Fiddling: Fiddling
 })

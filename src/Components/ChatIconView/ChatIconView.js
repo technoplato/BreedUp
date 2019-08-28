@@ -41,7 +41,7 @@ export default class ChatIconView extends React.Component {
                   ? {
                       uri:
                         this.props.participants[0].photoURL ||
-                        this.props.participants[0].senderProfileURL
+                        this.props.participants[0].senderPhotoURL
                     }
                   : AppStyles.iconSet.userAvatar
               }

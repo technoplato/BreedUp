@@ -292,10 +292,10 @@ class ChatScreen extends React.Component {
             content: that.state.input,
             created,
             recipientID: friend.uid,
-            recipientProfileURL: friend.photoURL,
+            recipientPhotoURL: friend.photoURL,
             senderUsername: displayName,
             senderID: uid,
-            senderProfileURL: photoURL
+            senderPhotoURL: photoURL
           }
 
           firebase
@@ -357,10 +357,10 @@ class ChatScreen extends React.Component {
           created,
           recipientFirstName: friend.username,
           recipientID: friend.uid,
-          recipientProfileURL: friend.photoURL,
+          recipientPhotoURL: friend.photoURL,
           senderUsername: displayName,
           senderID: uid,
-          senderProfileURL: photoURL
+          senderPhotoURL: photoURL
           // url: this.state.downloadUrl
         }
 
@@ -442,7 +442,7 @@ class ChatScreen extends React.Component {
                 phone={false}
               />
             </View>
-            {item.senderProfileURL != null && (
+            {item.senderPhotoURL != null && (
               <ChatIconView
                 style={styles.userIcon}
                 imageStyle={styles.userIcon}

@@ -3,10 +3,9 @@ import { Text, TextInput, Alert, ImageBackground } from "react-native"
 
 import { Button } from "react-native-elements"
 
-import firebase from '@react-native-firebase/app';
-import '@react-native-firebase/database';
-import '@react-native-firebase/firestore';
-import '@react-native-firebase/auth';
+import auth from '@react-native-firebase/auth';
+import database from '@react-native-firebase/database';
+import firestore from '@react-native-firebase/firestore';
 
 import styles from "./LoginStyles"
 import { Images } from "../Themes"
@@ -26,21 +25,17 @@ export default class Login extends React.Component {
 
   handleLogin = () => {
     const { email, password } = this.state
-    firebase
       .auth()
       .signInWithEmailAndPassword(email, password)
-
       .then(data => {
         const user = JSON.parse(data.user.toJSON())
-        firebase
-          .firestore()
+        firestore()
           .collection("users")
           .doc(data.user.uid)
           .update({
             user
           })
       })
-
       .then(() => this.props.navigation.navigate("Feed"))
       .catch(error => this.setState({ errorMsg: error.message }))
   }
@@ -54,8 +49,7 @@ export default class Login extends React.Component {
 
       this.setState({ errorMsg })
     } else {
-      firebase
-        .auth()
+        auth()
         .sendPasswordResetEmail(email)
         .then(function() {
           Alert.alert(

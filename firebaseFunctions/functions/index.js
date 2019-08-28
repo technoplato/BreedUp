@@ -5,6 +5,17 @@ admin.initializeApp()
 
 const firestore = admin.firestore()
 
+const removeFuncs = obj => JSON.parse(JSON.stringify(obj))
+
+exports.onUserSignup = functions.auth.user().onCreate(userRecord => {
+  const user = removeFuncs(userRecord)
+  // Create user in "users" collection
+  return firestore
+    .collection("users")
+    .doc(user.uid)
+    .set(user)
+})
+
 exports.sendChatPushNotification = functions.firestore
   .document("channels/{channelId}/threads/{threadId}")
   .onWrite((change, context) => {

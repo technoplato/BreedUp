@@ -268,7 +268,7 @@ class SearchModal extends React.Component {
   }
 
   renderItem = ({ item }) => {
-    if (item.profileURL && item.username) {
+    if (item.photoURL && item.username) {
       return (
         <TouchableOpacity onPress={() => this.onPressUser(item)}>
           <View style={styles.container}>
