@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, FlatList, ActivityIndicator } from 'react-native'
+import { View, Text, FlatList, ActivityIndicator } from 'react-native'
 import _ from 'lodash'
 
 import DogListItem from '../DogListItem'
@@ -9,7 +9,6 @@ import styles from './DogListStyles'
 import { Colors } from '../../Themes'
 
 import { fetchDogsForUser } from '../../Interactors/Dog'
-import { Text } from 'react-native-elements'
 
 export default class DogList extends React.Component {
   constructor(props) {

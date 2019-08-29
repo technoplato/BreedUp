@@ -199,16 +199,8 @@ export default class Profile extends React.Component {
   onDogPress = dog => {
     this.props.navigation.navigate('ViewDog', {
       dog: dog,
-      currentUser: this.state.myProfile,
-      onDogUpdated: this.onDogUpdated
+      currentUser: this.state.myProfile
     })
-  }
-
-  onDogUpdated = (oldDog, updatedDog) => {
-    const dogs = this.state.dogs
-    const index = dogs.indexOf(oldDog)
-    dogs.splice(index, 1, updatedDog)
-    this.setState({ dogs: dogs })
   }
 
   // postsList() {

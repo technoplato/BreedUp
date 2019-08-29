@@ -29,9 +29,9 @@ Now, off to it!
 
 ### Steps to completion:
 
-1. Add dog to dogs root collection
-2. Setup Firebase Cloud Function™ to listen for new (***ON ADD***) dogs. When a new dog is added to the collection, use Cloud Functions to add that dog to the dogs property on the user record.
-3. Keep everything up to date (***ON CHANGE***). Things that can change: user names, user profile pictures, user descriptions, dog pictures. When properties change, propagate those changes to each respective record.
+- [x]  Add dog to dogs root collection
+- [ ]   Setup Firebase Cloud Function™ to listen for new (***ON ADD***) dogs. When a new dog is added to the collection, use Cloud Functions to add that dog to the dogs property on the user record.
+- [ ]    Keep everything up to date (***ON CHANGE***). Things that can change: user names, user profile pictures, user descriptions, dog pictures. When properties change, propagate those changes to each respective record.
 
 **For example**
 

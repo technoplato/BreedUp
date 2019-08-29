@@ -50,20 +50,14 @@ const currentUser = () => {
 /**
  * Uploads an image to Firebase and returns the URL.
  */
-const uploadImage = (imageUri, userId, path) => {
-  // Create ref for storing image
+const uploadImage = async (imageUri, userId, path) => {
   const storageRef = storage()
     .ref()
     .child(userId)
     .child(path)
 
-  // Save photo to Firebase storage and return URL where photo is stored
-  return storageRef
-    .put(imageUri)
-    .then(snapshot => snapshot.downloadURL)
-    .then(url => {
-      return url
-    })
+  await storageRef.putFile(imageUri)
+  return storageRef.getDownloadURL()
 }
 
 /**
@@ -76,6 +70,7 @@ const deleteImage = (userId, path) => {
     .child(path)
     .delete()
     .then(() => true)
+    .catch(() => false)
 }
 
 const postImageUploadPath = 'posts/images/'

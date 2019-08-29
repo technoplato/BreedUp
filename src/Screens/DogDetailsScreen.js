@@ -1,41 +1,36 @@
-import React from "react"
+import React from 'react'
 import {
   Text,
   TextInput,
   TouchableWithoutFeedback,
   TouchableHighlight,
   Keyboard,
-  KeyboardAvoidingView,
   View,
   Alert,
   Image
-} from "react-native"
+} from 'react-native'
 
-import styles from "./ViewDogStyles"
-import { updateDog } from "../Interactors/Dog"
+import styles from './ViewDogStyles'
+import { updateDog } from '../Interactors/Dog'
 
-import CameraModal from "../../lib/InstagramCameraModal"
+import CameraModal from '../../lib/InstagramCameraModal'
 
-import { Button } from "react-native-elements"
-import _ from "lodash"
+import { Button } from 'react-native-elements'
 
 export default class DogDetailsScreen extends React.Component {
-  state = {}
   constructor(props) {
     super(props)
 
-    const { dog, currentUser } = this.props.navigation.state.params
+    const { dog, currentUser = false } = this.props.navigation.state.params
 
     this.state = {
       oldDog: dog,
-      ownerId: dog.ownerId,
       name: dog.name,
       breed: dog.breed,
       imageUri: dog.imageUri,
       loading: false,
       photoEditModalVisible: false,
-      // TODO - see if Kent is bothered by not having this functionality
-      currentUser: false
+      currentUser: currentUser
     }
 
     this.showPhotoModal = this.showPhotoModal.bind(this)
@@ -45,34 +40,21 @@ export default class DogDetailsScreen extends React.Component {
   onPressUpdateDetails = () => {
     Keyboard.dismiss()
 
-    // Show loading
-    this.setState({ loading: true })
-
-    const { oldDog, ownerId, name, breed, imageUri } = this.state
-
-    // Create clone with potentially new info to update
-    const newDog = _.clone(oldDog)
-    newDog["name"] = name
-    newDog["breed"] = breed
-    newDog["imageUri"] = imageUri
-
-    // Verify input
-    if (name === "") {
-      Alert.alert("Please enter a name for your dog")
+    if (name === '') {
+      Alert.alert('Please enter a name for your dog')
       this.setState({ loading: false })
-    } else if (breed === "") {
-      Alert.alert("Please enter a breed for your dog")
+    } else if (breed === '') {
+      Alert.alert('Please enter a breed for your dog')
       this.setState({ loading: false })
     } else {
+      // Show loading
+      this.setState({ loading: true })
+
+      const { oldDog, name, breed, imageUri, id } = this.state
+      const newDog = { owner: oldDog.owner, name, breed, imageUri, id }
+
       // Let addDog interactor do its thing and then go back
-      updateDog(oldDog, newDog)
-        .then(updatedDog => {
-          return this.props.navigation.state.params.onDogUpdated(
-            oldDog,
-            updatedDog
-          )
-        })
-        .then(() => this.props.navigation.goBack())
+      updateDog(oldDog, newDog).then(() => this.props.navigation.goBack())
     }
   }
 
@@ -94,7 +76,7 @@ export default class DogDetailsScreen extends React.Component {
             >
               <Image
                 source={{ uri: this.state.imageUri }}
-                style={{ height: 144, width: 144, alignSelf: "center" }}
+                style={{ height: 144, width: 144, alignSelf: 'center' }}
               />
             </TouchableHighlight>
             {this.renderName()}
