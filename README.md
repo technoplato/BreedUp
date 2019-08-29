@@ -36,6 +36,14 @@ Now, off to it!
 **For example**
 
   Actually, I'm going to go ahead and just do the add part first to keep things relatively simple at first.
+
   
   Now, it's time to test and see how much I got wrong...
+  
+### ERRORS
+#### ERROR 1
 ![Cannot read property 'length' of undefined"](https://i.imgur.com/17MZhaX.png" "Cannot read property 'length' of undefined")
+
+I know how to fix this one. I didn't check if the dog array property actually exists on the user object. Going to go fix that now.
+
+
