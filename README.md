@@ -45,5 +45,13 @@ Now, off to it!
 ![Cannot read property 'length' of undefined"](https://i.imgur.com/17MZhaX.png" "Cannot read property 'length' of undefined")
 
 I know how to fix this one. I didn't check if the dog array property actually exists on the user object. Going to go fix that now.
+I think that was fixed :)
 
+#### ERROR 2
+
+![Searching for a dog I just added"](https://i.imgur.com/stmhDX3.png" "Searching for a dog that I just added")
+
+
+#### ERROR N
+![insert image alt text here](insert_image_url_here)
 

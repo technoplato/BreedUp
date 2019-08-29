@@ -43,6 +43,7 @@ export default class SignUpScreen extends React.Component {
             .doc(user.uid)
             .set({
               ...user,
+              dogs: [],
               username: username,
               photoURL:
                 'https://www.instamobile.io/wp-content/uploads/2019/05/default-avatar.jpg'

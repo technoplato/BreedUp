@@ -54,7 +54,10 @@ export const fetchDogsForUser = async ownerId => {
     .collection('users')
     .doc(ownerId)
     .get()
-    .then(doc => doc.data().dogs)
+    .then(doc => {
+      console.log(doc.data())
+      return doc.data().dogs || []
+    })
 }
 
 const updateDogImage = async newDog => {
