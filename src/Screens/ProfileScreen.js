@@ -141,46 +141,6 @@ export default class Profile extends React.Component {
 
     const { modifiedDescription, modifiedUsername } = this.state
 
-    // Modify this in Firebase functions -----------------
-    // const petImageArray = await firebase
-    //   .database()
-    //   .ref()
-    //   .child('dogs')
-    //   .child(this.state.uid)
-    //   .once('value')
-    //   .then(snap => {
-    //     const keysArray = Object.keys(snap.val() || [])
-    //     const results = keysArray
-    //       .map(key => snap.val()[key])
-    //       .map(dog => dog.imageUri)
-    //     return results
-    //   })
-
-    //!! I believe this is redundant. It looks like I can just use a query like the following:
-    /*
-    usersCollection
-      .where("name", ">=", query)
-      .where("name", "<=", query + HIGH_UNICODE)
-
-    in order to search user names. In order to get users by ID:
-
-    usersCollection
-      .where("uid", "==", id)
-
-    */
-    // firebase
-    //   .database()
-    //   .ref()
-    //   .child('names')
-    //   .child('users')
-    //   .child(this.state.uid)
-    //   .set({
-    //     username: modifiedUsername.toLowerCase(),
-    //     uid: this.state.uid,
-    //     dogs: petImageArray,
-    //     description: modifiedDescription
-    //   })
-
     await this.userRef.update({
       description: modifiedDescription,
       username: modifiedUsername.toLowerCase()

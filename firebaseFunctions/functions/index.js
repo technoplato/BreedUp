@@ -20,7 +20,10 @@ exports.onUserUpdate = functions.firestore
   .document('users/{userId}')
   .onUpdate(async (change, context) => {
     const updatedUser = change.after.data()
-    return await Promise.all([updateAuth(updatedUser), updateDogs(updatedUser)])
+    return await Promise.all([
+      updateAuth(updatedUser),
+      updateDogsOnUserChange(updatedUser)
+    ])
   })
 
 /**
@@ -47,25 +50,27 @@ const updateAuth = user => {
  * in Firestore
  * @param user newly updated user
  */
-const updateDogs = async user => {
+const updateDogsOnUserChange = async user => {
+  const userRef = firestore.collection('users').doc(user.uid)
+  const dogsRef = firestore.collection('dogs')
+
+  const owner = {
+    /* uid always remains constant */
+    username: user.username,
+    photoURL: user.photoURL,
+    description: user.description
+  }
+  const dogsUpdate = [...user.dogs].map(dog => {
+    dog.owner = owner
+    return dog
+  })
+
   const updateDogPromises = []
 
-  const dogCollection = await firestore
-    .collection('users')
-    .doc(user.uid)
-    .collection('dogs')
-    .get()
+  updateDogPromises.push(userRef.update({ dogs: dogsUpdate }))
 
-  dogCollection.forEach(dogDoc => {
-    updateDogPromises.push(
-      dogDoc.update({
-        owner: {
-          username: updatedUser.username,
-          photoURL: updatedUser.photoURL,
-          description: updatedUser.description
-        }
-      })
-    )
+  dogsUpdate.forEach(dog => {
+    updateDogPromises.push(dogsRef.doc(dog.id).set(dog))
   })
 
   return updateDogPromises
