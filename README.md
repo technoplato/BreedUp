@@ -37,3 +37,5 @@ Now, off to it!
 
   Actually, I'm going to go ahead and just do the add part first to keep things relatively simple at first.
   
+  Now, it's time to test and see how much I got wrong...
+![Cannot read property 'length' of undefined"](https://i.imgur.com/17MZhaX.png" "Cannot read property 'length' of undefined")
