@@ -126,7 +126,8 @@ export const searchDogs = async dogNamePrefix => {
     .where('name', '>=', dogNamePrefix)
     .where('name', '<=', dogNamePrefix + HIGH_UNICODE_VAL)
     .limit(SEARCH_RESULTS_COUNT)
-    .get(snapshot => {
+    .get()
+    .then(snapshot => {
       const results = []
       snapshot.forEach(doc => {
         const dogDoc = doc.data()

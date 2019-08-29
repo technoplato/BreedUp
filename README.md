@@ -52,6 +52,10 @@ I think that was fixed :)
 ![Searching for a dog I just added"](https://i.imgur.com/stmhDX3.png" "Searching for a dog that I just added")
 
 
+#### ERROR 3
+![Probably missing Firestore index](https://i.imgur.com/sPSLe1u.png)
+I am almost positive this error has to do with a missing index on Firestore, but I'm really not sure how to fix it. Maybe it's seeing that collectionGroup query still? Not sure. Will have to come back. I want to make a PR for react-native-firebase to show those URLs...
+
+
 #### ERROR N
 ![insert image alt text here](insert_image_url_here)
-
