@@ -26,3 +26,13 @@ Dogs need to be the following:
 | Stored in their own root collection   | In order to search for dog names and to locate a dog by its ID without collectionGroup queries, dogs need to be stored in their own collection.       | We cannot display all of a user's dogs in search results without making an additional query for each dog that user owns.   |
 
 Now, off to it!
+
+### Steps to completion:
+
+1. Add dog to dogs root collection
+2. Setup Firebase Cloud Function™ to listen for new (***ON ADD***) dogs. When a new dog is added to the collection, use Cloud Functions to add that dog to the dogs property on the user record.
+3. Keep everything up to date (***ON CHANGE***). Things that can change: user names, user profile pictures, user descriptions, dog pictures. When properties change, propagate those changes to each respective record.
+
+**For example**
+  Actually, I'm going to go ahead and just do the add part first to keep things relatively simple at first.
+  
