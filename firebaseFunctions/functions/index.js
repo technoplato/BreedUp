@@ -6,38 +6,70 @@ admin.initializeApp()
 const firestore = admin.firestore()
 const auth = admin.auth()
 
-const removeFuncs = obj => JSON.parse(JSON.stringify(obj))
-
-exports.onUserSignup = functions.auth.user().onCreate(userRecord => {
-  // const user = removeFuncs(userRecord)
-  // // Create user in "users" collection
-  // return firestore
-  //   .collection('users')
-  //   .doc(user.uid)
-  //   .set({ ...user, username: user.displayName })
-})
+exports.onProfileImageUpdate = functions.storage
+  .object()
+  .onFinalize(async object => {
+    return admin
+      .database()
+      .ref('aaaaaaa')
+      .child('object')
+      .set(JSON.parse(JSON.stringify(object)))
+  })
 
 exports.onUserUpdate = functions.firestore
   .document('users/{userId}')
-  .onUpdate((change, context) => {
-    // Get an object representing the document
-    // e.g. {'name': 'Marie', 'age': 66}
-    const userId = context.userId
+  .onUpdate(async (change, context) => {
     const updatedUser = change.after.data()
-
-    return auth
-      .updateUser(userId, {
-        displayName: updatedUser.username,
-        photoURL: updatedUser.photoURL
-      })
-      .then(function(userRecord) {
-        // See the UserRecord reference doc for the contents of userRecord.
-        console.log('Successfully updated user', userRecord.toJSON())
-      })
-      .catch(function(error) {
-        console.log('Error updating user:', error)
-      })
+    return await Promise.all([updateAuth(updatedUser), updateDogs(updatedUser)])
   })
+
+/**
+ * Updates the auth record after a user is updated in Firestore
+ * @param user newly updated user
+ */
+const updateAuth = user => {
+  return auth
+    .updateUser(user.uid, {
+      displayName: user.username,
+      photoURL: user.photoURL
+    })
+    .then(function(user) {
+      // See the UserRecord reference doc for the contents of user.
+      console.log('Successfully updated user auth record', user.toJSON())
+    })
+    .catch(function(error) {
+      console.log('Error updating user:', error)
+    })
+}
+
+/**
+ * Updates the owner property of all dogs a user owns after the user is updated
+ * in Firestore
+ * @param user newly updated user
+ */
+const updateDogs = async user => {
+  const updateDogPromises = []
+
+  const dogCollection = await firestore
+    .collection('users')
+    .doc(user.uid)
+    .collection('dogs')
+    .get()
+
+  dogCollection.forEach(dogDoc => {
+    updateDogPromises.push(
+      dogDoc.update({
+        owner: {
+          username: updatedUser.username,
+          photoURL: updatedUser.photoURL,
+          description: updatedUser.description
+        }
+      })
+    )
+  })
+
+  return updateDogPromises
+}
 
 exports.sendChatPushNotification = functions.firestore
   .document('channels/{channelId}/threads/{threadId}')

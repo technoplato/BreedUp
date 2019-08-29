@@ -1,13 +1,16 @@
-import GeoFire from 'geofire'
+import { GeoFire } from 'geofire'
 import db from '@react-native-firebase/database'
 import Geolocation from '@react-native-community/geolocation'
 
 const dogsRef = db().ref('dogs')
 const dogLocationsRef = db().ref('locations/dogs')
-const usersLocationsRef = db().ref('locations/users')
+const usersLocationsRef = db()
+  .ref('locations')
+  .child('users')
 
 export const updateUserLocation = async userId => {
   const location = await getCurrentLocation()
+  console.log("Updating User's Location to coordinates: ", location)
 
   return Promise.all([
     updateDogLocationsForUser(userId, location),

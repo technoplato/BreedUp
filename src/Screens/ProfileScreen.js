@@ -8,6 +8,7 @@ import {
 } from 'react-native'
 import { Button } from 'react-native-elements'
 import Modal from 'react-native-modal'
+
 import firestore from '@react-native-firebase/firestore'
 import auth from '@react-native-firebase/auth'
 import storage from '@react-native-firebase/storage'
@@ -22,8 +23,6 @@ import CameraModal from '../../lib/InstagramCameraModal'
 import { followUser, unfollowUser, isFollowing } from '../Interactors/Users'
 
 export default class Profile extends React.Component {
-  state = {}
-
   constructor(props) {
     super(props)
 
@@ -64,6 +63,12 @@ export default class Profile extends React.Component {
     this.userRef = firestore()
       .collection('users')
       .doc(profileId)
+    const id = auth().currentUser.uid
+
+    this.profileImgStorageRef = storage()
+      .ref()
+      .child(currentUid)
+      .child('profile_img')
   }
 
   async componentDidMount() {
@@ -130,58 +135,6 @@ export default class Profile extends React.Component {
     })
   }
 
-  modal() {
-    return (
-      <Modal
-        isVisible={this.state.modalVisible && !this.state.saveComplete}
-        onBackdropPress={() => this.setTextEditingModalVisible(false)}
-        style={{ justifyContent: 'center', alignItems: 'center' }}
-      >
-        <View style={{ width: '100%', height: '70%' }}>
-          <View style={{ padding: 12, backgroundColor: 'white' }}>
-            <Text>Username</Text>
-            <TextInput
-              maxLength={20}
-              style={{ marginBottom: 24 }}
-              onChangeText={this.onUsernameChange}
-              value={this.state.username}
-            />
-
-            <Text>Description</Text>
-            <TextInput
-              maxLength={120}
-              multiline
-              onChangeText={this.onDescriptionChange}
-              value={this.state.description}
-            />
-          </View>
-          <View
-            style={{
-              flex: 1,
-              paddingBottom: 12,
-              minHeight: 42,
-              backgroundColor: 'grey',
-              justifyContent: 'flex-end'
-            }}
-          >
-            <Button
-              title={this.state.modalSaving ? 'Saving...' : 'Save Info'}
-              loading={this.state.modalSaving}
-              disabled={this.state.modalSaving}
-              onPress={async () => {
-                if (this.state.hasProfileChanged) {
-                  await this.saveProfileData()
-                } else {
-                  this.setTextEditingModalVisible(false)
-                }
-              }}
-            />
-          </View>
-        </View>
-      </Modal>
-    )
-  }
-
   async saveProfileData() {
     this.setTextEditingModalVisible(false)
     this.setSaving(false)
@@ -243,6 +196,78 @@ export default class Profile extends React.Component {
     })
   }
 
+  async onNewProfileImageChosen(newProfileImageUri) {
+    // Optimistically update image URI
+    this.setState({
+      profileURL: newProfileImageUri
+    })
+
+    await this.profileImgStorageRef.putFile(newProfileImageUri)
+    const updatedUrl = await this.profileImgStorageRef.getDownloadURL()
+
+    this.userRef.update({
+      photoURL: updatedUrl
+    })
+
+    this.setState({ profileURL: updatedUrl })
+  }
+
+  showPhotoModal(doShow) {
+    this.setState({
+      photoEditModalVisible: doShow
+    })
+  }
+
+  renderEditProfileButton() {
+    return (
+      <Button
+        type="outline"
+        titleStyle={{ color: 'black' }}
+        buttonStyle={{
+          backgroundColor: 'white',
+          borderWidth: 2,
+          borderColor: Colors.dogBoneBlue
+        }}
+        title={'Edit Profile'}
+        onPress={() => {
+          this.setTextEditingModalVisible(true)
+        }}
+      />
+    )
+  }
+
+  onDogPress = dog => {
+    this.props.navigation.navigate('ViewDog', {
+      dog: dog,
+      currentUser: this.state.myProfile,
+      onDogUpdated: this.onDogUpdated
+    })
+  }
+
+  onDogUpdated = (oldDog, updatedDog) => {
+    const dogs = this.state.dogs
+    const index = dogs.indexOf(oldDog)
+    dogs.splice(index, 1, updatedDog)
+    this.setState({ dogs: dogs })
+  }
+
+  // postsList() {
+  //   return (
+  //     <View style={styles.postList.container}>
+  //       <PostList
+  //         style={styles.postList.list}
+  //         navigation={this.props.navigation}
+  //         userId={this.state.uid}
+  //         onAvatarPressed={this.onAvatarPressed}
+  //       />
+  //     </View>
+  //   )
+  // }
+
+  onAvatarPressed = () => {
+    // ignored in profile view
+  }
+
   render() {
     return (
       <View style={styles.screen.container}>
@@ -266,50 +291,55 @@ export default class Profile extends React.Component {
     )
   }
 
-  async onNewProfileImageChosen(newProfileImageUri) {
-    // Optimistically update image URI
-    this.setState({
-      profileURL: newProfileImageUri
-    })
-
-    // Store photo in storage
-    const storageRef = storage().ref()
-
-    const id = firebase.auth().currentUser.uid
-
-    const userProfileImageStorageRef = storageRef.child(id).child('profile_img')
-
-    let updatedUrl = await userProfileImageStorageRef
-      .put(newProfileImageUri)
-      .then(snapshot => snapshot.downloadURL)
-
-    this.userRef.update({
-      photoURL: updatedUrl
-    })
-
-    this.setState({ profileURL: updatedUrl })
-  }
-
-  showPhotoModal(doShow) {
-    this.setState({
-      photoEditModalVisible: doShow
-    })
-  }
-
-  renderLoading() {
+  modal() {
     return (
-      <View
-        style={{
-          backgroundColor: 'white',
-          alignItems: 'center',
-          justifyContent: 'center',
-          position: 'absolute',
-          width: '100%',
-          height: '100%'
-        }}
+      <Modal
+        isVisible={this.state.modalVisible && !this.state.saveComplete}
+        onBackdropPress={() => this.setTextEditingModalVisible(false)}
+        style={{ justifyContent: 'center', alignItems: 'center' }}
       >
-        <ActivityIndicator size="large" color={Colors.crimson} />
-      </View>
+        <View style={{ width: '100%', height: '70%' }}>
+          <View style={{ padding: 12, backgroundColor: 'white' }}>
+            <Text>Username</Text>
+            <TextInput
+              maxLength={20}
+              style={{ marginBottom: 24 }}
+              onChangeText={this.onUsernameChange}
+              value={this.state.username}
+            />
+
+            <Text>Description</Text>
+            <TextInput
+              maxLength={120}
+              multiline
+              onChangeText={this.onDescriptionChange}
+              value={this.state.description}
+            />
+          </View>
+          <View
+            style={{
+              flex: 1,
+              paddingBottom: 12,
+              minHeight: 42,
+              backgroundColor: 'grey',
+              justifyContent: 'flex-end'
+            }}
+          >
+            <Button
+              title={this.state.modalSaving ? 'Saving...' : 'Save Info'}
+              loading={this.state.modalSaving}
+              disabled={this.state.modalSaving}
+              onPress={async () => {
+                if (this.state.hasProfileChanged) {
+                  await this.saveProfileData()
+                } else {
+                  this.setTextEditingModalVisible(false)
+                }
+              }}
+            />
+          </View>
+        </View>
+      </Modal>
     )
   }
 
@@ -350,21 +380,34 @@ export default class Profile extends React.Component {
     )
   }
 
-  renderEditProfileButton() {
+  dogList() {
     return (
-      <Button
-        type="outline"
-        titleStyle={{ color: 'black' }}
-        buttonStyle={{
+      <View style={styles.dogList.container}>
+        <DogList
+          navigation={this.props.navigation}
+          userId={this.state.uid}
+          currentUser={this.state.myProfile}
+          canAddDog={this.state.myProfile}
+          onDogPress={this.onDogPress}
+        />
+      </View>
+    )
+  }
+
+  renderLoading() {
+    return (
+      <View
+        style={{
           backgroundColor: 'white',
-          borderWidth: 2,
-          borderColor: Colors.dogBoneBlue
+          alignItems: 'center',
+          justifyContent: 'center',
+          position: 'absolute',
+          width: '100%',
+          height: '100%'
         }}
-        title={'Edit Profile'}
-        onPress={() => {
-          this.setTextEditingModalVisible(true)
-        }}
-      />
+      >
+        <ActivityIndicator size="large" color={Colors.crimson} />
+      </View>
     )
   }
 
@@ -392,52 +435,6 @@ export default class Profile extends React.Component {
         }}
       />
     )
-  }
-
-  dogList() {
-    return (
-      <View style={styles.dogList.container}>
-        <DogList
-          navigation={this.props.navigation}
-          userId={this.state.uid}
-          currentUser={this.state.myProfile}
-          canAddDog={this.state.myProfile}
-          onDogPress={this.onDogPress}
-        />
-      </View>
-    )
-  }
-
-  onDogPress = dog => {
-    this.props.navigation.navigate('ViewDog', {
-      dog: dog,
-      currentUser: this.state.myProfile,
-      onDogUpdated: this.onDogUpdated
-    })
-  }
-
-  onDogUpdated = (oldDog, updatedDog) => {
-    const dogs = this.state.dogs
-    const index = dogs.indexOf(oldDog)
-    dogs.splice(index, 1, updatedDog)
-    this.setState({ dogs: dogs })
-  }
-
-  // postsList() {
-  //   return (
-  //     <View style={styles.postList.container}>
-  //       <PostList
-  //         style={styles.postList.list}
-  //         navigation={this.props.navigation}
-  //         userId={this.state.uid}
-  //         onAvatarPressed={this.onAvatarPressed}
-  //       />
-  //     </View>
-  //   )
-  // }
-
-  onAvatarPressed = () => {
-    // ignored in profile view
   }
 }
 
