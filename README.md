@@ -34,5 +34,6 @@ Now, off to it!
 3. Keep everything up to date (***ON CHANGE***). Things that can change: user names, user profile pictures, user descriptions, dog pictures. When properties change, propagate those changes to each respective record.
 
 **For example**
+
   Actually, I'm going to go ahead and just do the add part first to keep things relatively simple at first.
   
