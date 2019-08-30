@@ -20,15 +20,18 @@ exports.onUserUpdate = functions.firestore
   .document('users/{userId}')
   .onUpdate(async (change, context) => {
     const updatedUser = change.after.data()
-    return await Promise.all([
+    await Promise.all([
       updateAuth(updatedUser),
       updateDogsOnUserChange(updatedUser)
     ])
+    return true
   })
 
 /**
  * Updates the auth record after a user is updated in Firestore
  * @param user newly updated user
+ *
+ * TODO: relevant fields to custom claims
  */
 const updateAuth = user => {
   return auth
@@ -55,26 +58,48 @@ const updateDogsOnUserChange = async user => {
   const dogsRef = firestore.collection('dogs')
 
   const owner = {
-    /* uid always remains constant */
+    uid: user.uid,
     username: user.username,
     photoURL: user.photoURL,
     description: user.description
   }
-  const dogsUpdate = [...user.dogs].map(dog => {
+
+  const updatedDogs = (user.dogs || []).map(dog => {
     dog.owner = owner
     return dog
   })
 
   const updateDogPromises = []
 
-  updateDogPromises.push(userRef.update({ dogs: dogsUpdate }))
-
-  dogsUpdate.forEach(dog => {
+  updatedDogs.forEach(dog => {
     updateDogPromises.push(dogsRef.doc(dog.id).set(dog))
   })
 
   return updateDogPromises
 }
+
+exports.onDogCreated = functions.firestore
+  .document('dogs/{dogId}')
+  .onCreate(doc => {
+    const dog = doc.data()
+    const ownerId = dog.owner.uid
+    delete dog.owner
+    console.log(dog)
+    console.log(ownerId)
+    return firestore
+      .collection('users')
+      .doc(ownerId)
+      .get()
+      .then(doc => {
+        if (!doc.exists) {
+          console.log(`Document for doc owned by ${ownerId} does not exist`)
+          return false
+        }
+        const dogs = doc.data().dogs || []
+        dogs.push(dog)
+        return doc.ref.update({ dogs })
+      })
+  })
 
 exports.sendChatPushNotification = functions.firestore
   .document('channels/{channelId}/threads/{threadId}')

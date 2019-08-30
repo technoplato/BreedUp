@@ -32,8 +32,6 @@ export default class Profile extends React.Component {
     const privateProfile =
       this.props.navigation.state.routeName === 'PrivateProfile'
 
-    console.log(privateProfile)
-
     const currentUid = auth().currentUser.uid
     const profileId = this.props.navigation.getParam(
       'userId',
@@ -98,12 +96,7 @@ export default class Profile extends React.Component {
   }
 
   async amIFollowing() {
-    console.log(this.state)
-    try {
-      return await isFollowing(this.state.uid)
-    } catch (err) {
-      console.log(err)
-    }
+    return await isFollowing(this.state.uid)
   }
 
   setTextEditingModalVisible(visible) {
@@ -257,7 +250,7 @@ export default class Profile extends React.Component {
               maxLength={20}
               style={{ marginBottom: 24 }}
               onChangeText={this.onUsernameChange}
-              value={this.state.username}
+              value={this.state.modifiedUsername}
             />
 
             <Text>Description</Text>
@@ -265,7 +258,7 @@ export default class Profile extends React.Component {
               maxLength={120}
               multiline
               onChangeText={this.onDescriptionChange}
-              value={this.state.description}
+              value={this.state.modifiedDescription}
             />
           </View>
           <View

@@ -1,4 +1,4 @@
-import React from "react"
+import React from 'react'
 import {
   Text,
   TextInput,
@@ -9,26 +9,26 @@ import {
   View,
   Alert,
   Image
-} from "react-native"
-import { Button } from "react-native-elements"
+} from 'react-native'
+import { Button } from 'react-native-elements'
 
-import styles from "../Styles/AddDogStyles"
-import { addDog } from "../Interactors/Dog"
+import styles from '../Styles/AddDogStyles'
+import { addDog } from '../Interactors/Dog'
 
-import CameraModal from "../../lib/InstagramCameraModal"
+import CameraModal from '../../lib/InstagramCameraModal'
 
 export default class AddDogScreen extends React.Component {
   state = {}
   constructor(props) {
     super(props)
 
-    const ownerId = this.props.navigation.getParam("userId", "NO-ID")
+    const ownerId = this.props.navigation.getParam('userId', 'NO-ID')
 
     this.state = {
       ownerId: ownerId,
-      name: "",
-      breed: "",
-      imageUri: "",
+      name: '',
+      breed: '',
+      imageUri: '',
       loading: false,
       photoEditModalVisible: false
     }
@@ -48,18 +48,18 @@ export default class AddDogScreen extends React.Component {
     // Verify input
     const { ownerId, name, breed, imageUri } = this.state
 
-    if (imageUri === "") {
-      Alert.alert("Please provide a picture for your dog")
+    if (imageUri === '') {
+      Alert.alert('Please provide a picture for your dog')
       this.setState({
         loading: false
       })
-    } else if (name === "") {
-      Alert.alert("Please enter a name for your dog")
+    } else if (name === '') {
+      Alert.alert('Please enter a name for your dog')
       this.setState({
         loading: false
       })
-    } else if (breed === "") {
-      Alert.alert("Please enter a breed for your dog")
+    } else if (breed === '') {
+      Alert.alert('Please enter a breed for your dog')
       this.setState({
         loading: false
       })
@@ -76,15 +76,15 @@ export default class AddDogScreen extends React.Component {
     const image = imageUri ? (
       <Image
         source={{ uri: this.state.imageUri }}
-        style={{ height: 144, width: 144, alignSelf: "center" }}
+        style={{ height: 144, width: 144, alignSelf: 'center' }}
       />
     ) : (
       <Text
         style={{
-          backgroundColor: "grey",
+          backgroundColor: 'grey',
           padding: 12,
           width: 220,
-          alignSelf: "center",
+          alignSelf: 'center',
           fontSize: 32
         }}
         onPress={() => this.showPhotoModal(true)}

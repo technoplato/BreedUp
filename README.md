@@ -30,9 +30,21 @@ Now, off to it!
 ### Steps to completion:
 
 - [x]  Add dog to dogs root collection
-- [ ]   Setup Firebase Cloud Function™ to listen for new (***ON ADD***) dogs. When a new dog is added to the collection, use Cloud Functions to add that dog to the dogs property on the user record.
-- [ ]    Keep everything up to date (***ON CHANGE***). Things that can change: user names, user profile pictures, user descriptions, dog pictures. When properties change, propagate those changes to each respective record.
+- [x]   Setup Firebase Cloud Function™ to listen for new (***ON CREATE***) dogs. When a new dog is added to the collection, use Cloud Functions to add that dog to the dogs property on the user record.
 
+^^Coming back here to work on this. 
+
+Having lots of trouble getting this cloud function right. I think it may have had something to do with undefined data somewhere...
+
+Jesus Christ. That took way too long to figure out.
+
+Some gotchas:
+- I changed from using onWrite to onCreate for dogs and the parameters changed. Since cloud function logs are, well, cloud function logs, it took way too much time to figure that out. Using Chris Esplin's approach that I've got somewhat working (I think) in Knophy, would be a much better idea.
+![https://i.imgur.com/GxidGUn.png](https://i.imgur.com/GxidGUn.png)
+HALLELUJAH!! it's working
+- [ ]    Keep everything up to date (***ON WRITE***). Things that can change: user names, user profile pictures, user descriptions, dog pictures. When properties change, propagate those changes to each respective record.
+
+^^ Need to test, but I believe this works
 **For example**
 
   Actually, I'm going to go ahead and just do the add part first to keep things relatively simple at first.
