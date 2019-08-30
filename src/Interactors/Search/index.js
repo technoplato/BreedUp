@@ -40,8 +40,8 @@ export const searchUsers = async usernamePrefix => {
 
   const usersArray = await firestore()
     .collection('users')
-    .where('username', '>=', usernamePrefix)
-    .where('username', '<=', usernamePrefix + HIGH_UNICODE_VAL)
+    .where('lowercaseUsername', '>=', usernamePrefix)
+    .where('lowercaseUsername', '<=', usernamePrefix + HIGH_UNICODE_VAL)
     .limit(SEARCH_RESULTS_COUNT)
     .get()
     .then(snapshot => {
@@ -122,9 +122,9 @@ export const searchDogs = async dogNamePrefix => {
   if (!dogNamePrefix) return []
 
   const dogArray = await firestore()
-    .collectionGroup('dogs')
-    .where('name', '>=', dogNamePrefix)
-    .where('name', '<=', dogNamePrefix + HIGH_UNICODE_VAL)
+    .collection('dogs')
+    .where('lowercaseName', '>=', dogNamePrefix)
+    .where('lowercaseName', '<=', dogNamePrefix + HIGH_UNICODE_VAL)
     .limit(SEARCH_RESULTS_COUNT)
     .get()
     .then(snapshot => {

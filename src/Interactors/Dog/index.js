@@ -26,6 +26,7 @@ export const addDog = async (ownerId, name, breed, imageUri) => {
 
   const newDog = {
     name: name,
+    lowercaseName: name.toLocaleLowerCase(),
     imageUri: newImageUri,
     breed: breed,
     id: newDogRef.id,
@@ -42,6 +43,8 @@ export const updateDog = async (oldDog, newDog) => {
     const newImageUri = await updateDogImage(newDog)
     newDog.imageUri = newImageUri
   }
+
+  newdDog.lowercaseName = newDog.name.toLocaleLowerCase()
 
   return firestore()
     .collection('dogs')

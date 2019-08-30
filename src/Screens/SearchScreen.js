@@ -50,7 +50,7 @@ const SearchResultUser = ({ item, onResultPress }) => {
             <RoundImageView size={64} source={{ uri: item.owner.photoURL }} />
           </View>
           <View style={{ marginLeft: 12, flexDirection: 'column' }}>
-            <Text>{item.owner.name}</Text>
+            <Text>{item.owner.username}</Text>
             <Text>{item.owner.description}</Text>
           </View>
         </View>
@@ -98,7 +98,7 @@ const SearchResultDog = ({ item, onResultPress }) => {
           />
           <Text
             style={{ marginLeft: 8, fontWeight: '300', fontSize: 14 }}
-          >{`${owner.name}'s ${dog.breed}`}</Text>
+          >{`${owner.username}'s ${dog.breed}`}</Text>
         </View>
       </View>
     </TouchableHighlight>

@@ -26,7 +26,6 @@ export default class SignUpScreen extends React.Component {
   handleSignUp = () => {
     let { email, password, username } = this.state
     let userData
-    username = username.toLocaleLowerCase()
     if (!email) {
       this.setState({ errorMsg: 'Please enter a valid email.' })
     } else if (!password) {
@@ -46,6 +45,7 @@ export default class SignUpScreen extends React.Component {
               dogs: [],
               description: '',
               username: username,
+              lowercaseUsername: username.toLocaleLowerCase(),
               photoURL:
                 'https://www.instamobile.io/wp-content/uploads/2019/05/default-avatar.jpg'
             })

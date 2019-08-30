@@ -55,6 +55,12 @@ I think that was fixed :)
 #### ERROR 3
 ![Probably missing Firestore index](https://i.imgur.com/sPSLe1u.png)
 I am almost positive this error has to do with a missing index on Firestore, but I'm really not sure how to fix it. Maybe it's seeing that collectionGroup query still? Not sure. Will have to come back. I want to make a PR for react-native-firebase to show those URLs...
+Fixed it!
+
+Also realized that I need to figure out case insensitive search, so fixing that real quick.
+
+Not sure why I inserted this.
+![insert image alt text here](https://i.imgur.com/z0ZBSnq.png)
 
 
 #### ERROR N
