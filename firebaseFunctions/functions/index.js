@@ -84,17 +84,11 @@ exports.onDogCreated = functions.firestore
     const dog = doc.data()
     const ownerId = dog.owner.uid
     delete dog.owner
-    console.log(dog)
-    console.log(ownerId)
     return firestore
       .collection('users')
       .doc(ownerId)
       .get()
       .then(doc => {
-        if (!doc.exists) {
-          console.log(`Document for doc owned by ${ownerId} does not exist`)
-          return false
-        }
         const dogs = doc.data().dogs || []
         dogs.push(dog)
         return doc.ref.update({ dogs })
