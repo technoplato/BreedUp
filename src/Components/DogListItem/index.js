@@ -1,25 +1,17 @@
-import React from "react"
-import { View, Image, TouchableHighlight } from "react-native"
+import React from 'react'
+import { View, Image, TouchableHighlight } from 'react-native'
 
-import styles from "./DogListItemStyles"
-import RoundImageView from "../RoundImageView"
+import styles from './DogListItemStyles'
+import RoundImageView from '../RoundImageView'
 
-export default class DogListItem extends React.Component {
-  render() {
-    return <View style={{ marginHorizontal: 6 }}>{this.renderImage()}</View>
-  }
-
-  renderImage = () => {
-    return (
+export default ({ item, onDogPress, size = 48 }) => {
+  return (
+    <View style={{ paddingHorizontal: size / 8 }}>
       <RoundImageView
-        onPress={() => this.props.onDogPress(this.props.item)}
-        size={this.props.size}
-        source={{ uri: this.props.item.imageUri }}
+        onPress={() => onDogPress(item)}
+        size={size}
+        source={{ uri: item.imageUri }}
       />
-    )
-  }
-}
-
-DogListItem.defaultProps = {
-  size: 48
+    </View>
+  )
 }

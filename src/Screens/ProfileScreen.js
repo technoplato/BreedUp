@@ -2,6 +2,8 @@ import React from 'react'
 import {
   View,
   StyleSheet,
+  TouchableWithoutFeedback,
+  Keyboard,
   Text,
   TextInput,
   ActivityIndicator
@@ -243,47 +245,49 @@ export default class Profile extends React.Component {
         onBackdropPress={() => this.setTextEditingModalVisible(false)}
         style={{ justifyContent: 'center', alignItems: 'center' }}
       >
-        <View style={{ width: '100%', height: '70%' }}>
-          <View style={{ padding: 12, backgroundColor: 'white' }}>
-            <Text>Username</Text>
-            <TextInput
-              maxLength={20}
-              style={{ marginBottom: 24 }}
-              onChangeText={this.onUsernameChange}
-              value={this.state.modifiedUsername}
-            />
+        <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+          <View style={{ width: '100%', height: '70%' }}>
+            <View style={{ padding: 12, backgroundColor: 'white' }}>
+              <Text>Username</Text>
+              <TextInput
+                maxLength={20}
+                style={{ marginBottom: 24 }}
+                onChangeText={this.onUsernameChange}
+                value={this.state.modifiedUsername}
+              />
 
-            <Text>Description</Text>
-            <TextInput
-              maxLength={120}
-              multiline
-              onChangeText={this.onDescriptionChange}
-              value={this.state.modifiedDescription}
-            />
-          </View>
-          <View
-            style={{
-              flex: 1,
-              paddingBottom: 12,
-              minHeight: 42,
-              backgroundColor: 'grey',
-              justifyContent: 'flex-end'
-            }}
-          >
-            <Button
-              title={this.state.modalSaving ? 'Saving...' : 'Save Info'}
-              loading={this.state.modalSaving}
-              disabled={this.state.modalSaving}
-              onPress={async () => {
-                if (this.state.hasProfileChanged) {
-                  await this.saveProfileData()
-                } else {
-                  this.setTextEditingModalVisible(false)
-                }
+              <Text>Description</Text>
+              <TextInput
+                maxLength={120}
+                multiline
+                onChangeText={this.onDescriptionChange}
+                value={this.state.modifiedDescription}
+              />
+            </View>
+            <View
+              style={{
+                flex: 1,
+                paddingBottom: 12,
+                minHeight: 42,
+                backgroundColor: 'grey',
+                justifyContent: 'flex-end'
               }}
-            />
+            >
+              <Button
+                title={this.state.modalSaving ? 'Saving...' : 'Save Info'}
+                loading={this.state.modalSaving}
+                disabled={this.state.modalSaving}
+                onPress={async () => {
+                  if (this.state.hasProfileChanged) {
+                    await this.saveProfileData()
+                  } else {
+                    this.setTextEditingModalVisible(false)
+                  }
+                }}
+              />
+            </View>
           </View>
-        </View>
+        </TouchableWithoutFeedback>
       </Modal>
     )
   }

@@ -48,10 +48,4 @@ export default createStackNavigator({
       )
     })
   }
-  // NotificationChatHome: {
-  //   screen: ChatNavigation,
-  //   navigationOptions: ({}) => ({
-  //     header: null
-  //   })
-  // }
 })

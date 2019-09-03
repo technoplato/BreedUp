@@ -77,3 +77,12 @@ Not sure why I inserted this.
 
 #### ERROR N
 ![insert image alt text here](insert_image_url_here)
+
+I think I'm going to start creating a new README per branch? That way, it will be a tiny bit more straightforward to track what the thing was being used for in the first place.
+
+Right now, I just have to figure out what I'm going to finish up with this branch before merging it back into develop.
+
+Is the dog renaming stuff working? 
+
+Just got a bunch of stuff done that will be included in this commit. I'm about to merge the upgrade Firebase branch and probably begin working on fixing the feeds to work in a more clean way. Will also fix some bugs along the way.
+

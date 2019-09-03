@@ -6,6 +6,7 @@ admin.initializeApp()
 const firestore = admin.firestore()
 const auth = admin.auth()
 
+// Users
 exports.onProfileImageUpdate = functions.storage
   .object()
   .onFinalize(async object => {
@@ -78,6 +79,7 @@ const updateDogsOnUserChange = async user => {
   return updateDogPromises
 }
 
+// Dogs
 exports.onDogCreated = functions.firestore
   .document('dogs/{dogId}')
   .onCreate(doc => {
@@ -95,6 +97,34 @@ exports.onDogCreated = functions.firestore
       })
   })
 
+exports.onDogUpdate = functions.firestore
+  .document('dogs/{dogId}')
+  .onUpdate(async ({ after }) => {
+    const updatedDog = after.data()
+    await firestore
+      .collection('users')
+      .doc(updatedDog.owner.uid)
+      .get()
+      .then(doc => {
+        const owner = doc.data()
+        const dogs = [...owner.dogs].map(dog => {
+          if (updatedDog.id === dog.id) {
+            dog = {
+              ...dog,
+              name: updatedDog.name,
+              lowercaseName: updatedDog.lowercaseName,
+              breed: updatedDog.breed,
+              imageUri: updatedDog.imageUri
+            }
+          }
+          return dog
+        })
+        return doc.ref.update({ dogs })
+      })
+    return true
+  })
+
+// Notifications
 exports.sendChatPushNotification = functions.firestore
   .document('channels/{channelId}/threads/{threadId}')
   .onWrite((change, context) => {

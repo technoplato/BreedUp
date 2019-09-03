@@ -10,6 +10,7 @@ import {
   searchNearbyDogs
 } from '../Interactors/Search'
 import RoundImageView from '../Components/RoundImageView'
+import DogListItem from '../Components/DogListItem'
 
 const ListEmptyComponent = ({ query }) => {
   const text =
@@ -56,11 +57,15 @@ const SearchResultUser = ({ item, onResultPress }) => {
         </View>
         <View style={{ flexDirection: 'row' }}>
           {item.dogs &&
-            item.dogs.map(dogImageUri => (
-              <RoundImageView
-                key={dogImageUri}
+            item.dogs.map(dog => (
+              <DogListItem
+                onDogPress={() => {
+                  onResultPress(item)
+                }}
+                item={dog}
+                key={dog.id}
                 size={24}
-                source={{ uri: dogImageUri }}
+                imageUri={{ uri: dog.imageUri }}
               />
             ))}
         </View>
@@ -189,14 +194,14 @@ export default class SearchScreen extends React.Component {
   onUserPress = result => {
     this.props.navigation.navigate('PublicProfile', {
       userId: result.owner.uid,
-      username: result.owner.name
+      username: result.owner.username
     })
   }
 
   onDogPress = result => {
     this.props.navigation.navigate('PublicProfile', {
       userId: result.owner.uid,
-      username: result.owner.name
+      username: result.owner.username
     })
   }
 

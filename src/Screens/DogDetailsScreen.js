@@ -5,6 +5,7 @@ import {
   TouchableWithoutFeedback,
   TouchableHighlight,
   Keyboard,
+  KeyboardAvoidingView,
   View,
   Alert,
   Image
@@ -40,6 +41,8 @@ export default class DogDetailsScreen extends React.Component {
   onPressUpdateDetails = () => {
     Keyboard.dismiss()
 
+    const { oldDog, name, breed, imageUri } = this.state
+
     if (name === '') {
       Alert.alert('Please enter a name for your dog')
       this.setState({ loading: false })
@@ -50,8 +53,13 @@ export default class DogDetailsScreen extends React.Component {
       // Show loading
       this.setState({ loading: true })
 
-      const { oldDog, name, breed, imageUri, id } = this.state
-      const newDog = { owner: oldDog.owner, name, breed, imageUri, id }
+      const newDog = {
+        ...oldDog,
+        name,
+        lowercaseName: name.toLocaleLowerCase(),
+        breed,
+        imageUri
+      }
 
       // Let addDog interactor do its thing and then go back
       updateDog(oldDog, newDog).then(() => this.props.navigation.goBack())

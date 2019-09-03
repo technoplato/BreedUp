@@ -1,21 +1,16 @@
-import firebase from '@react-native-firebase/app'
-import '@react-native-firebase/database'
-import '@react-native-firebase/firestore'
-import '@react-native-firebase/auth'
+import firestore from '@react-native-firebase/firestore'
 
 import { uploadImage, deleteImage } from '../../Utils/FirebaseUtils'
 
 export const addDog = async (ownerId, name, breed, imageUri) => {
-  const userRef = firebase
-    .firestore()
+  const userRef = firestore()
     .collection('users')
     .doc(ownerId)
   const { uid, username, photoURL, description } = await userRef
     .get()
     .then(doc => doc.data())
   const owner = { uid, username, photoURL, description }
-  const newDogRef = firebase
-    .firestore()
+  const newDogRef = firestore()
     .collection('dogs')
     .doc()
   const newImageUri = await uploadImage(
@@ -44,22 +39,25 @@ export const updateDog = async (oldDog, newDog) => {
     newDog.imageUri = newImageUri
   }
 
-  newdDog.lowercaseName = newDog.name.toLocaleLowerCase()
+  newDog.lowercaseName = newDog.name.toLocaleLowerCase()
 
   return firestore()
     .collection('dogs')
     .doc(newDog.id)
     .set(newDog)
 }
+
 export const fetchDogsForUser = async ownerId => {
-  return await firebase
-    .firestore()
-    .collection('users')
-    .doc(ownerId)
+  return await firestore()
+    .collection('dogs')
+    .where('owner.uid', '==', ownerId)
     .get()
-    .then(doc => {
-      console.log(doc.data())
-      return doc.data().dogs || []
+    .then(snap => {
+      const dogs = []
+      snap.forEach(dogDoc => {
+        dogs.push(dogDoc.data())
+      })
+      return dogs
     })
 }
 
@@ -68,6 +66,6 @@ const updateDogImage = async newDog => {
   return await uploadImage(
     newDog.imageUri,
     newDog.owner.uid,
-    'dogs/' + newDogRef.id
+    'dogs/' + newDog.id
   )
 }

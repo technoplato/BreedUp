@@ -10,7 +10,6 @@ const usersLocationsRef = db()
 
 export const updateUserLocation = async userId => {
   const location = await getCurrentLocation()
-  console.log("Updating User's Location to coordinates: ", location)
 
   return Promise.all([
     updateDogLocationsForUser(userId, location),

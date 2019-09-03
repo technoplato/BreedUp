@@ -96,23 +96,6 @@ export const searchNearbyUsers = async (usernamePrefix, km = 15) => {
   return normalizeUsers(nearbyUsers)
 }
 
-const normalizeUsers = users => {
-  return users
-    .filter(u => !!u)
-    .map(user => {
-      return {
-        type: 'person',
-        owner: {
-          description: user.description,
-          uid: user.uid,
-          name: user.username,
-          photoURL: user.photoURL
-        },
-        dogs: user.dogs
-      }
-    })
-}
-
 /**
  * Searches for dog based on starting text of dog name.
  *
@@ -187,6 +170,23 @@ export const searchNearbyDogs = async (dognamePrefix, km = 15) => {
   const nearbyDogs = await Promise.all(nearbyDogPromises)
 
   return normalizeDogs(nearbyDogs)
+}
+
+const normalizeUsers = users => {
+  return users
+    .filter(u => !!u)
+    .map(user => {
+      return {
+        type: 'person',
+        owner: {
+          description: user.description,
+          uid: user.uid,
+          username: user.username,
+          photoURL: user.photoURL
+        },
+        dogs: user.dogs
+      }
+    })
 }
 
 const normalizeDogs = dogs => {
