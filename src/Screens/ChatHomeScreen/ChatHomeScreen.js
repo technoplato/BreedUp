@@ -131,12 +131,15 @@ class ChatHomeScreen extends React.Component {
   }
 
   componentWillUnmount() {
-    this.usersUnsubscribe()
-    this.heAcceptedFriendshipsUnsubscribe()
-    this.iAcceptedFriendshipsUnsubscribe()
-    this.toMePendingFriendshipssUnsubscribe()
-    this.channelPaticipationUnsubscribe()
-    this.channelsUnsubscribe()
+    this.usersUnsubscribe && this.usersUnsubscribe()
+    this.heAcceptedFriendshipsUnsubscribe &&
+      this.heAcceptedFriendshipsUnsubscribe()
+    this.iAcceptedFriendshipsUnsubscribe &&
+      this.iAcceptedFriendshipsUnsubscribe()
+    this.toMePendingFriendshipssUnsubscribe &&
+      this.toMePendingFriendshipssUnsubscribe()
+    this.channelPaticipationUnsubscribe && this.channelPaticipationUnsubscribe()
+    this.channelsUnsubscribe && this.channelsUnsubscribe()
   }
 
   onPendingFriendShipsCollectionUpdate = querySnapshot => {
