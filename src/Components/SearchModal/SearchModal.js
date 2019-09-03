@@ -1,4 +1,4 @@
-import React from "react"
+import React from 'react'
 import {
   FlatList,
   TouchableOpacity,
@@ -7,18 +7,17 @@ import {
   View,
   Image,
   Keyboard
-} from "react-native"
-import { SearchBar } from "react-native-elements"
-import TextButton from "react-native-button"
+} from 'react-native'
+import { SearchBar } from 'react-native-elements'
+import TextButton from 'react-native-button'
 
-import firebase from '@react-native-firebase/app';
-import '@react-native-firebase/auth';
-import '@react-native-firebase/firestore';
+import firebase from '@react-native-firebase/app'
+import '@react-native-firebase/auth'
+import '@react-native-firebase/firestore'
 
-
-import { SafeAreaView } from "react-navigation"
-import AppStyles from "../../AppStyles"
-import styles from "./styles"
+import { SafeAreaView } from 'react-navigation'
+import AppStyles from '../../AppStyles'
+import styles from './styles'
 
 const REQUEST_NONE = 0
 const REQUEST_TO_HIM = 1
@@ -28,38 +27,38 @@ class SearchModal extends React.Component {
   constructor(props) {
     super(props)
 
-    this.usersRef = firebase.firestore().collection("users")
+    this.usersRef = firebase.firestore().collection('users')
     this.usersUnsubscribe = null
 
     this.heAcceptedFriendshipsRef = firebase
       .firestore()
-      .collection("friendships")
-      .where("user1", "==", firebase.auth().currentUser.uid)
+      .collection('friendships')
+      .where('user1', '==', firebase.auth().currentUser.uid)
     this.heAcceptedFriendshipssUnsubscribe = null
 
     this.iAcceptedFriendshipsRef = firebase
       .firestore()
-      .collection("friendships")
-      .where("user2", "==", firebase.auth().currentUser.uid)
+      .collection('friendships')
+      .where('user2', '==', firebase.auth().currentUser.uid)
     this.iAcceptedFriendshipssUnsubscribe = null
 
     this.toMePendingFriendshipsRef = firebase
       .firestore()
-      .collection("pending_friendships")
-      .where("user2", "==", firebase.auth().currentUser.uid)
+      .collection('pending_friendships')
+      .where('user2', '==', firebase.auth().currentUser.uid)
     this.toMePendingFriendshipssUnsubscribe = null
 
     this.toHimPendingFriendshipsRef = firebase
       .firestore()
-      .collection("pending_friendships")
-      .where("user1", "==", firebase.auth().currentUser.uid)
+      .collection('pending_friendships')
+      .where('user1', '==', firebase.auth().currentUser.uid)
     this.toHimPendingFriendshipssUnsubscribe = null
 
     this.state = {
       heAcceptedFriendships: [],
       hiAcceptedFriendships: [],
       friends: [],
-      keyword: "",
+      keyword: '',
       pendingFriends: [],
       users: [],
       filteredUsers: []
@@ -200,8 +199,8 @@ class SearchModal extends React.Component {
   }
 
   onClear = () => {
-    this.setState({ keyword: "" })
-    const filteredUsers = this.filteredUsers("")
+    this.setState({ keyword: '' })
+    const filteredUsers = this.filteredUsers('')
     this.setState({ filteredUsers })
   }
 
@@ -212,7 +211,7 @@ class SearchModal extends React.Component {
   }
 
   onPress = item => {
-    this.props.navigation.navigate("Detail", { item })
+    this.props.navigation.navigate('Detail', { item })
   }
 
   onAdd = item => {
@@ -228,10 +227,10 @@ class SearchModal extends React.Component {
     Keyboard.dismiss()
     firebase
       .firestore()
-      .collection("pending_friendships")
+      .collection('pending_friendships')
       .add(data)
       .then(function(docRef) {
-        alert("Successfully sent friend request!")
+        alert('Successfully sent friend request!')
       })
       .catch(function(error) {
         alert(error)
@@ -247,15 +246,15 @@ class SearchModal extends React.Component {
 
     firebase
       .firestore()
-      .collection("pending_friendships")
+      .collection('pending_friendships')
       .doc(item.pendingId)
       .delete()
     firebase
       .firestore()
-      .collection("friendships")
+      .collection('friendships')
       .add(data)
       .then(function(docRef) {
-        alert("Successfully accept friend request!")
+        alert('Successfully accept friend request!')
       })
       .catch(function(error) {
         alert(error)
@@ -362,7 +361,7 @@ class SearchModal extends React.Component {
               inputStyle={[
                 AppStyles.styleSet.searchBar.input,
                 {
-                  color: "white"
+                  color: 'white'
                 }
               ]}
               autoFocus
@@ -382,7 +381,7 @@ class SearchModal extends React.Component {
           </View>
           <FlatList
             style={styles.flat}
-            keyboardShouldPersistTaps={"always"}
+            keyboardShouldPersistTaps={'always'}
             data={this.state.filteredUsers}
             renderItem={this.renderItem}
             keyExtractor={item => `${item.id}`}

@@ -1,4 +1,4 @@
-import React from "react"
+import React from 'react'
 import {
   FlatList,
   TouchableOpacity,
@@ -6,20 +6,19 @@ import {
   Image,
   Text,
   View
-} from "react-native"
-import FastImage from "react-native-fast-image"
-import TextButton from "react-native-button"
+} from 'react-native'
+import FastImage from 'react-native-fast-image'
+import TextButton from 'react-native-button'
 
-import firebase from '@react-native-firebase/app';
-import '@react-native-firebase/auth';
-import '@react-native-firebase/firestore';
+import firebase from '@react-native-firebase/app'
+import '@react-native-firebase/auth'
+import '@react-native-firebase/firestore'
 
-
-import DialogInput from "react-native-dialog-input"
-import { SafeAreaView } from "react-navigation"
-import ChatIconView from "../ChatIconView/ChatIconView"
-import AppStyles from "../../AppStyles"
-import styles from "./styles"
+import DialogInput from 'react-native-dialog-input'
+import { SafeAreaView } from 'react-navigation'
+import ChatIconView from '../ChatIconView/ChatIconView'
+import AppStyles from '../../AppStyles'
+import styles from './styles'
 
 class CreateGroupModal extends React.Component {
   constructor(props) {
@@ -30,20 +29,20 @@ class CreateGroupModal extends React.Component {
       hiAcceptedFriendships: [],
       friends: [],
       isNameDialogVisible: false,
-      input: "",
+      input: '',
       isImgErr: false
     }
 
     this.heAcceptedFriendshipsRef = firebase
       .firestore()
-      .collection("friendships")
-      .where("user1", "==", firebase.auth().currentUser.uid)
+      .collection('friendships')
+      .where('user1', '==', firebase.auth().currentUser.uid)
     this.heAcceptedFriendshipssUnsubscribe = null
 
     this.iAcceptedFriendshipsRef = firebase
       .firestore()
-      .collection("friendships")
-      .where("user2", "==", firebase.auth().currentUser.uid)
+      .collection('friendships')
+      .where('user2', '==', firebase.auth().currentUser.uid)
     this.iAcceptedFriendshipssUnsubscribe = null
   }
 
@@ -105,7 +104,7 @@ class CreateGroupModal extends React.Component {
 
     if (this.usersUnsubscribe) this.usersUnsubscribe()
 
-    this.usersRef = firebase.firestore().collection("users")
+    this.usersRef = firebase.firestore().collection('users')
     this.usersUnsubscribe = this.usersRef.onSnapshot(
       this.onUsersCollectionUpdate
     )
@@ -125,7 +124,7 @@ class CreateGroupModal extends React.Component {
 
     if (this.usersUnsubscribe) this.usersUnsubscribe()
 
-    this.usersRef = firebase.firestore().collection("users")
+    this.usersRef = firebase.firestore().collection('users')
     this.usersUnsubscribe = this.usersRef.onSnapshot(
       this.onUsersCollectionUpdate
     )
@@ -134,7 +133,7 @@ class CreateGroupModal extends React.Component {
   onCreate = () => {
     const checkedFriends = this.state.friends.filter(friend => friend.checked)
     if (checkedFriends.length == 0) {
-      alert("Please check one more friends.")
+      alert('Please check one more friends.')
     } else {
       this.showNameDialog(true)
     }
@@ -159,7 +158,7 @@ class CreateGroupModal extends React.Component {
     const channelData = {
       creator_id: firebase.auth().currentUser.uid,
       name: text,
-      lastMessage: "Created Group",
+      lastMessage: 'Created Group',
       lastMessageDate: firebase.firestore.FieldValue.serverTimestamp()
     }
 
@@ -168,7 +167,7 @@ class CreateGroupModal extends React.Component {
 
     firebase
       .firestore()
-      .collection("channels")
+      .collection('channels')
       .add(channelData)
       .then(function(docRef) {
         const participationData = {
@@ -177,7 +176,7 @@ class CreateGroupModal extends React.Component {
         }
         firebase
           .firestore()
-          .collection("channel_participation")
+          .collection('channel_participation')
           .add(participationData)
 
         const checkedFriends = friends.filter(friend => friend.checked)
@@ -188,7 +187,7 @@ class CreateGroupModal extends React.Component {
           }
           firebase
             .firestore()
-            .collection("channel_participation")
+            .collection('channel_participation')
             .add(participationData)
         })
 

@@ -1,25 +1,25 @@
-import React from "react"
+import React from 'react'
 import {
   FlatList,
   Image,
   TextInput,
   TouchableOpacity,
   View
-} from "react-native"
-import TextButton from "react-native-button"
-import ActionSheet from "react-native-actionsheet"
-import DialogInput from "react-native-dialog-input"
-import firebase from '@react-native-firebase/app';
-import '@react-native-firebase/database';
-import '@react-native-firebase/firestore';
-import '@react-native-firebase/auth';
-import { SafeAreaView } from "react-navigation"
-import { KeyboardAwareView } from "react-native-keyboard-aware-view"
-import Autolink from "react-native-autolink"
-import ChatIconView from "../../Components/ChatIconView/ChatIconView"
-import AppStyles from "../../AppStyles"
-import styles from "./styles"
-import { Icon } from "react-native-elements"
+} from 'react-native'
+import TextButton from 'react-native-button'
+import ActionSheet from 'react-native-actionsheet'
+import DialogInput from 'react-native-dialog-input'
+import firebase from '@react-native-firebase/app'
+import '@react-native-firebase/database'
+import '@react-native-firebase/firestore'
+import '@react-native-firebase/auth'
+import { SafeAreaView } from 'react-navigation'
+import { KeyboardAwareView } from 'react-native-keyboard-aware-view'
+import Autolink from 'react-native-autolink'
+import ChatIconView from '../../Components/ChatIconView/ChatIconView'
+import AppStyles from '../../AppStyles'
+import styles from './styles'
+import { Icon } from 'react-native-elements'
 
 class ChatScreen extends React.Component {
   static navigationOptions = ({ navigation }) => {
@@ -29,7 +29,7 @@ class ChatScreen extends React.Component {
     let isOne2OneChannel = false
 
     if (channel.fromDeepLink) {
-      title = "Loading..."
+      title = 'Loading...'
     }
 
     if (!title) {
@@ -64,36 +64,36 @@ class ChatScreen extends React.Component {
   state = {
     isRenameDialogVisible: false,
     threads: [],
-    input: "",
+    input: '',
     isImageViewerVisible: false,
     tappedImage: []
   }
 
   async componentDidMount() {
     const { getParam } = this.props.navigation
-    let channel = getParam("channel")
+    let channel = getParam('channel')
 
     this.currentUid = firebase.auth().currentUser.uid
     this.channelParticipation = firebase
       .firestore()
-      .collection("channel_participation")
-      .where("channel", "==", channel.id)
-    this.usersCollection = firebase.firestore().collection("users")
+      .collection('channel_participation')
+      .where('channel', '==', channel.id)
+    this.usersCollection = firebase.firestore().collection('users')
 
     if (channel.fromDeepLink) {
       channel = await this.loadFullChannel(channel.id)
     }
 
-    if (!channel) throw "No channel loaded"
+    if (!channel) throw 'No channel loaded'
 
     global.activeChatChannelId = channel.id
 
     this.threadsRef = firebase
       .firestore()
-      .collection("channels")
+      .collection('channels')
       .doc(channel.id)
-      .collection("threads")
-      .orderBy("created", "desc")
+      .collection('threads')
+      .orderBy('created', 'desc')
 
     this.threadsUnscribe = this.threadsRef.onSnapshot(
       this.onThreadsCollectionUpdate
@@ -110,7 +110,7 @@ class ChatScreen extends React.Component {
     const others = await this.loadParticipants(channelId)
     const { name } = await firebase
       .firestore()
-      .collection("channels")
+      .collection('channels')
       .doc(channelId)
       .get()
       .then(snap => snap.data())
@@ -162,7 +162,7 @@ class ChatScreen extends React.Component {
 
   componentWillUnmount() {
     this.threadsUnscribe && this.threadsUnscribe()
-    global.activeChatChannelId = ""
+    global.activeChatChannelId = ''
   }
 
   existSameSentMessage = (messages, newMessage) => {
@@ -208,9 +208,9 @@ class ChatScreen extends React.Component {
     if (index === 0) {
       firebase
         .firestore()
-        .collection("channel_participation")
-        .where("channel", "==", this.state.channel.id)
-        .where("user", "==", firebase.auth().currentUser)
+        .collection('channel_participation')
+        .where('channel', '==', this.state.channel.id)
+        .where('user', '==', firebase.auth().currentUser)
         .get()
         .then(querySnapshot => {
           querySnapshot.forEach(function(doc) {
@@ -230,7 +230,7 @@ class ChatScreen extends React.Component {
   }
 
   onPressChat = chat => {
-    if (chat.url !== "") {
+    if (chat.url !== '') {
       this.displayChatImage(chat.url)
     }
   }
@@ -252,7 +252,7 @@ class ChatScreen extends React.Component {
   createOne2OneChannel = () => {
     const channelData = {
       creator_id: firebase.auth().currentUser.uid,
-      name: "",
+      name: '',
       lastMessage: this.state.input,
       lastMessageDate: new Date()
     }
@@ -262,7 +262,7 @@ class ChatScreen extends React.Component {
 
     firebase
       .firestore()
-      .collection("channels")
+      .collection('channels')
       .add(channelData)
       .then(function(docRef) {
         channelData.id = docRef.id
@@ -275,7 +275,7 @@ class ChatScreen extends React.Component {
         }
         firebase
           .firestore()
-          .collection("channel_participation")
+          .collection('channel_participation')
           .add(participationData)
         const created = Date.now()
         channelData.participants.forEach(friend => {
@@ -285,7 +285,7 @@ class ChatScreen extends React.Component {
           }
           firebase
             .firestore()
-            .collection("channel_participation")
+            .collection('channel_participation')
             .add(participationData)
 
           const data = {
@@ -300,9 +300,9 @@ class ChatScreen extends React.Component {
 
           firebase
             .firestore()
-            .collection("channels")
+            .collection('channels')
             .doc(channelData.id)
-            .collection("threads")
+            .collection('threads')
             .add(data)
             .then(function(docRef) {
               // alert('Successfully sent friend request!');
@@ -314,15 +314,15 @@ class ChatScreen extends React.Component {
 
         that.threadsRef = firebase
           .firestore()
-          .collection("channels")
+          .collection('channels')
           .doc(channelData.id)
-          .collection("threads")
-          .orderBy("created", "desc")
+          .collection('threads')
+          .orderBy('created', 'desc')
         that.threadsUnscribe = that.threadsRef.onSnapshot(
           that.onThreadsCollectionUpdate
         )
 
-        that.setState({ input: "" })
+        that.setState({ input: '' })
       })
       .catch(function(error) {
         alert(error)
@@ -366,9 +366,9 @@ class ChatScreen extends React.Component {
 
         firebase
           .firestore()
-          .collection("channels")
+          .collection('channels')
           .doc(this.state.channel.id)
-          .collection("threads")
+          .collection('threads')
           .add(data)
           .then(function(docRef) {
             // alert('Successfully sent friend request!');
@@ -392,10 +392,10 @@ class ChatScreen extends React.Component {
 
       firebase
         .firestore()
-        .collection("channels")
+        .collection('channels')
         .doc(this.state.channel.id)
         .set(channel)
-      this.setState({ input: "" })
+      this.setState({ input: '' })
     }
   }
 
@@ -416,7 +416,7 @@ class ChatScreen extends React.Component {
 
     firebase
       .firestore()
-      .collection("channels")
+      .collection('channels')
       .doc(this.state.channel.id)
       .set(channel)
       .then(() => {
@@ -521,7 +521,7 @@ class ChatScreen extends React.Component {
         <ActionSheet
           ref={o => (this.settingActionSheet = o)}
           title="Group Settings"
-          options={["Rename Group", "Cancel"]}
+          options={['Rename Group', 'Cancel']}
           cancelButtonIndex={2}
           onPress={index => {
             this.onSettingActionDone(index)
@@ -530,7 +530,7 @@ class ChatScreen extends React.Component {
         <ActionSheet
           ref={o => (this.confirmLeaveActionSheet = o)}
           title="Are you sure?"
-          options={["Confirm", "Cancel"]}
+          options={['Confirm', 'Cancel']}
           cancelButtonIndex={1}
           destructiveButtonIndex={0}
           onPress={index => {
@@ -540,7 +540,7 @@ class ChatScreen extends React.Component {
         <DialogInput
           isDialogVisible={this.state.isRenameDialogVisible}
           title="Change Name"
-          hintInput={this.state.channel ? this.state.channel.name : ""}
+          hintInput={this.state.channel ? this.state.channel.name : ''}
           textInputProps={{ selectTextOnFocus: true }}
           submitText="OK"
           submitInput={inputText => {

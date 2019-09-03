@@ -1,18 +1,18 @@
-import React from "react"
-import { FlatList, TouchableOpacity, Image, Text, View } from "react-native"
-import { SearchBar } from "react-native-elements"
-import firebase from '@react-native-firebase/app';
-import '@react-native-firebase/database';
-import '@react-native-firebase/firestore';
-import '@react-native-firebase/auth';
-import TextButton from "react-native-button"
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view"
-import ChatIconView from "../../Components/ChatIconView/ChatIconView"
-import AppStyles from "../../AppStyles"
-import styles from "./styles"
+import React from 'react'
+import { FlatList, TouchableOpacity, Image, Text, View } from 'react-native'
+import { SearchBar } from 'react-native-elements'
+import firebase from '@react-native-firebase/app'
+import '@react-native-firebase/database'
+import '@react-native-firebase/firestore'
+import '@react-native-firebase/auth'
+import TextButton from 'react-native-button'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import ChatIconView from '../../Components/ChatIconView/ChatIconView'
+import AppStyles from '../../AppStyles'
+import styles from './styles'
 
-const FRIEND = "friend"
-const PENDING_FRIEND = "pending_friend"
+const FRIEND = 'friend'
+const PENDING_FRIEND = 'pending_friend'
 
 class FriendsScreen extends React.Component {
   static navigationOptions = ({ navigation }) => {
@@ -55,27 +55,27 @@ class FriendsScreen extends React.Component {
       hiAcceptedFriendships: [],
       pendingFriendships: [],
       friends: [],
-      keyword: "",
+      keyword: '',
       users: [],
       filteredUsers: []
     }
 
     this.heAcceptedFriendshipsRef = firebase
       .firestore()
-      .collection("friendships")
-      .where("user1", "==", firebase.auth().currentUser.uid)
+      .collection('friendships')
+      .where('user1', '==', firebase.auth().currentUser.uid)
     this.heAcceptedFriendshipssUnsubscribe = null
 
     this.iAcceptedFriendshipsRef = firebase
       .firestore()
-      .collection("friendships")
-      .where("user2", "==", firebase.auth().currentUser.uid)
+      .collection('friendships')
+      .where('user2', '==', firebase.auth().currentUser.uid)
     this.iAcceptedFriendshipssUnsubscribe = null
 
     this.toMePendingFriendshipsRef = firebase
       .firestore()
-      .collection("pending_friendships")
-      .where("user2", "==", firebase.auth().currentUser.uid)
+      .collection('pending_friendships')
+      .where('user2', '==', firebase.auth().currentUser.uid)
     this.toMePendingFriendshipssUnsubscribe = null
   }
 
@@ -93,7 +93,7 @@ class FriendsScreen extends React.Component {
     this.props.navigation.setParams({
       handleSearch: this.onSearch,
       handleClear: this.onClear,
-      keyword: ""
+      keyword: ''
     })
   }
 
@@ -159,7 +159,7 @@ class FriendsScreen extends React.Component {
 
     if (this.usersUnsubscribe) this.usersUnsubscribe()
 
-    this.usersRef = firebase.firestore().collection("users")
+    this.usersRef = firebase.firestore().collection('users')
     this.usersUnsubscribe = this.usersRef.onSnapshot(
       this.onUsersCollectionUpdate
     )
@@ -179,7 +179,7 @@ class FriendsScreen extends React.Component {
 
     if (this.usersUnsubscribe) this.usersUnsubscribe()
 
-    this.usersRef = firebase.firestore().collection("users")
+    this.usersRef = firebase.firestore().collection('users')
     this.usersUnsubscribe = this.usersRef.onSnapshot(
       this.onUsersCollectionUpdate
     )
@@ -199,7 +199,7 @@ class FriendsScreen extends React.Component {
 
     if (this.usersUnsubscribe) this.usersUnsubscribe()
 
-    this.usersRef = firebase.firestore().collection("users")
+    this.usersRef = firebase.firestore().collection('users')
     this.usersUnsubscribe = this.usersRef.onSnapshot(
       this.onUsersCollectionUpdate
     )
@@ -227,8 +227,8 @@ class FriendsScreen extends React.Component {
   }
 
   onClear = () => {
-    this.setState({ keyword: "" })
-    const filteredUsers = this.filteredUsers("")
+    this.setState({ keyword: '' })
+    const filteredUsers = this.filteredUsers('')
     this.setState({ filteredUsers })
   }
 
@@ -243,11 +243,11 @@ class FriendsScreen extends React.Component {
   onUnFriend = item => {
     firebase
       .firestore()
-      .collection("friendships")
+      .collection('friendships')
       .doc(item.friendshipId)
       .delete()
       .then(function(docRef) {
-        alert("Successfully unfriend")
+        alert('Successfully unfriend')
       })
       .catch(function(error) {
         alert(error)
@@ -262,15 +262,15 @@ class FriendsScreen extends React.Component {
 
     firebase
       .firestore()
-      .collection("pending_friendships")
+      .collection('pending_friendships')
       .doc(item.friendshipId)
       .delete()
     firebase
       .firestore()
-      .collection("friendships")
+      .collection('friendships')
       .add(data)
       .then(function(docRef) {
-        alert("Successfully accept friend request!")
+        alert('Successfully accept friend request!')
       })
       .catch(function(error) {
         alert(error)
@@ -279,9 +279,9 @@ class FriendsScreen extends React.Component {
 
   getBtnText = item => {
     if (item.type == FRIEND) {
-      return "Unfriend"
+      return 'Unfriend'
     }
-    return "Accept"
+    return 'Accept'
   }
 
   onPressFriend = friend => {
@@ -293,7 +293,7 @@ class FriendsScreen extends React.Component {
       participants: [firebase.auth().currentUser, friend]
     }
 
-    this.props.navigation.navigate("Chat", { channel: channel })
+    this.props.navigation.navigate('Chat', { channel: channel })
   }
 
   renderItem = ({ item }) => (

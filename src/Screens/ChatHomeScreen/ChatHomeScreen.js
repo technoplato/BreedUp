@@ -1,4 +1,4 @@
-import React from "react"
+import React from 'react'
 import {
   ScrollView,
   View,
@@ -8,20 +8,20 @@ import {
   TouchableOpacity,
   Platform,
   Keyboard
-} from "react-native"
-import firebase from '@react-native-firebase/app';
-import '@react-native-firebase/database';
-import '@react-native-firebase/firestore';
-import '@react-native-firebase/auth';
-import Icon from "react-native-vector-icons/Ionicons"
-import { Icon as Icon2 } from "react-native-elements"
+} from 'react-native'
+import firebase from '@react-native-firebase/app'
+import '@react-native-firebase/database'
+import '@react-native-firebase/firestore'
+import '@react-native-firebase/auth'
+import Icon from 'react-native-vector-icons/Ionicons'
+import { Icon as Icon2 } from 'react-native-elements'
 
-import AppStyles from "../../AppStyles"
-import ChatIconView from "../../Components/ChatIconView/ChatIconView"
-import SearchModal from "../../Components/SearchModal/SearchModal"
-import CreateGroupModal from "../../Components/CreateGroupModal/CreateGroupModal"
-import styles from "./styles"
-import TextButton from "react-native-button"
+import AppStyles from '../../AppStyles'
+import ChatIconView from '../../Components/ChatIconView/ChatIconView'
+import SearchModal from '../../Components/SearchModal/SearchModal'
+import CreateGroupModal from '../../Components/CreateGroupModal/CreateGroupModal'
+import styles from './styles'
+import TextButton from 'react-native-button'
 
 const REQUEST_NONE = 0
 const REQUEST_TO_HIM = 1
@@ -29,7 +29,7 @@ const REQUEST_TO_ME = 2
 
 class ChatHomeScreen extends React.Component {
   static navigationOptions = ({ navigation }) => ({
-    title: "Chats",
+    title: 'Chats',
     headerLeft: (
       <Icon2
         containerStyle={{ marginLeft: 12 }}
@@ -71,41 +71,41 @@ class ChatHomeScreen extends React.Component {
 
     this.heAcceptedFriendshipsRef = firebase
       .firestore()
-      .collection("friendships")
-      .where("user1", "==", firebase.auth().currentUser.uid)
+      .collection('friendships')
+      .where('user1', '==', firebase.auth().currentUser.uid)
     this.heAcceptedFriendshipsUnsubscribe = null
 
     this.iAcceptedFriendshipsRef = firebase
       .firestore()
-      .collection("friendships")
-      .where("user2", "==", firebase.auth().currentUser.uid)
+      .collection('friendships')
+      .where('user2', '==', firebase.auth().currentUser.uid)
     this.iAcceptedFriendshipsUnsubscribe = null
 
     this.toMePendingFriendshipsRef = firebase
       .firestore()
-      .collection("pending_friendships")
-      .where("user2", "==", firebase.auth().currentUser.uid)
+      .collection('pending_friendships')
+      .where('user2', '==', firebase.auth().currentUser.uid)
     this.toMePendingFriendshipssUnsubscribe = null
 
     this.channelPaticipationRef = firebase
       .firestore()
-      .collection("channel_participation")
-      .where("user", "==", firebase.auth().currentUser.uid)
+      .collection('channel_participation')
+      .where('user', '==', firebase.auth().currentUser.uid)
     this.channelPaticipationUnsubscribe = null
 
     this.channelsRef = firebase
       .firestore()
-      .collection("channels")
-      .orderBy("lastMessageDate", "desc")
+      .collection('channels')
+      .orderBy('lastMessageDate', 'desc')
     this.channelsUnsubscribe = null
   }
 
   async componentDidMount() {
     const channel = new firebase.notifications.Android.Channel(
-      "test-channel",
-      "Test Channel",
+      'test-channel',
+      'Test Channel',
       firebase.notifications.Android.Importance.Max
-    ).setDescription("My apps test channel")
+    ).setDescription('My apps test channel')
 
     firebase.notifications().android.createChannel(channel)
 
@@ -202,7 +202,7 @@ class ChatHomeScreen extends React.Component {
 
     if (this.usersUnsubscribe) this.usersUnsubscribe()
 
-    this.usersRef = firebase.firestore().collection("users")
+    this.usersRef = firebase.firestore().collection('users')
     this.usersUnsubscribe = this.usersRef.onSnapshot(
       this.onUsersCollectionUpdate
     )
@@ -222,7 +222,7 @@ class ChatHomeScreen extends React.Component {
 
     if (this.usersUnsubscribe) this.usersUnsubscribe()
 
-    this.usersRef = firebase.firestore().collection("users")
+    this.usersRef = firebase.firestore().collection('users')
     this.usersUnsubscribe = this.usersRef.onSnapshot(
       this.onUsersCollectionUpdate
     )
@@ -274,8 +274,8 @@ class ChatHomeScreen extends React.Component {
           if (filters.length > 0) {
             firebase
               .firestore()
-              .collection("channel_participation")
-              .where("channel", "==", channel.id)
+              .collection('channel_participation')
+              .where('channel', '==', channel.id)
               .onSnapshot(participationSnapshot => {
                 const userPromiseArray = []
                 participationSnapshot.forEach(participationDoc => {
@@ -286,7 +286,7 @@ class ChatHomeScreen extends React.Component {
                       new Promise((userResolve, userReject) => {
                         firebase
                           .firestore()
-                          .collection("users")
+                          .collection('users')
                           .doc(participation.user)
                           .get()
                           .then(user => {
@@ -335,7 +335,7 @@ class ChatHomeScreen extends React.Component {
    * @param chat
    */
   onPressChat = chat => {
-    this.props.navigation.navigate("Chat", { channel: chat })
+    this.props.navigation.navigate('Chat', { channel: chat })
   }
 
   /**
@@ -355,13 +355,13 @@ class ChatHomeScreen extends React.Component {
       channel = one2OneChannel[0]
     } else {
       channel = {
-        name: "",
+        name: '',
         id: null,
         participants: [friend]
       }
     }
 
-    this.props.navigation.navigate("Chat", { channel })
+    this.props.navigation.navigate('Chat', { channel })
   }
 
   renderFriendItem = ({ item }) => {
@@ -380,8 +380,8 @@ class ChatHomeScreen extends React.Component {
   }
 
   formatMessage = item => {
-    if (item.lastMessage.startsWith("https://firebasestorage.googleapis.com")) {
-      return "Someone sent a photo."
+    if (item.lastMessage.startsWith('https://firebasestorage.googleapis.com')) {
+      return 'Someone sent a photo.'
     }
     return item.lastMessage
   }
@@ -408,8 +408,8 @@ class ChatHomeScreen extends React.Component {
                 ellipsizeMode="middle"
                 style={styles.message}
               >
-                {this.formatMessage(item)} ·{" "}
-                {Platform.OS === "ios"
+                {this.formatMessage(item)} ·{' '}
+                {Platform.OS === 'ios'
                   ? AppStyles.utils.timeFormatIos(item.lastMessageDate)
                   : AppStyles.utils.timeFormatAndroid(item.lastMessageDate)}
               </Text>
@@ -454,15 +454,15 @@ class ChatHomeScreen extends React.Component {
 
     firebase
       .firestore()
-      .collection("pending_friendships")
+      .collection('pending_friendships')
       .doc(pendingFriendRequest.id)
       .delete()
     firebase
       .firestore()
-      .collection("friendships")
+      .collection('friendships')
       .add(data)
       .then(function(docRef) {
-        alert("Successfully accept friend request!")
+        alert('Successfully accept friend request!')
       })
       .catch(function(error) {
         alert(error)

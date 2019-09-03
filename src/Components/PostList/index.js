@@ -1,18 +1,18 @@
-import React from "react"
-import { ListView, Share, RefreshControl } from "react-native"
-import firebase from '@react-native-firebase/app';
-import '@react-native-firebase/database';
-import axios from "axios"
-import _ from "lodash"
+import React from 'react'
+import { ListView, Share, RefreshControl } from 'react-native'
+import firebase from '@react-native-firebase/app'
+import '@react-native-firebase/database'
+import axios from 'axios'
+import _ from 'lodash'
 
-import FeedCard from "../FeedCard"
+import FeedCard from '../FeedCard'
 
 export default class PostList extends React.Component {
   componentWillMount() {
     const rootRef = firebase.database().ref()
 
-    this.likedPostsRef = rootRef.child("users/" + this.userId + "/likes")
-    this.postsRef = rootRef.child("posts/" + this.props.userId)
+    this.likedPostsRef = rootRef.child('users/' + this.userId + '/likes')
+    this.postsRef = rootRef.child('posts/' + this.props.userId)
 
     this.ds = new ListView.DataSource({
       rowHasChanged: (r1, r2) => {
@@ -40,7 +40,7 @@ export default class PostList extends React.Component {
     let likedKeys
     // First, we need to get an array of liked posts from the user
     return this.likedPostsRef
-      .once("value", snapshot => {
+      .once('value', snapshot => {
         // The existence of a key here constitues a like. The value is unused.
         return Object.keys(snapshot.val() || {})
       })
@@ -52,7 +52,7 @@ export default class PostList extends React.Component {
       .then(posts => {
         const likedPosts = new Map(likedKeys.map(key => [key, true]))
 
-        const orderedPosts = _.sortBy(posts, ["key"]).reverse()
+        const orderedPosts = _.sortBy(posts, ['key']).reverse()
 
         this.setState({
           ...this.state,
@@ -91,7 +91,7 @@ export default class PostList extends React.Component {
         enableEmptySections={true}
         refreshControl={
           <RefreshControl
-            style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
+            style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}
             refreshing={this.state.refreshing}
             onRefresh={this.onRefresh}
           />
@@ -125,10 +125,10 @@ export default class PostList extends React.Component {
     const newDs = this.state.postsDataSource._dataBlob.s1
     const index = this.indexWithKey(newDs, key)
     const post = newDs[index]
-    post["liked"] = !wasLiked
+    post['liked'] = !wasLiked
     newDs[index] = post
 
-    handleLikeToggle = wasLiked
+    const handleLikeToggle = wasLiked
       ? this.likedPostsRef.child(key).remove()
       : this.likedPostsRef.child(key).set(!wasLiked)
 
@@ -155,22 +155,22 @@ export default class PostList extends React.Component {
   }
 
   onCommentPressed = post => {
-    this.props.navigation.navigate("Comments", {
+    this.props.navigation.navigate('Comments', {
       post: post
     })
   }
 
   onSharePressed = (key, text) => {
     const url =
-      /* TODO: Proper link on iOS and Android to download link (with deep link for extra points) */ "https://github.com/lustigdev/BreedUp/issues/37"
+      /* TODO: Proper link on iOS and Android to download link (with deep link for extra points) */ 'https://github.com/lustigdev/BreedUp/issues/37'
     Share.share({
-      title: "Breed Up is awesome!",
+      title: 'Breed Up is awesome!',
       message: `Breed Up is awesome. Download it now! Check out this post.\n\n${text}\n\n${url}`
     })
   }
 
   getAllChildrenPromise(listRef, debug = false) {
-    const keysLink = listRef.toString() + ".json?shallow=true"
+    const keysLink = listRef.toString() + '.json?shallow=true'
 
     return axios.get(keysLink).then(res => {
       if (res.data) {
@@ -181,7 +181,7 @@ export default class PostList extends React.Component {
           promises.push(
             listRef
               .child(key)
-              .once("value")
+              .once('value')
               .then(snap => {
                 return snap.val()
               })

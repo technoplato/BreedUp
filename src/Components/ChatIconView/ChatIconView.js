@@ -1,7 +1,7 @@
-import React from "react"
-import { Image, View } from "react-native"
-import AppStyles from "../../AppStyles"
-import styles from "./styles"
+import React from 'react'
+import { Image, View } from 'react-native'
+import AppStyles from '../../AppStyles'
+import styles from './styles'
 
 export default class ChatIconView extends React.Component {
   constructor(props) {
