@@ -2,7 +2,7 @@ import React from 'react'
 import { Button, FlatList, TouchableOpacity, Text, View } from 'react-native'
 import firestore from '@react-native-firebase/firestore'
 
-class MyListItem extends React.Component {
+class PostItem extends React.Component {
   _onPress = () => {
     this.props.onPressLike(this.props.id, this.props.liked)
   }
@@ -16,43 +16,37 @@ class MyListItem extends React.Component {
           <Text style={{ color: textColor, fontSize: 22 }}>
             {this.props.id}
           </Text>
+          <Text style={{ fontSize: 16 }}>{this.props.likeCount}</Text>
         </View>
       </TouchableOpacity>
     )
   }
 
-  shouldComponentUpdate(
-    { liked },
-    nextState: Readonly<S>,
-    nextContext: any
-  ): boolean {
-    return liked !== this.props.liked
+  shouldComponentUpdate({ liked, likeCount }): boolean {
+    return liked !== this.props.liked || likeCount !== this.props.likeCount
   }
 }
 
 class PostsList extends React.PureComponent {
-  state = { posts: [], likes: (new Map(): Map<string, boolean>) }
+  state = { posts: {} }
 
-  async componentDidMount(): void {
+  async componentDidMount() {
     this.postsRef = firestore().collection('posts')
-    this.postsRef.get().then(this.onPostsLoaded)
+    this.postsRef.onSnapshot(this.onPostsUpdated)
   }
 
-  onPostsLoaded = postsCollection => {
-    const likePostIds = []
-    const posts = []
+  onPostsUpdated = postsCollection => {
+    const posts = {}
     postsCollection.forEach(postDoc => {
       const post = postDoc.data()
-      if (post.likes && post.likes.includes(this.props.userId)) {
-        likePostIds.push(postDoc.id)
+      posts[post.id] = {
+        ...post,
+        liked: post.likes && post.likes.includes(this.props.userId),
+        likes: null
       }
-      posts.push(post)
     })
 
-    const likesMap = new Map(this.state.likes)
-    likePostIds.forEach(postId => likesMap.set(postId, !likesMap.get(postId)))
-
-    this.setState({ posts, likes: likesMap })
+    this.setState({ posts })
   }
 
   handleLikePressed = async (postId, wasLiked) => {
@@ -71,16 +65,16 @@ class PostsList extends React.PureComponent {
 
   setLocalPostLikeStatus = (postId, isLiked) => {
     this.setState(state => {
-      const likes = new Map(state.likes)
-      likes.set(postId, isLiked)
-      return { likes }
+      const posts = { ...state.posts }
+      posts[postId].liked = isLiked
+      return { posts }
     })
   }
 
   setRemotePostLikeStatus = async (postId, isLiked) => {
     return isLiked
       ? await this.setPostAsLiked(postId)
-      : await this.setPostAsDisliked(postId)
+      : await this.setPostAsUnliked(postId)
   }
 
   setPostAsLiked = async postId => {
@@ -91,11 +85,12 @@ class PostsList extends React.PureComponent {
       })
       return true
     } catch (e) {
+      console.log(e)
       return false
     }
   }
 
-  setPostAsDisliked = async postId => {
+  setPostAsUnliked = async postId => {
     try {
       await this.postsRef.doc(postId).update({
         likes: firestore.FieldValue.arrayRemove(this.props.userId),
@@ -109,24 +104,26 @@ class PostsList extends React.PureComponent {
   }
 
   _renderItem = ({ item }) => (
-    <MyListItem
+    <PostItem
       id={item.id}
       onPressLike={this.handleLikePressed}
-      liked={!!this.state.likes.get(item.id)}
+      liked={item.liked}
       title={item.title}
     />
   )
 
   render() {
+    console.log('Rendering PostsList')
     return (
       <FlatList
-        data={this.state.posts}
+        data={Object.values(this.state.posts)}
         extraData={this.state}
         keyExtractor={this._keyExtractor}
         renderItem={this._renderItem}
       />
     )
   }
+
   _keyExtractor = item => item.id
 }
 
