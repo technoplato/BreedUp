@@ -124,6 +124,21 @@ exports.onDogUpdate = functions.firestore
     return true
   })
 
+// Posts
+exports.onPostCreated = functions.firestore
+  .document('posts/{postId}')
+  .onCreate(doc => {
+    const post = doc.data()
+
+    return doc.ref.set({
+      ...post,
+      likes: [],
+      likeCount: 0,
+      viewCount: 0,
+      created: new Date().getTime()
+    })
+  })
+
 // Notifications
 exports.sendChatPushNotification = functions.firestore
   .document('channels/{channelId}/threads/{threadId}')
