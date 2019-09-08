@@ -12,7 +12,7 @@ export default class Loading extends React.Component {
       global.user = user
       if (user) {
         updateUserLocation(user.uid)
-        this.props.navigation.navigate('PrivateProfile')
+        this.props.navigation.navigate('Feed')
       } else {
         this.props.navigation.navigate('SignUp')
       }

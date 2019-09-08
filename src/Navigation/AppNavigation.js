@@ -7,8 +7,8 @@ import React from 'react'
 import Testing from './Testing'
 
 const RootNav = createSwitchNavigator({
-  Testing: Testing,
   Onboarding: Onboarding,
+  Testing: Testing,
   Main: Main
 })
 

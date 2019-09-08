@@ -4,7 +4,6 @@ import { Text, TextInput, Alert, ImageBackground } from 'react-native'
 import { Button } from 'react-native-elements'
 
 import auth from '@react-native-firebase/auth'
-import database from '@react-native-firebase/database'
 import firestore from '@react-native-firebase/firestore'
 
 import styles from './LoginStyles'
