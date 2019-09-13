@@ -80,10 +80,11 @@ export default class FeedScreen extends React.Component {
   }
 
   componentWillUnmount() {
-    this.removeNotificationDisplayedListener()
-    this.removeNotificationListener()
-    this.removeNotificationOpenedListener()
-    this.removeTokenRefreshListener()
+    // TODO watch invertase until they release notifications on rnfb6
+    // this.removeNotificationDisplayedListener()
+    // this.removeNotificationListener()
+    // this.removeNotificationOpenedListener()
+    // this.removeTokenRefreshListener()
   }
 
   async askForNotificationPermissions() {

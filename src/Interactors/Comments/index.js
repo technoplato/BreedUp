@@ -16,7 +16,7 @@ export const addComment = async (oldPost, text) => {
   const commentAdded = await newCommentRef.set(newComment)
 
   const transaction = await postsRef
-    .child(oldPost.author_id)
+    .child(oldPost.author.uid)
     .child(oldPost.key)
     .transaction(post => {
       if (post !== null) {

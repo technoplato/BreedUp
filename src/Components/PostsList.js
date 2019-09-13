@@ -164,7 +164,6 @@ export default class PostsList extends React.PureComponent {
             minimumViewTime: 3000
           }}
           onViewableItemsChanged={this.onViewableItemsChanged}
-          contentContainerStyle={{ paddingBottom: 200 }}
           maintainVisibleContentPosition={{ minIndexForVisible: 0 }}
           data={this.data()}
           extraData={this.state}
