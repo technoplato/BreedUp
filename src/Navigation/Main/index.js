@@ -1,11 +1,11 @@
-import React from "react"
-import { createBottomTabNavigator } from "react-navigation"
-import { Image, View } from "react-native"
+import React from 'react'
+import { createBottomTabNavigator } from 'react-navigation'
+import { Image, View } from 'react-native'
 
-import { ProfileStack, AddPost, SearchStack, EventStack } from "../Misc"
-import FeedStack from "../Feed"
+import { ProfileStack, AddPost, SearchStack, EventStack } from '../Misc'
+import FeedStack from '../Feed'
 
-import { Images } from "../../Themes"
+import { Images } from '../../Themes'
 
 const TabNavigation = createBottomTabNavigator(
   {
@@ -28,16 +28,16 @@ const TabNavigation = createBottomTabNavigator(
         const { routeName } = navigation.state
         let iconSource
         switch (routeName) {
-          case "Feed":
+          case 'Feed':
             iconSource = Images.iconHome
             break
-          case "Search":
+          case 'Search':
             iconSource = Images.iconSearch
             break
-          case "Post":
+          case 'Post':
             iconSource = Images.iconAdd
             break
-          case "Profile":
+          case 'Profile':
             iconSource = Images.iconProfile
             break
         }
@@ -53,8 +53,8 @@ const TabNavigation = createBottomTabNavigator(
       }
     }),
     tabBarOptions: {
-      activeTintColor: "tomato",
-      inactiveTintColor: "gray"
+      activeTintColor: 'tomato',
+      inactiveTintColor: 'gray'
     }
   }
 )
@@ -65,12 +65,12 @@ function shouldShowTabBar(navigation) {
   const name = dest && dest.routeName
 
   return !(
-    name === "PublicProfile" ||
-    name === "ViewDog" ||
-    name === "ChatHome" ||
-    name === "NotificationChatHome" ||
-    name === "ProfileChatHome" ||
-    name === "Chat"
+    name === 'PublicProfile' ||
+    name === 'ViewDog' ||
+    name === 'ChatHome' ||
+    name === 'NotificationChatHome' ||
+    name === 'ProfileChatHome' ||
+    name === 'Chat'
   )
 }
 export default TabNavigation
