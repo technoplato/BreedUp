@@ -5,19 +5,27 @@ import PostItem from './PostItem'
 import ShowNewPostsButton from './ShowNewPostsButton'
 
 export default class PostsList extends React.PureComponent {
-  // Staged posts are posts that have been added remotely but not shown yet.
-  state = { posts: {}, staged: {} }
-
   PAGE_SIZE = 10
 
-  async componentDidMount() {
+  constructor(props) {
+    super(props)
+
+    console.log(props)
+    const { userId } = props
+
+    // Staged posts are posts that have been added remotely but not shown yet.
+    this.state = { posts: {}, staged: {} }
+    this.list = React.createRef()
+
     this.postsRef = firestore().collection('posts')
+    if (userId) {
+      this.postsRef = firestore()
+        .collection('posts')
+        .where('author.uid', '==', userId)
+    }
     this.oldestPostTime = new Date().getTime()
     this.next = this.postsRef.orderBy('created', 'desc').limit(this.PAGE_SIZE)
-    this.changesUnsubscribe = () =>
-      console.log(
-        'This method will be used to unsubscribe our listener when we fetch older posts.'
-      )
+    this.changesUnsubscribe = () => {}
     this.loadMorePosts()
   }
 
@@ -64,15 +72,21 @@ export default class PostsList extends React.PureComponent {
   }
 
   onPostsUpdated = postsCollection => {
+    let doScrollToTop = false
     const posts = { ...this.state.posts }
     postsCollection.docChanges().forEach(({ type, doc }) => {
       const post = doc.data()
       if (type === 'added') {
         if (!posts[post.id]) {
-          // If the post is already present, do not add it again.
-          // Firestore snapshot does not have simple functionality to only
-          // listen to changes on windows of data.
-          this.stagePost(post)
+          if (post.author.uid === global.user.uid) {
+            posts[post.id] = this.prunePost(post)
+            doScrollToTop = true
+          } else {
+            // If the post is already present, do not add it again.
+            // Firestore snapshot does not have simple functionality to only
+            // listen to changes on windows of data.
+            this.stagePost(post)
+          }
         }
       }
       if (type === 'modified') {
@@ -83,7 +97,15 @@ export default class PostsList extends React.PureComponent {
       }
     })
 
-    this.setState({ posts })
+    this.setState({ posts }, () => {
+      if (doScrollToTop) this.scrollToTop()
+    })
+  }
+
+  scrollToTop = () => {
+    setTimeout(() => {
+      this.list.scrollToOffset({ animated: false, offset: 0 })
+    }, 200)
   }
 
   prunePost = post => ({
@@ -163,6 +185,9 @@ export default class PostsList extends React.PureComponent {
             itemVisiblePercentThreshold: 100,
             minimumViewTime: 3000
           }}
+          ref={ref => {
+            this.list = ref
+          }}
           onViewableItemsChanged={this.onViewableItemsChanged}
           maintainVisibleContentPosition={{ minIndexForVisible: 0 }}
           data={this.data()}
@@ -212,10 +237,10 @@ export default class PostsList extends React.PureComponent {
     })
   }
 
-  onAvatarPressed = (userId, username) => {
+  onAvatarPressed = user => {
     this.props.navigation.navigate('PublicProfile', {
-      userId: userId,
-      username: username
+      userId: user.uid,
+      username: user.username
     })
   }
 

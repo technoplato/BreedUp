@@ -1,6 +1,7 @@
 import firestore from '@react-native-firebase/firestore'
+import uploadImage from 'utilities/upload-image'
 
-import { uploadImage, deleteImage } from '../../Utils/FirebaseUtils'
+import { deleteImage } from '../../Utils/FirebaseUtils'
 
 export const addDog = async (ownerId, name, breed, imageUri) => {
   const userRef = firestore()
@@ -15,8 +16,7 @@ export const addDog = async (ownerId, name, breed, imageUri) => {
     .doc()
   const newImageUri = await uploadImage(
     imageUri,
-    ownerId,
-    'dogs/' + newDogRef.id
+    `${ownerId}/dogs/${newDogRef.id}`
   )
 
   const newDog = {
@@ -65,7 +65,6 @@ const updateDogImage = async newDog => {
   deleteImage(newDog.owner.uid, 'dogs/' + newDog.id)
   return await uploadImage(
     newDog.imageUri,
-    newDog.owner.uid,
-    'dogs/' + newDog.id
+    `${newDog.owner.uid}/dogs/${newDog.id}`
   )
 }

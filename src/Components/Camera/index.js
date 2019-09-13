@@ -1,7 +1,6 @@
 import React from 'react'
 import { View } from 'react-native'
 import { RNCamera } from 'react-native-camera'
-import ImagePicker from 'react-native-image-picker'
 import { Button } from 'react-native-elements'
 
 import styles from './CameraStyle'

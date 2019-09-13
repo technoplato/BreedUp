@@ -34,6 +34,7 @@
 		C445766B22F5D5100015C7CD /* EvilIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C445763322F5D5100015C7CD /* EvilIcons.ttf */; };
 		C445766C22F5D5100015C7CD /* SimpleLineIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C445763422F5D5100015C7CD /* SimpleLineIcons.ttf */; };
 		C445766D22F5D5100015C7CD /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C445763522F5D5100015C7CD /* MaterialIcons.ttf */; };
+		C464755F232BFC25003E6363 /* libreact-native-image-resizer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C464755E232BFC25003E6363 /* libreact-native-image-resizer.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -78,6 +79,7 @@
 		C445763322F5D5100015C7CD /* EvilIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = EvilIcons.ttf; sourceTree = "<group>"; };
 		C445763422F5D5100015C7CD /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = SimpleLineIcons.ttf; sourceTree = "<group>"; };
 		C445763522F5D5100015C7CD /* MaterialIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = MaterialIcons.ttf; sourceTree = "<group>"; };
+		C464755E232BFC25003E6363 /* libreact-native-image-resizer.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = "libreact-native-image-resizer.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C8BDA309CEB942F79A6C9767 /* FontAwesome5_Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Regular.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Regular.ttf"; sourceTree = "<group>"; };
 		C9450F435A35326ED4EA702C /* libPods-BreedUpTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-BreedUpTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CEAAED1FD6564E5E93BAF67C /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = SimpleLineIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/SimpleLineIcons.ttf"; sourceTree = "<group>"; };
@@ -91,6 +93,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C464755F232BFC25003E6363 /* libreact-native-image-resizer.a in Frameworks */,
 				342621379B69D7FC47BF3883 /* libPods-BreedUp.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -140,6 +143,7 @@
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				C464755E232BFC25003E6363 /* libreact-native-image-resizer.a */,
 				147B88ECFA2FC6C1F81DFE85 /* libPods-BreedUp.a */,
 				C9450F435A35326ED4EA702C /* libPods-BreedUpTests.a */,
 			);
@@ -330,7 +334,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh";
+			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh\n";
 		};
 		24B1327AF8E692B9F986642A /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;

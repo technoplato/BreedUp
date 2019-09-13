@@ -11,7 +11,7 @@ import {
 
 import { Button } from 'react-native-elements'
 
-import { createPost, submitPost } from '../Interactors/Posts'
+import { createPost } from '../Interactors/Posts'
 import DogList from '../Components/DogList'
 import { currentUser } from '../Utils/FirebaseUtils'
 
@@ -25,6 +25,12 @@ export default class SubmitPostScreen extends React.Component {
 
     this.onSubmitEditing = this.onSubmitEditing.bind(this)
     this.uploadPost = this.uploadPost.bind(this)
+
+    this.input = React.createRef()
+  }
+
+  componentDidMount() {
+    this.input.focus()
   }
 
   render() {
@@ -42,6 +48,9 @@ export default class SubmitPostScreen extends React.Component {
           >
             <Image style={{ height: 100, width: 100 }} source={{ uri: uri }} />
             <TextInput
+              ref={input => {
+                this.input = input
+              }}
               style={{ marginLeft: 12, flex: 1, height: 100 }}
               placeholder="Write a caption..."
               multiline
@@ -59,7 +68,7 @@ export default class SubmitPostScreen extends React.Component {
               loading={this.state.saving}
               disabled={this.state.saving}
               onPress={() => {
-                this.uploadPost().then(() => this.props.finish())
+                this.uploadPost()
               }}
             />
           </View>
@@ -123,15 +132,12 @@ export default class SubmitPostScreen extends React.Component {
   async uploadPost() {
     this.setState({ saving: true })
 
-    const post = await createPost(
+    await createPost(
       this.props.uri,
       this.state.postText,
       this.state.pendingDogs
     )
 
-    const submittedPost = await submitPost(post)
-
-    this.setState({ saving: false })
     this.props.finish()
   }
 

@@ -48,19 +48,6 @@ const currentUser = () => {
 }
 
 /**
- * Uploads an image to Firebase and returns the URL.
- */
-const uploadImage = async (imageUri, userId, path) => {
-  const storageRef = storage()
-    .ref()
-    .child(userId)
-    .child(path)
-
-  await storageRef.putFile(imageUri)
-  return storageRef.getDownloadURL()
-}
-
-/**
  * Deletes an image from Firebase storage and returns true to resolve the promise.
  */
 const deleteImage = (userId, path) => {
@@ -76,10 +63,6 @@ const deleteImage = (userId, path) => {
 const postImageUploadPath = 'posts/images/'
 
 export {
-  /**
-   * Utility methods
-   */
-  uploadImage,
   deleteImage,
   /**
    * Firebase references

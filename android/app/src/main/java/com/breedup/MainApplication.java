@@ -3,6 +3,7 @@ package com.breedup;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import fr.bamlab.rnimageresizer.ImageResizerPackage;
 import com.imagepicker.ImagePickerPackage;
 import org.reactnative.camera.RNCameraPackage;
 import io.invertase.firebase.database.ReactNativeFirebaseDatabasePackage;
@@ -30,6 +31,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new ImageResizerPackage(),
             new ImagePickerPackage(),
             new RNCameraPackage(),
             new ReactNativeFirebaseDatabasePackage(),

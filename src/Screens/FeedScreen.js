@@ -130,10 +130,7 @@ export default class FeedScreen extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <PostsList
-          userId={global.user.uid}
-          navigation={this.props.navigation}
-        />
+        <PostsList navigation={this.props.navigation} />
       </View>
     )
   }

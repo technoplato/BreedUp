@@ -63,7 +63,7 @@ export default class PostItem extends React.Component {
             source={{ uri: author.photo }}
           />
           <View style={styles.postMetadata}>
-            <Text onPress={() => this.props.onAvatarPressed(this.props.author)}>
+            <Text onPress={() => this.props.onAvatarPressed(author)}>
               {author.username}
             </Text>
             <Text>
@@ -117,13 +117,12 @@ export default class PostItem extends React.Component {
   }
 
   renderImage = () => {
-    const { post_img } = this.props.item
-    console.log(post_img)
+    const { postPhoto } = this.props.item
     return (
       <Image
         resizeMode="cover"
         style={styles.image}
-        source={{ uri: post_img }}
+        source={{ uri: postPhoto }}
       />
     )
   }

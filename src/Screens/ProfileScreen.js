@@ -13,16 +13,17 @@ import Modal from 'react-native-modal'
 
 import firestore from '@react-native-firebase/firestore'
 import auth from '@react-native-firebase/auth'
-import storage from '@react-native-firebase/storage'
+
+import uploadImage from 'utilities/upload-image'
 
 import RoundImage from '../Components/RoundImageView'
 import { Colors } from '../Themes'
-// import PostList from "../Components/PostList"
 import DogList from '../Components/DogList'
 
 import CameraModal from '../../lib/InstagramCameraModal'
 
 import { followUser, unfollowUser, isFollowing } from '../Interactors/Users'
+import PostsList from '../Components/PostsList'
 
 export default class Profile extends React.Component {
   constructor(props) {
@@ -63,12 +64,6 @@ export default class Profile extends React.Component {
     this.userRef = firestore()
       .collection('users')
       .doc(profileId)
-    const id = auth().currentUser.uid
-
-    this.profileImgStorageRef = storage()
-      .ref()
-      .child(currentUid)
-      .child('profile_img')
   }
 
   async componentDidMount() {
@@ -152,13 +147,14 @@ export default class Profile extends React.Component {
   }
 
   async onNewProfileImageChosen(newProfileImageUri) {
-    // Optimistically update image URI
     this.setState({
       profileURL: newProfileImageUri
     })
 
-    await this.profileImgStorageRef.putFile(newProfileImageUri)
-    const updatedUrl = await this.profileImgStorageRef.getDownloadURL()
+    const updatedUrl = await uploadImage(
+      newProfileImageUri,
+      `${this.state.uid}/profile_img`
+    )
 
     this.userRef.update({
       photoURL: updatedUrl
@@ -198,20 +194,19 @@ export default class Profile extends React.Component {
     })
   }
 
-  // postsList() {
-  //   return (
-  //     <View style={styles.postList.container}>
-  //       <PostList
-  //         style={styles.postList.list}
-  //         navigation={this.props.navigation}
-  //         userId={this.state.uid}
-  //         onAvatarPressed={this.onAvatarPressed}
-  //       />
-  //     </View>
-  //   )
-  // }
+  postsList() {
+    return (
+      <View style={styles.postList.list}>
+        <PostsList
+          navigation={this.props.navigation}
+          userId={this.state.uid}
+          onAvatarPressed={this.onAvatarPressed}
+        />
+      </View>
+    )
+  }
 
-  onAvatarPressed = () => {
+  onAvatarPressed = author => {
     // ignored in profile view
   }
 
@@ -222,7 +217,7 @@ export default class Profile extends React.Component {
         {this.modal()}
         {this.header()}
         {this.dogList()}
-        {/*{this.postsList()}*/}
+        {this.postsList()}
         {this.state.loading && this.renderLoading()}
       </View>
     )

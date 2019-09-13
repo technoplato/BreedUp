@@ -1,7 +1,7 @@
 import { fromEvent } from 'rxjs'
 import { map } from 'rxjs/operators'
 import { commentsRef, postsRef, currentUser } from '../../Utils/FirebaseUtils'
-import { submitPost } from '../Posts'
+import { addOrUpdatePost } from '../Posts'
 
 export const addComment = async (oldPost, text) => {
   const newCommentRef = commentsRef.child(oldPost.key).push()
@@ -13,7 +13,7 @@ export const addComment = async (oldPost, text) => {
     key: newCommentRef.key
   }
 
-  const commentAdded = await newCommentRef.set(newComment)
+  await newCommentRef.set(newComment)
 
   const transaction = await postsRef
     .child(oldPost.author.uid)
@@ -36,7 +36,7 @@ export const addComment = async (oldPost, text) => {
     }, true)
 
   const newPost = transaction.snapshot.val()
-  return submitPost(newPost)
+  return addOrUpdatePost(newPost)
 }
 
 export const fetchCommentsForPost = async postId => {
