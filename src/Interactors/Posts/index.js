@@ -1,9 +1,11 @@
+import firestore from '@react-native-firebase/firestore'
+import uploadImage from 'utilities/upload-image'
+
 import { getFollowersForUser } from '../Users'
 import {
   rootRef,
   postsRef,
   globalFeedRef,
-  uploadImage,
   postImageUploadPath,
   currentUser
 } from '../../Utils/FirebaseUtils'
@@ -13,35 +15,27 @@ import {
  */
 const createPost = async (imageUri, text, dogs) => {
   const { uid, displayName, photoURL } = currentUser()
-  // First, I need to upload the image
+
   const postImgUrl = await uploadImageForPost(imageUri, uid)
   // Create a reference to where the post is going in order to get a key
-  const newPostRef = postsRef.child(uid).push()
-  // Create the post object
-  const post = {
-    author_username: displayName,
-    author_img_url: photoURL,
-    author_id: uid,
-    dogs: dogs,
-    key: newPostRef.key,
-    text: text,
-    comment_count: 0,
-    post_img: postImgUrl,
-    timestamp: new Date().getTime(),
-    view_count: 0
-  }
-  return post
-}
+  const postDoc = firestore()
+    .collection('posts')
+    .doc()
 
-/**
- * Broadcasts post to the poster's followers
- * and adds the post to the user's list of posts.
- *
- * Returns post after succesful upload.
- */
-const submitPost = async post => {
-  updatePostsForFollowers(post)
-  const postSnap = await addOrUpdatePost(post)
+  const post = {
+    author: {
+      username: displayName,
+      photo: photoURL,
+      uid: uid
+    },
+    dogs: dogs,
+    id: postDoc.id,
+    text: text,
+    postPhoto: postImgUrl
+  }
+
+  await addOrUpdatePost(post)
+
   return post
 }
 
@@ -56,11 +50,11 @@ const uploadImageForPost = async (postImgUri, authorId) => {
  * Adds or updates post to user's list of posts to be shown
  * on profile view.
  */
-const addOrUpdatePost = post => {
-  return postsRef
-    .child(post.author_id)
-    .child(post.key)
-    .update(post)
+export const addOrUpdatePost = post => {
+  return firestore()
+    .collection('posts')
+    .doc(post.id)
+    .set(post)
 }
 
 /**
@@ -74,7 +68,7 @@ const updatePostsForFollowers = async post => {
   // show every post to every user.
   const globalFeedPostSnap = await postToGlobalFeed(post)
 
-  const followers = await getFollowersForUser(post.author_id)
+  const followers = await getFollowersForUser(post.author.uid)
   const fanoutObj = fanoutPost(followers, post)
   return rootRef.update(fanoutObj)
 }
@@ -84,9 +78,9 @@ const updatePostsForFollowers = async post => {
  *
  * Adds post to global feed.
  */
-const postToGlobalFeed = async post => {
-  return await globalFeedRef.child(post.key).set(post)
-}
+// const postToGlobalFeed = async post => {
+//   return await globalFeedRef.child(post.key).set(post)
+// }
 
 /**
  * Returns array of posts made by user.
@@ -97,11 +91,6 @@ const getPosts = async userId => {
   const postsSnap = await postsRef.child(userId).once('value')
   return Object.values(postsSnap.val())
 }
-
-/**
- * Get posts a user has liked
- */
-// TODO
 
 /**
  * Creates an object to update all posts on Firebase for all followers.
@@ -117,4 +106,4 @@ function fanoutPost(followers, post) {
   return fanoutObj
 }
 
-export { createPost, submitPost }
+export { createPost }

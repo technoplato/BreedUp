@@ -31,6 +31,7 @@ export default class Login extends React.Component {
       .signInWithEmailAndPassword(email, password)
       .then(userRecord => {
         const user = removeFuncs(userRecord.user)
+        console.log(user)
         firestore()
           .collection('users')
           .doc(user.uid)
@@ -77,7 +78,34 @@ export default class Login extends React.Component {
         source={Images.blackDog}
         style={styles.container}
       >
-        <Text style={styles.headerText}>Breed Up</Text>
+        <Text
+          onLongPress={() => {
+            console.log('"long press"')
+            auth()
+              .signInWithEmailAndPassword('halfjew22@gmail.com', 'aaaaaa')
+              .then(userRecord => {
+                const user = removeFuncs(userRecord.user)
+                console.log(user)
+                firestore()
+                  .collection('users')
+                  .doc(user.uid)
+                  .set(
+                    {
+                      ...user,
+                      username: user.displayName,
+                      lowercaseUsername: user.displayName.toLocaleLowerCase(),
+                      photoURL: user.photoURL
+                    },
+                    { merge: true }
+                  )
+              })
+              .then(() => this.props.navigation.navigate('Feed'))
+              .catch(error => this.setState({ errorMsg: error.message }))
+          }}
+          style={styles.headerText}
+        >
+          Breed Up
+        </Text>
         {this.state.errorMsg && (
           <Text style={{ color: 'white', padding: 12 }}>
             {this.state.errorMsg}

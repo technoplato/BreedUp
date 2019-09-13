@@ -135,7 +135,8 @@ exports.onPostCreated = functions.firestore
       likes: [],
       likeCount: 0,
       viewCount: 0,
-      created: new Date().getTime()
+      commentCount: 0,
+      created: Date.now()
     })
   })
 

@@ -40,12 +40,7 @@ export default class PostItem extends React.Component {
   }
 
   renderCardHeader = () => {
-    const {
-      author_username,
-      author_img_url,
-      created,
-      viewCount
-    } = this.props.item
+    const { author, created, viewCount } = this.props.item
     const time_since_post = moment(created).fromNow()
     const viewCountSuffix = viewCount === 1 ? 'view' : 'views'
 
@@ -62,26 +57,14 @@ export default class PostItem extends React.Component {
       <View style={styles.headerContainer}>
         <View style={styles.imageAndTextContainer}>
           <Avatar
-            onPress={() =>
-              this.props.onAvatarPressed(
-                this.props.item.author_id,
-                this.props.item.author_username
-              )
-            }
+            onPress={() => this.props.onAvatarPressed(author)}
             rounded
             size={35}
-            source={{ uri: author_img_url }}
+            source={{ uri: author.photo }}
           />
           <View style={styles.postMetadata}>
-            <Text
-              onPress={() =>
-                this.props.onAvatarPressed(
-                  this.props.item.author_id,
-                  this.props.item.author_username
-                )
-              }
-            >
-              {author_username}
+            <Text onPress={() => this.props.onAvatarPressed(author)}>
+              {author.username}
             </Text>
             <Text>
               {time_since_post} | {viewCount + ' ' + viewCountSuffix}
@@ -134,12 +117,12 @@ export default class PostItem extends React.Component {
   }
 
   renderImage = () => {
-    const { post_img } = this.props.item
+    const { postPhoto } = this.props.item
     return (
       <Image
         resizeMode="cover"
         style={styles.image}
-        source={{ uri: post_img }}
+        source={{ uri: postPhoto }}
       />
     )
   }

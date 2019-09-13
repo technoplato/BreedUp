@@ -46,7 +46,7 @@ const TabNavigation = createBottomTabNavigator(
         // icon component from react-native-vector-icons
         return (
           <Image
-            source={iconSource}
+            source={Images.iconHome}
             style={{ marginTop: 6, height: 24, width: 24 }}
           />
         )
