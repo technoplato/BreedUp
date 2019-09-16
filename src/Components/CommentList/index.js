@@ -1,17 +1,17 @@
-import React from "react"
-import { FlatList, ActivityIndicator } from "react-native"
-import { filter, map } from "rxjs/operators"
-import _ from "lodash"
+import React from 'react'
+import { FlatList, ActivityIndicator } from 'react-native'
+import { filter, map } from 'rxjs/operators'
+import _ from 'lodash'
 
-import CommentListItem from "../CommentListItem"
-import styles from "./CommentListStyles"
-import { Colors } from "../../Themes"
+import CommentListItem from '../CommentListItem'
+import styles from './CommentListStyles'
+import { Colors } from '../../Themes'
 
 import {
   fetchCommentsForPost,
   stopObservingCommentsForPost,
   observeCommentsForPost
-} from "../../Interactors/Comments"
+} from '../../Interactors/Comments'
 
 export default class CommentsList extends React.Component {
   constructor(props) {
@@ -26,15 +26,15 @@ export default class CommentsList extends React.Component {
   }
 
   loadComments = async () => {
-    const { postId } = this.props
-    const { count, fetchedComments } = await fetchCommentsForPost(postId)
+    const { post } = this.props
+    const { fetchedComments } = await fetchCommentsForPost(post.id)
 
     this.setState({
       loading: false,
       comments: fetchedComments
     })
 
-    observeCommentsForPost(postId)
+    observeCommentsForPost(post.id)
       .pipe(
         filter(comment => {
           const { comments } = this.state
@@ -93,6 +93,6 @@ export default class CommentsList extends React.Component {
   keyExtractor = item => item.key
 
   componentWillUnmount() {
-    stopObservingCommentsForPost(this.props.postId)
+    stopObservingCommentsForPost(this.props.post.id)
   }
 }

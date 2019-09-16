@@ -10,7 +10,6 @@ export default class PostsList extends React.PureComponent {
   constructor(props) {
     super(props)
 
-    console.log(props)
     const { userId } = props
 
     // Staged posts are posts that have been added remotely but not shown yet.

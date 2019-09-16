@@ -1,6 +1,6 @@
 import React from 'react'
-import { createBottomTabNavigator } from 'react-navigation'
-import { Image, View } from 'react-native'
+import { createBottomTabNavigator } from 'react-navigation-tabs'
+import { Image } from 'react-native'
 
 import { ProfileStack, AddPost, SearchStack, EventStack } from '../Misc'
 import FeedStack from '../Feed'
@@ -22,9 +22,9 @@ const TabNavigation = createBottomTabNavigator(
     }
   },
   {
-    navigationOptions: ({ navigation }) => ({
+    defaultNavigationOptions: ({ navigation }) => ({
       tabBarVisible: shouldShowTabBar(navigation),
-      tabBarIcon: ({ focused, tintColor }) => {
+      tabBarIcon: () => {
         const { routeName } = navigation.state
         let iconSource
         switch (routeName) {
@@ -42,35 +42,47 @@ const TabNavigation = createBottomTabNavigator(
             break
         }
 
-        // You can return any component that you like here! We usually use an
-        // icon component from react-native-vector-icons
         return (
           <Image
-            source={Images.iconHome}
+            source={iconSource}
             style={{ marginTop: 6, height: 24, width: 24 }}
           />
         )
+      },
+      tabBarOptions: {
+        activeTintColor: 'tomato',
+        inactiveTintColor: 'gray'
       }
-    }),
-    tabBarOptions: {
-      activeTintColor: 'tomato',
-      inactiveTintColor: 'gray'
-    }
+    })
   }
 )
 
-function shouldShowTabBar(navigation) {
-  const routes = navigation.state.routes
-  const dest = routes && routes[1]
-  const name = dest && dest.routeName
+const getActiveRouteState = function(route) {
+  if (
+    !route.routes ||
+    route.routes.length === 0 ||
+    route.index >= route.routes.length
+  ) {
+    return route
+  }
 
-  return !(
+  const childActiveRoute = route.routes[route.index]
+  return getActiveRouteState(childActiveRoute)
+}
+
+function shouldShowTabBar(navigation) {
+  const name = getActiveRouteState(navigation.state).routeName
+
+  const doShow = !(
     name === 'PublicProfile' ||
     name === 'ViewDog' ||
     name === 'ChatHome' ||
     name === 'NotificationChatHome' ||
     name === 'ProfileChatHome' ||
+    name === 'Comments' ||
     name === 'Chat'
   )
+
+  return doShow
 }
 export default TabNavigation

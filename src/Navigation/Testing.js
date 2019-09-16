@@ -1,5 +1,5 @@
 import React from 'react'
-import { View } from 'react-native'
+import { View, Text } from 'react-native'
 import firestore from '@react-native-firebase/firestore'
 import firebase from '@react-native-firebase/app'
 
@@ -26,6 +26,10 @@ export default class Testing extends React.Component {
   }
 
   render() {
-    return <View style={{ paddingTop: 100 }}></View>
+    return (
+      <View style={{ paddingTop: 100 }}>
+        <Text>Testing wtf</Text>
+      </View>
+    )
   }
 }

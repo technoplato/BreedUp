@@ -1,6 +1,6 @@
 import React from 'react'
 import { Icon } from 'react-native-elements'
-import { createStackNavigator } from 'react-navigation'
+import { createStackNavigator } from 'react-navigation-stack'
 
 import FeedScreen from '../../Screens/FeedScreen'
 import CommentsScreen from '../../Screens/CommentsScreen'

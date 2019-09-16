@@ -250,6 +250,10 @@ PODS:
     - RNFBApp
   - RNGestureHandler (1.4.1):
     - React
+  - RNReanimated (1.2.0):
+    - React
+  - RNScreens (2.0.0-alpha.3):
+    - React
   - RNVectorIcons (6.6.0):
     - React
   - SDWebImage (5.1.0):
@@ -293,6 +297,8 @@ DEPENDENCIES:
   - "RNFBFirestore (from `../node_modules/@react-native-firebase/firestore`)"
   - "RNFBStorage (from `../node_modules/@react-native-firebase/storage`)"
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
+  - RNReanimated (from `../node_modules/react-native-reanimated`)
+  - RNScreens (from `../node_modules/react-native-screens`)
   - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
   - yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
@@ -386,6 +392,10 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-firebase/storage"
   RNGestureHandler:
     :path: "../node_modules/react-native-gesture-handler"
+  RNReanimated:
+    :path: "../node_modules/react-native-reanimated"
+  RNScreens:
+    :path: "../node_modules/react-native-screens"
   RNVectorIcons:
     :path: "../node_modules/react-native-vector-icons"
   yoga:
@@ -444,11 +454,13 @@ SPEC CHECKSUMS:
   RNFBFirestore: efef9ea79f659ffc0f3b56a8eab00311bd579772
   RNFBStorage: e9843ce5945ab05d5c0fbc2d8922c013353ad613
   RNGestureHandler: 4cb47a93019c1a201df2644413a0a1569a51c8aa
+  RNReanimated: 1b52415c4302f198cb581282a0166690bad62c43
+  RNScreens: 402a99b0a27c0c32f079cec12d3ccbd35e20cd7f
   RNVectorIcons: 0bb4def82230be1333ddaeee9fcba45f0b288ed4
   SDWebImage: fb387001955223213dde14bc08c8b73f371f8d8f
   SDWebImageWebPCoder: 7568737603c50f6237850afedd7e9e28e5917e6b
   yoga: 312528f5bbbba37b4dcea5ef00e8b4033fdd9411
 
-PODFILE CHECKSUM: abcd42068677ca8bc924297d3bfc407a9d7eb9d3
+PODFILE CHECKSUM: cb20d309ed5fa0da52996e6dd0bcb1d5dc88221e
 
 COCOAPODS: 1.7.5
