@@ -2,8 +2,11 @@ import React from 'react'
 import { createBottomTabNavigator } from 'react-navigation-tabs'
 import { Image } from 'react-native'
 
-import { ProfileStack, AddPost, SearchStack, EventStack } from '../Misc'
 import FeedStack from '../Feed'
+import SearchStack from '../Search'
+import AddPost from '../Post'
+import ProfileStack from '../Profile'
+import MeetupStack from '../Meetup'
 
 import { Images } from '../../Themes'
 
@@ -17,9 +20,8 @@ const TabNavigation = createBottomTabNavigator(
         tabBarVisible: false
       }
     },
-    Profile: {
-      screen: ProfileStack
-    }
+    Profile: ProfileStack,
+    Meetups: MeetupStack
   },
   {
     defaultNavigationOptions: ({ navigation }) => ({
@@ -70,19 +72,10 @@ const getActiveRouteState = function(route) {
   return getActiveRouteState(childActiveRoute)
 }
 
+const tabRoutes = ['Feed', 'Search', 'PrivateProfile', 'Meetups']
+
 function shouldShowTabBar(navigation) {
   const name = getActiveRouteState(navigation.state).routeName
-
-  const doShow = !(
-    name === 'PublicProfile' ||
-    name === 'ViewDog' ||
-    name === 'ChatHome' ||
-    name === 'NotificationChatHome' ||
-    name === 'ProfileChatHome' ||
-    name === 'Comments' ||
-    name === 'Chat'
-  )
-
-  return doShow
+  return tabRoutes.includes(name)
 }
 export default TabNavigation

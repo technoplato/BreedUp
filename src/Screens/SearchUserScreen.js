@@ -5,9 +5,11 @@ import { SearchBar, CheckBox } from 'react-native-elements'
 import styles from './SearchStyle'
 import {
   searchUsers,
+  searchDogs,
   searchNearbyUsers,
   searchNearbyDogs
-} from '../Interactors/Search'
+} from 'interactors/Search'
+
 import RoundImageView from 'components/RoundImageView'
 import DogListItem from 'components/DogListItem'
 
@@ -73,42 +75,7 @@ const SearchResultUser = ({ item, onResultPress }) => {
   )
 }
 
-const SearchResultDog = ({ item, onResultPress }) => {
-  const dog = item.dogs[0]
-  const owner = item.owner
-  return (
-    <TouchableHighlight onPress={() => onResultPress(item)}>
-      <View
-        style={{
-          flex: 1,
-          padding: 12,
-          flexDirection: 'column',
-          backgroundColor: 'white'
-        }}
-      >
-        <View style={{ flexDirection: 'row', marginBottom: 12 }}>
-          <View style={{}}>
-            <RoundImageView size={64} source={{ uri: dog.imageUri }} />
-          </View>
-          <View style={{ marginLeft: 12, flexDirection: 'column' }}>
-            <Text style={{ fontWeight: 'bold', fontSize: 22 }}>{dog.name}</Text>
-          </View>
-        </View>
-        <View style={{ flexDirection: 'row' }}>
-          <RoundImageView
-            key={owner.photoURL}
-            size={24}
-            source={{ uri: owner.photoURL }}
-          />
-          <Text
-            style={{ marginLeft: 8, fontWeight: '300', fontSize: 14 }}
-          >{`${owner.username}'s ${dog.breed}`}</Text>
-        </View>
-      </View>
-    </TouchableHighlight>
-  )
-}
-export default class SearchScreen extends React.Component {
+export default class SearchUserScreen extends React.Component {
   static navigationOptions = {
     header: null
   }
@@ -175,33 +142,16 @@ export default class SearchScreen extends React.Component {
   }
 
   renderResult = ({ item }) => {
-    if (item.type === 'dog') {
-      return <SearchResultDog item={item} onResultPress={this.onDogPress} />
-    } else if (item.type === 'person') {
-      return <SearchResultUser item={item} onResultPress={this.onUserPress} />
-    }
+    return <SearchResultUser item={item} onResultPress={this.onUserPress} />
   }
 
   extractKey = item => {
-    if (item.type === 'dog') {
-      return item.dogs[0].id
-    } else if (item.type === 'person') {
-      return item.owner.uid
-    }
+    return item.owner.uid
   }
 
   onUserPress = result => {
-    this.props.navigation.navigate('PublicProfile', {
-      userId: result.owner.uid,
-      username: result.owner.username
-    })
-  }
-
-  onDogPress = result => {
-    this.props.navigation.navigate('PublicProfile', {
-      userId: result.owner.uid,
-      username: result.owner.username
-    })
+    this.props.navigation.state.params.onUserChosen(result.owner)
+    this.props.navigation.goBack()
   }
 
   onChangeText = async text => {
@@ -216,12 +166,7 @@ export default class SearchScreen extends React.Component {
       ? await searchNearbyUsers(query)
       : await searchUsers(query)
 
-    const dogs = localSearch
-      ? await searchNearbyDogs(query)
-      : await searchDogs(query)
-
-    // this.setState({ results: users })
-    this.setState({ results: users.concat(dogs) })
+    this.setState({ results: users })
   }
 
   onClear = () => {

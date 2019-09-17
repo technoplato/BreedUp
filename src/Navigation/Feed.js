@@ -1,13 +1,12 @@
 import React from 'react'
-import { Icon } from 'react-native-elements'
 import { createStackNavigator } from 'react-navigation-stack'
+import { Icon } from 'react-native-elements'
 
-import FeedScreen from '../../Screens/FeedScreen'
-import CommentsScreen from '../../Screens/CommentsScreen'
-
-import Profile from '../../Screens/ProfileScreen'
-import ChatScreen from '../../Screens/ChatScreen/ChatScreen'
-import ChatHomeScreen from '../../Screens/ChatHomeScreen/ChatHomeScreen'
+import FeedScreen from 'screens/FeedScreen'
+import ChatHomeScreen from 'screens/ChatHomeScreen/ChatHomeScreen'
+import ChatScreen from 'screens/ChatScreen/ChatScreen'
+import CommentsScreen from 'screens/CommentsScreen'
+import ProfileScreen from 'screens/ProfileScreen'
 
 export default createStackNavigator({
   Feed: {
@@ -34,7 +33,7 @@ export default createStackNavigator({
     })
   },
   PublicProfile: {
-    screen: Profile,
+    screen: ProfileScreen,
     navigationOptions: ({ navigation }) => ({
       headerVisible: 'false',
       title: `${navigation.state.params.username}'s Profile`,

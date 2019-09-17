@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import { View, Text, Button, Input } from 'react-native'
-import { eventsRef, currentUser } from '../Utils/FirebaseUtils'
+import { eventsRef } from '../Utils/FirebaseUtils'
 
-class ViewEventScreen extends Component {
+class MeetupDetailsScreen extends Component {
   state = { loading: true }
 
   componentDidMount = async () => {
@@ -47,4 +47,4 @@ const EventDetails = ({ event }) => (
   </View>
 )
 
-export default ViewEventScreen
+export default MeetupDetailsScreen
