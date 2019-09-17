@@ -101,13 +101,13 @@ class ChatHomeScreen extends React.Component {
   }
 
   async componentDidMount() {
-    const channel = new firebase.notifications.Android.Channel(
-      'test-channel',
-      'Test Channel',
-      firebase.notifications.Android.Importance.Max
-    ).setDescription('My apps test channel')
-
-    firebase.notifications().android.createChannel(channel)
+    // const channel = new firebase.notifications.Android.Channel(
+    //   'test-channel',
+    //   'Test Channel',
+    //   firebase.notifications.Android.Importance.Max
+    // ).setDescription('My apps test channel')
+    //
+    // firebase.notifications().android.createChannel(channel)
 
     this.heAcceptedFriendshipsUnsubscribe = this.heAcceptedFriendshipsRef.onSnapshot(
       this.onHeAcceptedFriendShipsCollectionUpdate

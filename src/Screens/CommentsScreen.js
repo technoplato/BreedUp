@@ -1,6 +1,8 @@
 import React from 'react'
-import { TextInput, KeyboardAvoidingView, Keyboard } from 'react-native'
+import { TextInput, Keyboard } from 'react-native'
 import { Button } from 'react-native-elements'
+import { KeyboardAwareView } from 'react-native-keyboard-aware-view'
+import { SafeAreaView } from 'react-navigation'
 
 import CommentList from '../Components/CommentList'
 import styles from '../Styles/CommentsScreenStyles'
@@ -31,21 +33,19 @@ export default class CommentsScreen extends React.Component {
 
   render() {
     return (
-      <KeyboardAvoidingView behavior="padding" style={styles.container}>
-        <CommentList post={this.state.post} />
-        <TextInput
-          style={styles.input}
-          value={this.state.comment.toString()}
-          onChangeText={comment => this.onChangeText(comment)}
-          onSubmitEditing={this.onSubmitEditing}
-          placeholder="Enter comment"
-        />
-        <Button
-          height={42}
-          title="Add Comment"
-          onPress={this.onPressAddComment}
-        />
-      </KeyboardAvoidingView>
+      <SafeAreaView style={styles.container}>
+        <KeyboardAwareView style={styles.container}>
+          <CommentList post={this.state.post} />
+          <TextInput
+            style={styles.input}
+            value={this.state.comment.toString()}
+            onChangeText={comment => this.onChangeText(comment)}
+            onSubmitEditing={this.onSubmitEditing}
+            placeholder="Enter comment"
+          />
+          <Button title="Add Comment" onPress={this.onPressAddComment} />
+        </KeyboardAwareView>
+      </SafeAreaView>
     )
   }
 

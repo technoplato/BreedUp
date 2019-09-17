@@ -27,31 +27,31 @@ export default class CommentsList extends React.Component {
 
   loadComments = async () => {
     const { post } = this.props
-    const { fetchedComments } = await fetchCommentsForPost(post.id)
-
-    this.setState({
-      loading: false,
-      comments: fetchedComments
+    fetchCommentsForPost(post.id, comments => {
+      this.setState({ loading: false, comments })
     })
 
-    observeCommentsForPost(post.id)
-      .pipe(
-        filter(comment => {
-          const { comments } = this.state
-          let newComment = true
-          for (let i = 0; i < comments.length; i++) {
-            if (comments[i].key === comment.key) {
-              newComment = false
-              break
-            }
-          }
+    // console.log(fetchedComments)
 
-          return newComment
-        })
-      )
-      .subscribe(comment => {
-        this.addCommentToList(comment)
-      })
+    // TODO this behavior needs to change
+    // observeCommentsForPost(post.id)
+    //   .pipe(
+    //     filter(comment => {
+    //       const { comments } = this.state
+    //       let newComment = true
+    //       for (let i = 0; i < comments.length; i++) {
+    //         if (comments[i].id === comment.id) {
+    //           newComment = false
+    //           break
+    //         }
+    //       }
+    //
+    //       return newComment
+    //     })
+    //   )
+    //   .subscribe(comment => {
+    //     this.addCommentToList(comment)
+    //   })
   }
 
   addCommentToList = comment => {
@@ -67,6 +67,9 @@ export default class CommentsList extends React.Component {
   renderList = () => {
     return (
       <FlatList
+        inverted
+        vertical
+        showsVerticalScrollIndicator={false}
         style={styles.list}
         data={this.state.comments}
         extraData={this.state}
@@ -90,7 +93,7 @@ export default class CommentsList extends React.Component {
     return this.state.loading ? this.renderLoading() : this.renderList()
   }
 
-  keyExtractor = item => item.key
+  keyExtractor = item => item.id
 
   componentWillUnmount() {
     stopObservingCommentsForPost(this.props.post.id)

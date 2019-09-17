@@ -163,11 +163,11 @@ export default class PostItem extends React.Component {
   }
 
   renderComments = () => {
-    const { comment_count, first_comment, second_comment } = this.props.item
+    const { commentCount, first_comment, second_comment } = this.props.item
 
-    const viewAllText = comment_count > 2 && (
+    const viewAllText = commentCount > 2 && (
       <Text style={{ color: 'rgb(143, 143, 143)', marginBottom: 12 }}>
-        View all {comment_count} comments
+        View all {commentCount} comments
       </Text>
     )
     const comment1 = first_comment && (
@@ -184,7 +184,7 @@ export default class PostItem extends React.Component {
     )
 
     return (
-      comment_count > 0 && (
+      commentCount > 0 && (
         <TouchableWithoutFeedback
           onPress={() => this.props.onCommentPressed(this.props.item)}
         >

@@ -1,60 +1,76 @@
 import { fromEvent } from 'rxjs'
+import firestore from '@react-native-firebase/firestore'
 import { map } from 'rxjs/operators'
 import { commentsRef, postsRef, currentUser } from '../../Utils/FirebaseUtils'
 import { addOrUpdatePost } from '../Posts'
 
 export const addComment = async (oldPost, text) => {
-  const newCommentRef = commentsRef.child(oldPost.key).push()
+  const postDoc = firestore()
+    .collection('posts')
+    .doc(oldPost.id)
+  const newCommentDoc = postDoc.collection('comments').doc()
 
   const newComment = {
     author: currentUser().displayName,
     time_posted: new Date().getTime(),
     text: text,
-    key: newCommentRef.key
+    id: newCommentDoc.id
   }
 
-  await newCommentRef.set(newComment)
+  await newCommentDoc.set(newComment)
 
-  const transaction = await postsRef
-    .child(oldPost.author.uid)
-    .child(oldPost.key)
-    .transaction(post => {
-      if (post !== null) {
-        if (post.comment_count === 0) {
-          post['comment_count'] = 1
+  // // TODO: Moving this to cloud functions
+  const newPost = await firestore()
+    .runTransaction(transaction => {
+      return transaction.get(postDoc).then(doc => {
+        if (!doc.exists) {
+          throw 'Document does not exist for Post with ID: ' + oldPost.id
+        }
+
+        const post = doc.data()
+        const commentCount = post.commentCount
+        if (commentCount === 0) {
+          post['commentCount'] = 1
           post['first_comment'] = newComment
-        } else if (post.comment_count === 1) {
-          post['comment_count'] = 2
+        } else if (commentCount === 1) {
+          post['commentCount'] = 2
           post['second_comment'] = newComment
         } else {
-          post['comment_count'] = post.comment_count + 1
+          post['commentCount'] = post.commentCount + 1
         }
-        return post
-      } else {
-        return oldPost
-      }
-    }, true)
 
-  const newPost = transaction.snapshot.val()
+        transaction.update(postDoc, post)
+        return post
+      })
+    })
+    .catch(err => {
+      console.log('Transaction failed: ', err)
+    })
+
+  console.log('After performing transaction: ', newPost)
+
   return addOrUpdatePost(newPost)
 }
 
-export const fetchCommentsForPost = async postId => {
-  const snap = await commentsRef.child(postId).once('value')
-  return {
-    count: snap.numChildren() || 0,
-    fetchedComments: Object.values(snap.val() || {}).sort((a, b) => {
-      return a.key > b.key
+export const fetchCommentsForPost = (postId, callback) => {
+  return firestore()
+    .collection('posts')
+    .doc(postId)
+    .collection('comments')
+    .orderBy('time_posted', 'desc')
+    .onSnapshot(snap => {
+      const comments = snap.docs.map(doc => doc.data())
+      callback(comments)
     })
-  }
 }
 
 export const observeCommentsForPost = postId => {
-  return fromEvent(commentsRef.child(postId), 'child_added').pipe(
-    map(event => {
-      return event[0].val()
-    })
-  )
+  // TODO: port over behavior from PostList
+  // return fromEvent(commentsRef.child(postId), 'child_added').pipe(
+  //   map(event => {
+  //     return event[0].val()
+  //   })
+  // )
 }
 
 export const stopObservingCommentsForPost = postId => {
