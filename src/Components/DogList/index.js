@@ -1,14 +1,13 @@
 import React from 'react'
-import { View, Text, FlatList, ActivityIndicator } from 'react-native'
+import { View, Text, FlatList } from 'react-native'
 import _ from 'lodash'
 
 import DogListItem from '../DogListItem'
 import RoundPlus from '../RoundPlus'
 import styles from './DogListStyles'
 
-import { Colors } from '../../Themes'
-
 import { fetchDogsForUser } from '../../Interactors/Dog'
+import LargeLoadingIndicator from '../LargeLoadingIndicator'
 
 export default class DogList extends React.Component {
   constructor(props) {
@@ -122,13 +121,7 @@ export default class DogList extends React.Component {
   }
 
   renderLoading = () => {
-    return (
-      <ActivityIndicator
-        style={styles.loading}
-        size="large"
-        color={Colors.crimson}
-      />
-    )
+    return <LargeLoadingIndicator />
   }
 
   render() {

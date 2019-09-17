@@ -6,7 +6,6 @@ import { Button, Input } from 'react-native-elements'
 import firestore from '@react-native-firebase/firestore'
 
 const InviteUserButton = ({ recipient, handlePress }) => {
-  console.log(recipient)
   const text = recipient
     ? `Inviting: ${recipient.username} (click to change)`
     : 'Click to search for a User.'
@@ -98,7 +97,6 @@ export default class CreateMeetupScreen extends Component {
 
   addEvent = async () => {
     const { title, description, location, recipient } = this.state
-    console.log(this.state)
     const event = { title, description, location, recipient }
     const saved = await saveMeetup(event)
     this.props.navigation.state.params.onEventAdded(saved)
@@ -121,13 +119,11 @@ const saveMeetup = async info => {
     id: meetupDoc.id,
     ...info,
     sender,
-    participantsIds: [uid, info.recipient.uid],
+    participantIds: [uid, info.recipient.uid],
     participants: [sender, info.recipient],
     created: Date.now(),
     accepted: false
   }
-
-  console.log(meetup)
 
   await meetupDoc.set(meetup)
 
