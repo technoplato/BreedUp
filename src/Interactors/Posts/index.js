@@ -5,7 +5,6 @@ import { getFollowersForUser } from '../Users'
 import {
   rootRef,
   postsRef,
-  globalFeedRef,
   postImageUploadPath,
   currentUser
 } from '../../Utils/FirebaseUtils'

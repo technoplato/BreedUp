@@ -33,8 +33,12 @@ export default class CommentsScreen extends React.Component {
 
   render() {
     return (
-      <SafeAreaView style={styles.container}>
-        <KeyboardAwareView style={styles.container}>
+      <SafeAreaView style={{ flex: 1 }}>
+        <KeyboardAwareView
+          style={{
+            flex: 1
+          }}
+        >
           <CommentList post={this.state.post} />
           <TextInput
             style={styles.input}
@@ -43,7 +47,11 @@ export default class CommentsScreen extends React.Component {
             onSubmitEditing={this.onSubmitEditing}
             placeholder="Enter comment"
           />
-          <Button title="Add Comment" onPress={this.onPressAddComment} />
+          <Button
+            style={{ alignSelf: 'center' }}
+            title="Add Comment"
+            onPress={this.onPressAddComment}
+          />
         </KeyboardAwareView>
       </SafeAreaView>
     )

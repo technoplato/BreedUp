@@ -10,6 +10,8 @@ import {
 } from 'react-native'
 import moment from 'moment'
 import firebase from '@react-native-firebase/app'
+import _ from 'lodash'
+
 import { Colors } from '../Themes'
 
 export default class PostItem extends React.Component {
@@ -17,11 +19,26 @@ export default class PostItem extends React.Component {
     this.props.onPressLike(this.props.id, this.props.liked)
   }
 
-  shouldComponentUpdate({ liked, likeCount, viewCount }) {
+  shouldComponentUpdate({ liked, likeCount, viewCount, item }) {
+    const firstComment = _.get(item, 'first_comment.text', null)
+    const oldFirstComment = _.get(this.props.item, 'first_comment.text', null)
+    const secondComment = _.get(item, 'second_comment.text', null)
+    const oldSecondComment = _.get(this.props.item, 'second_comment.text', null)
+
+    const didFirstCommentChange = firstComment !== oldFirstComment
+    const didSecondCommentChange = secondComment !== oldSecondComment
+
+    const commentCount = item.commentCount
+    const oldCommentCount = this.props.item.commentCount
+
     return (
       liked !== this.props.liked ||
       likeCount !== this.props.likeCount ||
-      viewCount !== this.props.viewCount
+      viewCount !== this.props.viewCount ||
+      commentCount !== this.props.commentCount ||
+      commentCount !== oldCommentCount ||
+      didFirstCommentChange ||
+      didSecondCommentChange
     )
   }
 

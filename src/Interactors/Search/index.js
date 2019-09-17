@@ -1,4 +1,3 @@
-import { userNamesRef, dogNamesRef } from '../../Utils/FirebaseUtils'
 import { GeoFire } from 'geofire'
 import { getCurrentLocation } from '../Location'
 import firestore from '@react-native-firebase/firestore'

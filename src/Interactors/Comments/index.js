@@ -1,7 +1,5 @@
-import { fromEvent } from 'rxjs'
 import firestore from '@react-native-firebase/firestore'
-import { map } from 'rxjs/operators'
-import { commentsRef, postsRef, currentUser } from '../../Utils/FirebaseUtils'
+import { currentUser } from '../../Utils/FirebaseUtils'
 import { addOrUpdatePost } from '../Posts'
 
 export const addComment = async (oldPost, text) => {
@@ -47,12 +45,10 @@ export const addComment = async (oldPost, text) => {
       console.log('Transaction failed: ', err)
     })
 
-  console.log('After performing transaction: ', newPost)
-
   return addOrUpdatePost(newPost)
 }
 
-export const fetchCommentsForPost = (postId, callback) => {
+export const observeCommentsForPost = (postId, callback) => {
   return firestore()
     .collection('posts')
     .doc(postId)
@@ -62,17 +58,4 @@ export const fetchCommentsForPost = (postId, callback) => {
       const comments = snap.docs.map(doc => doc.data())
       callback(comments)
     })
-}
-
-export const observeCommentsForPost = postId => {
-  // TODO: port over behavior from PostList
-  // return fromEvent(commentsRef.child(postId), 'child_added').pipe(
-  //   map(event => {
-  //     return event[0].val()
-  //   })
-  // )
-}
-
-export const stopObservingCommentsForPost = postId => {
-  commentsRef.child(postId).off
 }

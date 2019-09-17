@@ -1,17 +1,10 @@
 import React from 'react'
 import { FlatList, ActivityIndicator } from 'react-native'
-import { filter, map } from 'rxjs/operators'
-import _ from 'lodash'
-
 import CommentListItem from '../CommentListItem'
 import styles from './CommentListStyles'
 import { Colors } from '../../Themes'
 
-import {
-  fetchCommentsForPost,
-  stopObservingCommentsForPost,
-  observeCommentsForPost
-} from '../../Interactors/Comments'
+import { observeCommentsForPost } from '../../Interactors/Comments'
 
 export default class CommentsList extends React.Component {
   constructor(props) {
@@ -27,37 +20,9 @@ export default class CommentsList extends React.Component {
 
   loadComments = async () => {
     const { post } = this.props
-    fetchCommentsForPost(post.id, comments => {
+    this.unsubscribe = observeCommentsForPost(post.id, comments => {
       this.setState({ loading: false, comments })
     })
-
-    // console.log(fetchedComments)
-
-    // TODO this behavior needs to change
-    // observeCommentsForPost(post.id)
-    //   .pipe(
-    //     filter(comment => {
-    //       const { comments } = this.state
-    //       let newComment = true
-    //       for (let i = 0; i < comments.length; i++) {
-    //         if (comments[i].id === comment.id) {
-    //           newComment = false
-    //           break
-    //         }
-    //       }
-    //
-    //       return newComment
-    //     })
-    //   )
-    //   .subscribe(comment => {
-    //     this.addCommentToList(comment)
-    //   })
-  }
-
-  addCommentToList = comment => {
-    const comments = this.state.comments
-    comments.push(comment)
-    this.setState({ comments: _.uniq(comments) })
   }
 
   renderItem = ({ item }) => {
@@ -96,6 +61,6 @@ export default class CommentsList extends React.Component {
   keyExtractor = item => item.id
 
   componentWillUnmount() {
-    stopObservingCommentsForPost(this.props.post.id)
+    this.unsubscribe()
   }
 }

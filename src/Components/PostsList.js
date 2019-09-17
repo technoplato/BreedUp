@@ -81,9 +81,6 @@ export default class PostsList extends React.PureComponent {
             posts[post.id] = this.prunePost(post)
             doScrollToTop = true
           } else {
-            // If the post is already present, do not add it again.
-            // Firestore snapshot does not have simple functionality to only
-            // listen to changes on windows of data.
             this.stagePost(post)
           }
         }
