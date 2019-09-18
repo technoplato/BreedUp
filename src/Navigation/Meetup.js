@@ -7,6 +7,7 @@ import MeetupsScreen from 'screens/MeetupsScreen'
 import MeetupDetailsScreen from 'screens/MeetupDetailsScreen'
 import SearchAddressScreen from 'screens/SearchAddressScreen'
 import SearchUserScreen from 'screens/SearchUserScreen'
+import PickDateScreen from 'screens/PickDateScreen'
 
 export default createStackNavigator(
   {
@@ -39,6 +40,12 @@ export default createStackNavigator(
       screen: SearchUserScreen,
       navigationOptions: {
         title: 'Invite a Friend!'
+      }
+    },
+    PickTime: {
+      screen: PickDateScreen,
+      navigationOptions: {
+        title: 'What Time works?'
       }
     }
   },

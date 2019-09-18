@@ -4,6 +4,7 @@ import { KeyboardAwareView } from 'react-native-keyboard-aware-view'
 import { SafeAreaView } from 'react-navigation'
 import { Button, Input } from 'react-native-elements'
 import firestore from '@react-native-firebase/firestore'
+import moment from 'moment'
 
 const InviteUserButton = ({ recipient, handlePress }) => {
   const text = recipient
@@ -20,6 +21,19 @@ const InviteUserButton = ({ recipient, handlePress }) => {
 
 const PickLocationButton = ({ location, handlePress }) => {
   const text = location ? location.name : 'Click to search for a Location.'
+  return (
+    <Button
+      containerStyle={{ marginTop: 12 }}
+      title={text}
+      onPress={handlePress}
+    />
+  )
+}
+
+const PickDateButton = ({ date: utcDate, handlePress }) => {
+  const text = utcDate
+    ? moment(utcDate).format('dddd, MMMM Do [at] h:mm a')
+    : 'Click to pick a Time.'
   return (
     <Button
       containerStyle={{ marginTop: 12 }}
@@ -81,6 +95,17 @@ export default class CreateMeetupScreen extends Component {
             }
           />
 
+          <PickDateButton
+            date={this.state.date}
+            handlePress={() =>
+              this.props.navigation.navigate('PickTime', {
+                onDateChosen: date => {
+                  this.setState({ date })
+                }
+              })
+            }
+          />
+
           <View
             style={{
               flex: 1,
@@ -96,8 +121,8 @@ export default class CreateMeetupScreen extends Component {
   }
 
   addEvent = async () => {
-    const { title, description, location, recipient } = this.state
-    const event = { title, description, location, recipient }
+    const { title, description, location, recipient, date } = this.state
+    const event = { title, description, location, recipient, date }
     const saved = await saveMeetup(event)
     this.props.navigation.state.params.onEventAdded(saved)
     this.props.navigation.goBack()
