@@ -7,7 +7,7 @@ class MeetupDetailsScreen extends Component {
 
   componentDidMount = async () => {
     console.log(this.props.navigation.state.params)
-    const event = await getEventById(this.props.navigation.state.params.id)
+    const event = await getMeetupById(this.props.navigation.state.params.id)
     this.setState({ event, loading: false })
   }
 
@@ -18,13 +18,6 @@ class MeetupDetailsScreen extends Component {
       <EventDetails event={this.state.event} />
     )
   }
-}
-
-const getEventById = async id => {
-  return await eventsRef
-    .child(id)
-    .once('value')
-    .then(snap => snap.val())
 }
 
 const Loading = () => {
@@ -42,8 +35,6 @@ const EventDetails = ({ event }) => (
     <Text>address: {event.address}</Text>
     <Text>creator: {event.creator.name}</Text>
     <Text>photo: {event.creator.image}</Text>
-    {/* TODO: get distance from event in details page */}
-    <Text>distance: {event.distance} km</Text>
   </View>
 )
 

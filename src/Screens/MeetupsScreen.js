@@ -4,6 +4,8 @@ import { Text, Divider, Button } from 'react-native-elements'
 import firestore from '@react-native-firebase/firestore'
 import isEmpty from 'utilities/is-empty'
 import cancelInvite from 'utilities/cancel-invite'
+import acceptInvite from 'utilities/accept-invite'
+import cancelMeetup from 'utilities/cancel-meetup'
 
 import MeetupsList from 'components/MeetupsList'
 import LargeLoadingIndicator from 'components/LargeLoadingIndicator'
@@ -11,9 +13,6 @@ import useMeetups from 'hooks/useMeetups'
 
 const MeetupsScreen = ({ navigation }) => {
   const { invites, values, loading, error } = useMeetups(global.user.uid)
-
-  const sorted =
-    (values && values.sort((i1, i2) => i1.created < i2.created)) || []
 
   const createMeetup = () =>
     navigation.navigate('CreateMeetup', {
@@ -63,7 +62,7 @@ const MeetupsScreen = ({ navigation }) => {
               }
             ],
 
-            recipient: {
+            sender: {
               description: 'NOT MINE cool new description',
               photoURL:
                 'https://firebasestorage.googleapis.com/v0/b/breed-up.appspot.com/o/r40337XTxTMxRdXtcoNfbeHuOnu2%2Fprofile_img?alt=media&token=8e5cef6a-0d40-4839-a28f-10a6fbf9a9a9',
@@ -71,7 +70,7 @@ const MeetupsScreen = ({ navigation }) => {
               username: 'NOTME'
             },
 
-            sender: {
+            recipient: {
               image:
                 'https://firebasestorage.googleapis.com/v0/b/breed-up.appspot.com/o/r40337XTxTMxRdXtcoNfbeHuOnu2%2Fprofile_img?alt=media&token=8e5cef6a-0d40-4839-a28f-10a6fbf9a9a9',
               name: 'halfjew23',
@@ -98,7 +97,6 @@ const MeetupsScreen = ({ navigation }) => {
 }
 
 const InvitesList = ({ invites, createMeetup }) => {
-  console.log('RENDERING', invites)
   return (
     <ScrollView>
       <View style={{ padding: 12 }}>
@@ -109,6 +107,7 @@ const InvitesList = ({ invites, createMeetup }) => {
           Invites
         </Text>
         <ReceivedInvitesList received={invites.received} />
+        <Divider style={{ marginVertical: 12, backgroundColor: 'gray' }} />
         <SentInvitesList sent={invites.sent} handleCreate={createMeetup} />
         <Divider style={{ marginVertical: 12, backgroundColor: 'gray' }} />
         <UpcomingInvitesList
@@ -120,59 +119,32 @@ const InvitesList = ({ invites, createMeetup }) => {
   )
 }
 
-const ReceivedInvitesList = ({ received }) => {
-  const empty = isEmpty(received)
+const InvitesSection = ({ invites, title, empty, action }) => {
   return (
-    <View>
-      <Text h4>Received</Text>
-      {empty && <Text h5>No invites received :(</Text>}
-
-      <FlatList
-        data={received}
-        renderItem={meetup => (
-          <View>
-            <Text key={meetup.id}>{meetup.title + '\n'}</Text>
-
-            <Text
-              style={{ color: 'green', padding: 4 }}
-              onPress={() => {
-                acceptInvite(item)
-              }}
-            >
-              {'Accept \n'}
-            </Text>
-          </View>
-        )}
-      />
-    </View>
-  )
-}
-
-const SentInvitesList = ({ sent, handleCreate }) => {
-  const empty = isEmpty(sent)
-
-  return (
-    <View>
-      <Text h4>Sent</Text>
-      {empty && (
-        <Text h5 onPress={handleCreate}>
-          No invites sent :( (click to create one)
+    <View style={{ marginTop: 12 }}>
+      <Text h4>{title}</Text>
+      {isEmpty(invites) && (
+        <Text onPress={empty.fn} h5>
+          {empty.msg}(
         </Text>
       )}
 
       <FlatList
-        data={Object.values(sent).sort((i1, i2) => i1.created < i2.created)}
+        data={Object.values(invites).sort(
+          (invite1, invite2) => invite1.created > invite2.created
+        )}
         renderItem={({ item }) => {
           return (
             <View>
-              <Text key={item.id}>{'Sent: ' + item.title}</Text>
+              <Text key={item.id}>{item.title.toString() + '\n'}</Text>
+
               <Text
-                style={{ color: 'red', padding: 4 }}
+                style={{ color: action.color, padding: 4 }}
                 onPress={() => {
-                  cancelInvite(item)
+                  action.fn(item)
                 }}
               >
-                {'Cancel \n'}
+                {`${action.msg}\n`}
               </Text>
             </View>
           )
@@ -182,52 +154,42 @@ const SentInvitesList = ({ sent, handleCreate }) => {
   )
 }
 
-const UpcomingInvitesList = ({ upcoming, handleCreate }) => {
-  const empty = isEmpty(upcoming)
-
+const ReceivedInvitesList = ({ received }) => {
   return (
-    <View>
-      <Text h4>Upcoming</Text>
-      {empty && (
-        <Text h5 onPress={handleCreate}>
-          No events :( (click to create one)
-        </Text>
-      )}
-      {Object.values(upcoming).map(meetup => (
-        <Text key={meetup.id}>{meetup.title + '\n'}</Text>
-      ))}
-    </View>
+    <InvitesSection
+      invites={received}
+      title={'Received'}
+      empty={{ msg: 'No invites received.', fn: () => {} }}
+      action={{ fn: acceptInvite, msg: 'Accept', color: 'green' }}
+    />
+  )
+}
+const SentInvitesList = ({ sent, cancelInvite, handleCreate }) => {
+  return (
+    <InvitesSection
+      invites={sent}
+      title={'Sent'}
+      empty={{
+        fn: handleCreate,
+        msg: 'No invites sent :( (click to create one)'
+      }}
+      action={{ msg: 'Cancel', fn: cancelInvite, color: 'red' }}
+    />
   )
 }
 
-const useMeetupsOld = uid => {
-  const [error, setError] = useState()
-  const [loading, setLoading] = useState(true)
-  const [invites, setInvites] = useState({})
-
-  useEffect(() => {
-    const unsubscribe = firestore()
-      .collection('meetups')
-      .where('participantIds', 'array-contains', uid)
-      .onSnapshot(
-        snapshot => {
-          snapshot.forEach(doc => {
-            const meetup = doc.data()
-            invites[meetup.id] = meetup
-          })
-
-          setLoading(false)
-          setInvites(invites)
-        },
-        err => {
-          setError(err)
-        }
-      )
-
-    return () => unsubscribe()
-  }, [uid])
-
-  return { loading, invites, error }
+const UpcomingInvitesList = ({ upcoming, handleCreate }) => {
+  return (
+    <InvitesSection
+      invites={upcoming}
+      title={'Upcoming'}
+      empty={{
+        fn: handleCreate,
+        msg: 'No upcoming meetups, click to create one.'
+      }}
+      action={{ msg: 'Cancel', fn: cancelMeetup, color: 'red' }}
+    />
+  )
 }
 
 export default MeetupsScreen

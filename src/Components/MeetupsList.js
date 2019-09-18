@@ -3,12 +3,9 @@ import { Text, TouchableWithoutFeedback, View } from 'react-native'
 import GeoFire from 'geofire'
 
 import { eventsRef } from '../Utils/FirebaseUtils'
-import { getCoordinatesForAddress } from '../Utils/location'
 
 class MeetupsList extends Component {
   state = { meetups: [] }
-
-  componentDidMount = async () => {}
 
   render() {
     return (
