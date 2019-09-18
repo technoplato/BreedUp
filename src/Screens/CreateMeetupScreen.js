@@ -4,7 +4,7 @@ import { KeyboardAwareView } from 'react-native-keyboard-aware-view'
 import { SafeAreaView } from 'react-navigation'
 import { Button, Input } from 'react-native-elements'
 import firestore from '@react-native-firebase/firestore'
-import moment from 'moment'
+import formatUtcToLocalDate from 'utilities/format-date'
 
 const InviteUserButton = ({ recipient, handlePress }) => {
   const text = recipient
@@ -31,9 +31,7 @@ const PickLocationButton = ({ location, handlePress }) => {
 }
 
 const PickDateButton = ({ date: utcDate, handlePress }) => {
-  const text = utcDate
-    ? moment(utcDate).format('dddd, MMMM Do [at] h:mm a')
-    : 'Click to pick a Time.'
+  const text = utcDate ? formatUtcToLocalDate(utcDate) : 'Click to pick a Time.'
   return (
     <Button
       containerStyle={{ marginTop: 12 }}
@@ -137,7 +135,7 @@ const saveMeetup = async info => {
   const sender = {
     name: displayName,
     uid,
-    image: photoURL
+    photo: photoURL
   }
 
   const meetup = {

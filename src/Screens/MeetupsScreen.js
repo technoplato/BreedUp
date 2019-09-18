@@ -1,5 +1,10 @@
 import React, { useState, useEffect } from 'react'
-import { ScrollView, View, FlatList } from 'react-native'
+import {
+  ScrollView,
+  View,
+  FlatList,
+  TouchableWithoutFeedback
+} from 'react-native'
 import { Text, Divider, Button } from 'react-native-elements'
 import firestore from '@react-native-firebase/firestore'
 import isEmpty from 'utilities/is-empty'
@@ -17,6 +22,11 @@ const MeetupsScreen = ({ navigation }) => {
   const createMeetup = () =>
     navigation.navigate('CreateMeetup', {
       onEventAdded: event => console.log(event)
+    })
+
+  const showMeetup = id =>
+    navigation.navigate('ViewMeetup', {
+      id
     })
 
   return (
@@ -48,29 +58,29 @@ const MeetupsScreen = ({ navigation }) => {
 
             participants: [
               {
-                image:
+                photo:
                   'https://firebasestorage.googleapis.com/v0/b/breed-up.appspot.com/o/r40337XTxTMxRdXtcoNfbeHuOnu2%2Fprofile_img?alt=media&token=8e5cef6a-0d40-4839-a28f-10a6fbf9a9a9',
                 name: 'halfjew23',
                 uid: 'r40337XTxTMxRdXtcoNfbeHuOnu2'
               },
               {
                 description: 'My cool new description',
-                photoURL:
+                photo:
                   'https://firebasestorage.googleapis.com/v0/b/breed-up.appspot.com/o/r40337XTxTMxRdXtcoNfbeHuOnu2%2Fprofile_img?alt=media&token=8e5cef6a-0d40-4839-a28f-10a6fbf9a9a9',
                 uid: 'NOTME',
-                username: 'halfjew23'
+                name: 'halfjew23'
               }
             ],
 
-            sender: {
+            recipient: {
               description: 'NOT MINE cool new description',
-              photoURL:
+              photo:
                 'https://firebasestorage.googleapis.com/v0/b/breed-up.appspot.com/o/r40337XTxTMxRdXtcoNfbeHuOnu2%2Fprofile_img?alt=media&token=8e5cef6a-0d40-4839-a28f-10a6fbf9a9a9',
               uid: 'NOTME',
-              username: 'NOTME'
+              name: 'NOTME'
             },
 
-            recipient: {
+            sender: {
               image:
                 'https://firebasestorage.googleapis.com/v0/b/breed-up.appspot.com/o/r40337XTxTMxRdXtcoNfbeHuOnu2%2Fprofile_img?alt=media&token=8e5cef6a-0d40-4839-a28f-10a6fbf9a9a9',
               name: 'halfjew23',
@@ -90,13 +100,17 @@ const MeetupsScreen = ({ navigation }) => {
         }}
         onPress={createMeetup}
       />
-      <InvitesList invites={invites} createMeetup={createMeetup} />
+      <InvitesList
+        invites={invites}
+        createMeetup={createMeetup}
+        showMeetup={showMeetup}
+      />
       {/*<MeetupsList navigation={props.navigation} />*/}
     </View>
   )
 }
 
-const InvitesList = ({ invites, createMeetup }) => {
+const InvitesList = ({ invites, createMeetup, showMeetup }) => {
   return (
     <ScrollView>
       <View style={{ padding: 12 }}>
@@ -108,18 +122,23 @@ const InvitesList = ({ invites, createMeetup }) => {
         </Text>
         <ReceivedInvitesList received={invites.received} />
         <Divider style={{ marginVertical: 12, backgroundColor: 'gray' }} />
-        <SentInvitesList sent={invites.sent} handleCreate={createMeetup} />
+        <SentInvitesList
+          sent={invites.sent}
+          handleCreate={createMeetup}
+          cancelInvite={cancelInvite}
+        />
         <Divider style={{ marginVertical: 12, backgroundColor: 'gray' }} />
         <UpcomingInvitesList
           upcoming={invites.upcoming}
           handleCreate={createMeetup}
+          showMeetup={showMeetup}
         />
       </View>
     </ScrollView>
   )
 }
 
-const InvitesSection = ({ invites, title, empty, action }) => {
+const InvitesSection = ({ invites, title, empty, action, renderItem }) => {
   return (
     <View style={{ marginTop: 12 }}>
       <Text h4>{title}</Text>
@@ -133,24 +152,35 @@ const InvitesSection = ({ invites, title, empty, action }) => {
         data={Object.values(invites).sort(
           (invite1, invite2) => invite1.created > invite2.created
         )}
-        renderItem={({ item }) => {
-          return (
-            <View>
-              <Text key={item.id}>{item.title.toString() + '\n'}</Text>
-
-              <Text
-                style={{ color: action.color, padding: 4 }}
-                onPress={() => {
-                  action.fn(item)
-                }}
-              >
-                {`${action.msg}\n`}
-              </Text>
-            </View>
-          )
-        }}
+        renderItem={({ item: invite }) => renderItem(invite)}
       />
     </View>
+  )
+}
+
+const MeetupListItem = ({
+  id,
+  title,
+  photo,
+  action,
+  onMeetupPress,
+  invite
+}) => {
+  return (
+    <TouchableWithoutFeedback onPress={() => onMeetupPress(id)}>
+      <View>
+        <Text key={id}>{title + '\n'}</Text>
+
+        <Text
+          style={{ color: action.color, padding: 4 }}
+          onPress={() => {
+            action.fn(invite)
+          }}
+        >
+          {`${action.msg}\n`}
+        </Text>
+      </View>
+    </TouchableWithoutFeedback>
   )
 }
 
@@ -160,7 +190,19 @@ const ReceivedInvitesList = ({ received }) => {
       invites={received}
       title={'Received'}
       empty={{ msg: 'No invites received.', fn: () => {} }}
-      action={{ fn: acceptInvite, msg: 'Accept', color: 'green' }}
+      renderItem={invite => {
+        const { id, sender, title } = invite
+        return (
+          <MeetupListItem
+            invite={invite}
+            id={id}
+            title={`Invite From: ${sender.name}\n${title}`}
+            photo={sender.photo}
+            action={{ fn: acceptInvite, msg: 'Accept', color: 'green' }}
+            onMeetupPress={acceptInvite}
+          />
+        )
+      }}
     />
   )
 }
@@ -173,12 +215,24 @@ const SentInvitesList = ({ sent, cancelInvite, handleCreate }) => {
         fn: handleCreate,
         msg: 'No invites sent :( (click to create one)'
       }}
-      action={{ msg: 'Cancel', fn: cancelInvite, color: 'red' }}
+      renderItem={invite => {
+        const { recipient, title, id } = invite
+        return (
+          <MeetupListItem
+            invite={invite}
+            id={id}
+            title={`To: ${recipient.name}\n${title}`}
+            photo={recipient.photo}
+            action={{ msg: 'Cancel', fn: cancelInvite, color: 'red' }}
+            onMeetupPress={() => {}}
+          />
+        )
+      }}
     />
   )
 }
 
-const UpcomingInvitesList = ({ upcoming, handleCreate }) => {
+const UpcomingInvitesList = ({ upcoming, handleCreate, showMeetup }) => {
   return (
     <InvitesSection
       invites={upcoming}
@@ -187,7 +241,19 @@ const UpcomingInvitesList = ({ upcoming, handleCreate }) => {
         fn: handleCreate,
         msg: 'No upcoming meetups, click to create one.'
       }}
-      action={{ msg: 'Cancel', fn: cancelMeetup, color: 'red' }}
+      renderItem={invite => {
+        const { sender, recipient, title, id } = invite
+        return (
+          <MeetupListItem
+            invite={invite}
+            id={id}
+            title={`${title}\n${sender.name} & ${recipient.name}'s Meetup!`}
+            photo={sender.photo}
+            action={{ msg: 'Cancel', fn: cancelMeetup, color: 'red' }}
+            onMeetupPress={() => showMeetup(id)}
+          />
+        )
+      }}
     />
   )
 }

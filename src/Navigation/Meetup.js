@@ -26,9 +26,9 @@ export default createStackNavigator(
     },
     ViewMeetup: {
       screen: MeetupDetailsScreen,
-      navigationOptions: {
-        title: `TODO: Set param on navigation to display as title`
-      }
+      navigationOptions: ({ navigation }) => ({
+        title: navigation.state.params.title
+      })
     },
     SearchAddress: {
       screen: SearchAddressScreen,

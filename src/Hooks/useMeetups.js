@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { useCollectionData } from 'react-firebase-hooks/firestore'
 import firestore from '@react-native-firebase/firestore'
 

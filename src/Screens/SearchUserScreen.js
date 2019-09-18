@@ -149,8 +149,13 @@ export default class SearchUserScreen extends React.Component {
     return item.owner.uid
   }
 
-  onUserPress = result => {
-    this.props.navigation.state.params.onUserChosen(result.owner)
+  onUserPress = ({ owner }) => {
+    this.props.navigation.state.params.onUserChosen({
+      name: owner.username,
+      photo: owner.photoURL,
+      description: owner.description || '',
+      uid: owner.uid
+    })
     this.props.navigation.goBack()
   }
 
