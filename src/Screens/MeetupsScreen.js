@@ -10,13 +10,12 @@ import firestore from '@react-native-firebase/firestore'
 import isEmpty from 'utilities/is-empty'
 
 import acceptInvite from 'utilities/accept-invite'
-import declineInvite from 'utilities/decline-invite'
 
 import LargeLoadingIndicator from 'components/LargeLoadingIndicator'
 import useMeetups from 'hooks/useMeetups'
 
 const MeetupsScreen = ({ navigation }) => {
-  const { invites, values, loading, error } = useMeetups(global.user.uid)
+  const { invites, loading } = useMeetups(global.user.uid)
 
   const createMeetup = () => navigation.navigate('CreateMeetup')
 
@@ -223,6 +222,7 @@ const ReceivedInvitesList = ({ received, showMeetup, handleCreate }) => {
     />
   )
 }
+
 const SentInvitesList = ({ sent, handleCreate, showMeetup }) => {
   return (
     <InvitesSection
