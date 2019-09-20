@@ -217,9 +217,9 @@ class SearchModal extends React.Component {
   onAdd = item => {
     const data = {
       // user1 should be called sender
-      user1: firebase.auth().currentUser.uid,
-      user1name: firebase.auth().currentUser.displayName,
-      user1imageUrl: firebase.auth().currentUser.photoURL,
+      user1: global.user.uid,
+      user1name: global.user.displayName,
+      user1imageUrl: global.user.photoURL,
       // user2 should be called recipient
       user2: item.id,
       created_at: firebase.firestore.FieldValue.serverTimestamp()
@@ -266,16 +266,14 @@ class SearchModal extends React.Component {
   }
 
   renderItem = ({ item }) => {
-    if (item.photoURL && item.username) {
+    if (item.photo && item.username) {
       return (
         <TouchableOpacity onPress={() => this.onPressUser(item)}>
           <View style={styles.container}>
             <Image
               style={styles.photo}
               source={
-                item.photoURL
-                  ? { uri: item.photoURL }
-                  : AppStyles.iconSet.userAvatar
+                item.photo ? { uri: item.photo } : AppStyles.iconSet.userAvatar
               }
             />
             <Text style={styles.name}>{item.username}</Text>

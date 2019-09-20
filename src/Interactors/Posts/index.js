@@ -13,7 +13,7 @@ import {
  * Utility method for creating a post. Also uploads image for post
  */
 const createPost = async (imageUri, text, dogs) => {
-  const { uid, displayName, photoURL } = currentUser()
+  const { uid, displayName, photoURL } = global.user
 
   const postImgUrl = await uploadImageForPost(imageUri, uid)
   // Create a reference to where the post is going in order to get a key
@@ -57,20 +57,21 @@ export const addOrUpdatePost = post => {
 }
 
 /**
+ * [UNDER CONSTRUCTION]
  * Adds or updates a post to all of a user's followers.
  *
  * Also, early on we want to show every user every post and
  * so we do so here.
  */
-const updatePostsForFollowers = async post => {
-  // This is only going to be used early on, as we want to
-  // show every post to every user.
-  const globalFeedPostSnap = await postToGlobalFeed(post)
-
-  const followers = await getFollowersForUser(post.author.uid)
-  const fanoutObj = fanoutPost(followers, post)
-  return rootRef.update(fanoutObj)
-}
+// const updatePostsForFollowers = async post => {
+//   // This is only going to be used early on, as we want to
+//   // show every post to every user.
+//   const globalFeedPostSnap = await postToGlobalFeed(post)
+//
+//   const followers = await getFollowersForUser(post.author.uid)
+//   const fanoutObj = fanoutPost(followers, post)
+//   return rootRef.update(fanoutObj)
+// }
 
 /**
  * Only used in early app development process. To be removed.

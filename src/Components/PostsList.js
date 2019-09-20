@@ -1,8 +1,11 @@
 import React from 'react'
-import { FlatList, View, Share } from 'react-native'
+import { View, FlatList, Share } from 'react-native'
 import firestore from '@react-native-firebase/firestore'
+
 import PostItem from './PostItem'
+import EmptyPosts from './EmptyPosts'
 import ShowNewPostsButton from './ShowNewPostsButton'
+import isEmpty from 'utilities/is-empty'
 
 export default class PostsList extends React.PureComponent {
   PAGE_SIZE = 10
@@ -22,7 +25,7 @@ export default class PostsList extends React.PureComponent {
         .collection('posts')
         .where('author.uid', '==', userId)
     }
-    this.oldestPostTime = new Date().getTime()
+
     this.next = this.postsRef.orderBy('created', 'desc').limit(this.PAGE_SIZE)
     this.changesUnsubscribe = () => {}
     this.loadMorePosts()
@@ -38,11 +41,15 @@ export default class PostsList extends React.PureComponent {
     const posts = { ...this.state.posts }
     newPosts.forEach(post => (posts[post.id] = post))
 
-    this.oldestPostTime = newPosts[numNewPosts - 1].created
+    let oldestPostTime =
+      numNewPosts === 0
+        ? new Date().getTime()
+        : newPosts[numNewPosts - 1].created
+
     this.next = firestore()
       .collection('posts')
       .orderBy('created', 'desc')
-      .startAt(this.oldestPostTime)
+      .startAt(oldestPostTime)
       .limit(this.PAGE_SIZE)
 
     await new Promise(res =>
@@ -52,8 +59,12 @@ export default class PostsList extends React.PureComponent {
     this.changesUnsubscribe = firestore()
       .collection('posts')
       .orderBy('created', 'desc')
-      .endAt(this.oldestPostTime)
+      .endAt(oldestPostTime)
       .onSnapshot(this.onPostsUpdated)
+  }
+
+  componentWillUnmount() {
+    this.changesUnsubscribe()
   }
 
   parsePostsSnapshot = collection => {
@@ -172,10 +183,16 @@ export default class PostsList extends React.PureComponent {
   )
 
   render() {
-    const { staged } = this.state
+    const { staged, posts } = this.state
+
     return (
-      <View>
+      <View style={{ flex: 1 }}>
         <ShowNewPostsButton staged={staged} onPress={this.showNewPosts} />
+        <EmptyPosts
+          userId={this.props.userId}
+          posts={posts}
+          navigation={this.props.navigation}
+        />
         <FlatList
           viewabilityConfig={{
             itemVisiblePercentThreshold: 100,

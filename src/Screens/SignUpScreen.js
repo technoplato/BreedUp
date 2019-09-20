@@ -7,8 +7,7 @@ import firestore from '@react-native-firebase/firestore'
 
 import styles from './SignUpStyles'
 import { Images } from '../Themes'
-
-const removeFuncs = obj => JSON.parse(JSON.stringify(obj))
+import removeFuncs from 'utilities/remove-functions-from-object'
 
 export default class SignUpScreen extends React.Component {
   state = { email: '', password: '', username: '', errorMsg: null }
@@ -36,7 +35,7 @@ export default class SignUpScreen extends React.Component {
       auth()
         .createUserWithEmailAndPassword(email, password)
         .then(userRecord => {
-          const user = removeFuncs(userRecord.user)
+          const user = removeFuncs(userRecord.user, true)
           firestore()
             .collection('users')
             .doc(user.uid)
@@ -46,11 +45,10 @@ export default class SignUpScreen extends React.Component {
               description: '',
               username: username,
               lowercaseUsername: username.toLocaleLowerCase(),
-              photoURL:
+              photo:
                 'https://www.instamobile.io/wp-content/uploads/2019/05/default-avatar.jpg'
             })
         })
-        .then(() => this.props.navigation.navigate('Feed'))
         .catch(error => {
           this.setState({ errorMsg: error.message })
         })
@@ -107,7 +105,7 @@ export default class SignUpScreen extends React.Component {
                       ...user,
                       username: user.displayName,
                       lowercaseUsername: user.displayName.toLocaleLowerCase(),
-                      photoURL: user.photoURL
+                      photo: user.photoURL
                     },
                     { merge: true }
                   )

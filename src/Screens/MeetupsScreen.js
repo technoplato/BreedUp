@@ -60,7 +60,7 @@ const MeetupsScreen = ({ navigation }) => {
               },
               {
                 description: 'My cool new description',
-                photoURL:
+                photo:
                   'https://firebasestorage.googleapis.com/v0/b/breed-up.appspot.com/o/r40337XTxTMxRdXtcoNfbeHuOnu2%2Fprofile_img?alt=media&token=8e5cef6a-0d40-4839-a28f-10a6fbf9a9a9',
                 uid: 'NOTME',
                 name: 'halfjew23'
@@ -69,7 +69,7 @@ const MeetupsScreen = ({ navigation }) => {
 
             sender: {
               description: 'NOT MINE cool new description',
-              photoURL:
+              photo:
                 'https://firebasestorage.googleapis.com/v0/b/breed-up.appspot.com/o/r40337XTxTMxRdXtcoNfbeHuOnu2%2Fprofile_img?alt=media&token=8e5cef6a-0d40-4839-a28f-10a6fbf9a9a9',
               uid: 'NOTME',
               name: 'NOTME'

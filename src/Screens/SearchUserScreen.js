@@ -49,7 +49,7 @@ const SearchResultUser = ({ item, onResultPress }) => {
       >
         <View style={{ flexDirection: 'row', marginBottom: 12 }}>
           <View style={{}}>
-            <RoundImageView size={64} source={{ uri: item.owner.photoURL }} />
+            <RoundImageView size={64} source={{ uri: item.owner.photo }} />
           </View>
           <View style={{ marginLeft: 12, flexDirection: 'column' }}>
             <Text>{item.owner.username}</Text>
@@ -152,7 +152,7 @@ export default class SearchUserScreen extends React.Component {
   onUserPress = ({ owner }) => {
     this.props.navigation.state.params.onUserChosen({
       name: owner.username,
-      photo: owner.photoURL,
+      photo: owner.photo,
       description: owner.description || '',
       uid: owner.uid
     })

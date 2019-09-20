@@ -7,10 +7,10 @@ export const addDog = async (ownerId, name, breed, imageUri) => {
   const userRef = firestore()
     .collection('users')
     .doc(ownerId)
-  const { uid, username, photoURL, description } = await userRef
+  const { uid, username, photo, description } = await userRef
     .get()
     .then(doc => doc.data())
-  const owner = { uid, username, photoURL, description }
+  const owner = { uid, username, photo, description }
   const newDogRef = firestore()
     .collection('dogs')
     .doc()

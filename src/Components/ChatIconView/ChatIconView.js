@@ -40,8 +40,8 @@ export default class ChatIconView extends React.Component {
                 this.state.isImgErr == false
                   ? {
                       uri:
-                        this.props.participants[0].photoURL ||
-                        this.props.participants[0].senderPhotoURL
+                        this.props.participants[0].photo ||
+                        this.props.participants[0].senderPhoto
                     }
                   : AppStyles.iconSet.userAvatar
               }
@@ -58,7 +58,7 @@ export default class ChatIconView extends React.Component {
               onError={this.onImageError}
               source={
                 this.state.isImgErr == false
-                  ? { uri: this.props.participants[0].photoURL }
+                  ? { uri: this.props.participants[0].photo }
                   : AppStyles.iconSet.userAvatar
               }
             />
@@ -68,7 +68,7 @@ export default class ChatIconView extends React.Component {
               onError={() => this.setState({ isSecondImgErr: true })}
               source={
                 this.state.isSecondImgErr == false
-                  ? { uri: this.props.participants[1].photoURL }
+                  ? { uri: this.props.participants[1].photo }
                   : AppStyles.iconSet.userAvatar
               }
             />

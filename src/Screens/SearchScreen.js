@@ -1,113 +1,20 @@
 import React from 'react'
-import { View, Text, FlatList, TouchableHighlight } from 'react-native'
+import { View, Text, FlatList } from 'react-native'
 import { SearchBar, CheckBox } from 'react-native-elements'
 
 import styles from './SearchStyle'
 import {
   searchUsers,
   searchNearbyUsers,
+  searchDogs,
   searchNearbyDogs
 } from '../Interactors/Search'
-import RoundImageView from 'components/RoundImageView'
-import DogListItem from 'components/DogListItem'
 
-const ListEmptyComponent = ({ query }) => {
-  const text =
-    query === '' ? 'Search for a user!' : `No results for '${query}'.`
-  return (
-    <View>
-      <Text
-        style={{
-          color: 'white',
-          fontSize: 28
-        }}
-      >
-        {text}
-      </Text>
-    </View>
-  )
-}
+import SearchListEmpty from 'components/SearchListEmpty'
+import SearchListSeparator from 'components/SearchListSeparator'
+import SearchResultUser from 'components/SearchResultUser'
+import SearchResultDog from 'components/SearchResultDog'
 
-const ItemSeparatorComponent = () => {
-  return (
-    <View style={{ marginVertical: 4, height: 1, backgroundColor: 'grey' }} />
-  )
-}
-
-const SearchResultUser = ({ item, onResultPress }) => {
-  return (
-    <TouchableHighlight onPress={() => onResultPress(item)}>
-      <View
-        style={{
-          flex: 1,
-          padding: 12,
-          flexDirection: 'column',
-          backgroundColor: 'white'
-        }}
-      >
-        <View style={{ flexDirection: 'row', marginBottom: 12 }}>
-          <View style={{}}>
-            <RoundImageView size={64} source={{ uri: item.owner.photoURL }} />
-          </View>
-          <View style={{ marginLeft: 12, flexDirection: 'column' }}>
-            <Text>{item.owner.username}</Text>
-            <Text>{item.owner.description}</Text>
-          </View>
-        </View>
-        <View style={{ flexDirection: 'row' }}>
-          {item.dogs &&
-            item.dogs.map(dog => (
-              <DogListItem
-                onDogPress={() => {
-                  onResultPress(item)
-                }}
-                item={dog}
-                key={dog.id}
-                size={24}
-                imageUri={{ uri: dog.imageUri }}
-              />
-            ))}
-        </View>
-      </View>
-    </TouchableHighlight>
-  )
-}
-
-const SearchResultDog = ({ item, onResultPress }) => {
-  const dog = item.dogs[0]
-  const owner = item.owner
-  return (
-    <TouchableHighlight onPress={() => onResultPress(item)}>
-      <View
-        style={{
-          flex: 1,
-          padding: 12,
-          flexDirection: 'column',
-          backgroundColor: 'white'
-        }}
-      >
-        <View style={{ flexDirection: 'row', marginBottom: 12 }}>
-          <View style={{}}>
-            <RoundImageView size={64} source={{ uri: dog.imageUri }} />
-          </View>
-          <View style={{ marginLeft: 12, flexDirection: 'column' }}>
-            <Text style={{ fontWeight: 'bold', fontSize: 22 }}>{dog.name}</Text>
-          </View>
-        </View>
-        <View style={{ flexDirection: 'row' }}>
-          <RoundImageView
-            key={owner.photoURL}
-            size={24}
-            source={{ uri: owner.photoURL }}
-          />
-          <Text
-            style={{ marginLeft: 8, fontWeight: '300', fontSize: 14 }}
-          >{`${owner.username}'s ${dog.breed}`}</Text>
-        </View>
-      </View>
-    </TouchableHighlight>
-  )
-}
 export default class SearchScreen extends React.Component {
   static navigationOptions = {
     header: null
@@ -132,22 +39,21 @@ export default class SearchScreen extends React.Component {
           onClear={this.onClear}
           placeholder="Search for dog or user"
         />
-        <View>
-          <CheckBox
-            onPress={this.onLocalSearchToggle}
-            containerStyle={{
-              backgroundColor: 'white',
-              width: '95%',
-              flexDirection: 'row'
-            }}
-            title={
-              this.state.localSearch
-                ? 'Uncheck to search everywhere!'
-                : 'Check to search locally!'
-            }
-            checked={this.state.localSearch}
-          />
-        </View>
+
+        <CheckBox
+          onPress={this.onLocalSearchToggle}
+          containerStyle={{
+            backgroundColor: 'white',
+            width: '95%',
+            flexDirection: 'row'
+          }}
+          title={
+            this.state.localSearch
+              ? 'Uncheck to search everywhere!'
+              : 'Check to search locally!'
+          }
+          checked={this.state.localSearch}
+        />
 
         {this.state.localSearch && (
           <Text style={{ color: 'white', fontSize: 28, textAlign: 'center' }}>
@@ -158,8 +64,8 @@ export default class SearchScreen extends React.Component {
         <View style={styles.main}>
           <FlatList
             renderItem={this.renderResult}
-            ItemSeparatorComponent={ItemSeparatorComponent}
-            ListEmptyComponent={<ListEmptyComponent query={this.state.query} />}
+            ItemSeparatorComponent={SearchListSeparator}
+            ListEmptyComponent={<SearchListEmpty query={this.state.query} />}
             data={this.state.results}
             keyExtractor={this.extractKey}
           />
@@ -220,7 +126,6 @@ export default class SearchScreen extends React.Component {
       ? await searchNearbyDogs(query)
       : await searchDogs(query)
 
-    // this.setState({ results: users })
     this.setState({ results: users.concat(dogs) })
   }
 

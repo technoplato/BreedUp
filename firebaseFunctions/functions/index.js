@@ -7,20 +7,21 @@ const firestore = admin.firestore()
 const auth = admin.auth()
 
 // Users
-exports.onProfileImageUpdate = functions.storage
-  .object()
-  .onFinalize(async object => {
-    return admin
-      .database()
-      .ref('aaaaaaa')
-      .child('object')
-      .set(JSON.parse(JSON.stringify(object)))
-  })
+// exports.onProfileImageUpdate = functions.storage
+//   .object()
+//   .onFinalize(async object => {
+//     return admin
+//       .database()
+//       .ref('aaaaaaa')
+//       .child('object')
+//       .set(JSON.parse(JSON.stringify(object)))
+//   })
 
 exports.onUserUpdate = functions.firestore
   .document('users/{userId}')
-  .onUpdate(async (change, context) => {
+  .onWrite(async (change, context) => {
     const updatedUser = change.after.data()
+    if (!updatedUser) return true
     await Promise.all([
       updateAuth(updatedUser),
       updateDogsOnUserChange(updatedUser)
@@ -38,7 +39,7 @@ const updateAuth = user => {
   return auth
     .updateUser(user.uid, {
       displayName: user.username,
-      photoURL: user.photoURL
+      photoURL: user.photo
     })
     .then(function(user) {
       // See the UserRecord reference doc for the contents of user.
@@ -61,7 +62,7 @@ const updateDogsOnUserChange = async user => {
   const owner = {
     uid: user.uid,
     username: user.username,
-    photoURL: user.photoURL,
+    photo: user.photo,
     description: user.description
   }
 

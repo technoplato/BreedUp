@@ -8,7 +8,7 @@ import { updateUserLocation } from '../Interactors/Location'
 
 export default class Loading extends React.Component {
   componentDidMount() {
-    auth().onAuthStateChanged(async user => {
+    auth().onAuthStateChanged(user => {
       global.user = user
       if (user) {
         updateUserLocation(user.uid)

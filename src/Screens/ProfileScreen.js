@@ -22,7 +22,7 @@ import DogList from '../Components/DogList'
 
 import CameraModal from '../../lib/InstagramCameraModal'
 
-import { followUser, unfollowUser, isFollowing } from '../Interactors/Users'
+import { followUser, unfollowUser, amIFollowing } from '../Interactors/Users'
 import PostsList from '../Components/PostsList'
 
 export default class Profile extends React.Component {
@@ -53,7 +53,7 @@ export default class Profile extends React.Component {
       modalSaving: false,
       modifiedUsername: '',
       modifiedDescription: '',
-      modifiedPhotoURL: '',
+      modifiedPhoto: '',
       hasProfileChanged: false,
       loading: true,
       photoEditModalVisible: false,
@@ -72,16 +72,16 @@ export default class Profile extends React.Component {
       this.amIFollowing()
     ])
 
-    const { username, description, photoURL } = user
+    const { username, description, photo } = user
 
     this.props.navigation.setParams({ username })
 
     this.setState({
-      photoURL,
+      photo,
       username,
       description,
 
-      modifiedPhotoURL: photoURL,
+      modifiedPhoto: photo,
       modifiedUsername: username,
       modifiedDescription: description,
 
@@ -95,7 +95,7 @@ export default class Profile extends React.Component {
   }
 
   async amIFollowing() {
-    return await isFollowing(this.state.uid)
+    return await amIFollowing(this.state.uid)
   }
 
   setTextEditingModalVisible(visible) {
@@ -159,7 +159,7 @@ export default class Profile extends React.Component {
     )
 
     this.userRef.update({
-      photoURL: updatedUrl
+      photo: updatedUrl
     })
 
     this.setState({ profileURL: updatedUrl })

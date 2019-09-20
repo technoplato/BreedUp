@@ -51,7 +51,7 @@ export const searchUsers = async usernamePrefix => {
           description: userDoc.description,
           uid: userDoc.uid,
           username: userDoc.username,
-          photoURL: userDoc.photoURL,
+          photo: userDoc.photo,
           dogs: userDoc.dogs
         })
       })
@@ -180,7 +180,7 @@ const normalizeUsers = users => {
           description: user.description,
           uid: user.uid,
           username: user.username,
-          photoURL: user.photoURL
+          photo: user.photo
         },
         dogs: user.dogs
       }
