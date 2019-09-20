@@ -42,6 +42,9 @@ const TabNavigation = createBottomTabNavigator(
           case 'Profile':
             iconSource = Images.iconProfile
             break
+          case 'Meetups':
+            iconSource = Images.dogs
+            break
         }
 
         return (

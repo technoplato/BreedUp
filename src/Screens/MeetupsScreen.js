@@ -12,7 +12,6 @@ import cancelInvite from 'utilities/cancel-invite'
 import acceptInvite from 'utilities/accept-invite'
 import cancelMeetup from 'utilities/cancel-meetup'
 
-import MeetupsList from 'components/MeetupsList'
 import LargeLoadingIndicator from 'components/LargeLoadingIndicator'
 import useMeetups from 'hooks/useMeetups'
 
@@ -24,9 +23,9 @@ const MeetupsScreen = ({ navigation }) => {
       onEventAdded: event => console.log(event)
     })
 
-  const showMeetup = id =>
+  const showMeetup = invite =>
     navigation.navigate('ViewMeetup', {
-      id
+      id: invite.id
     })
 
   return (
@@ -105,7 +104,6 @@ const MeetupsScreen = ({ navigation }) => {
         createMeetup={createMeetup}
         showMeetup={showMeetup}
       />
-      {/*<MeetupsList navigation={props.navigation} />*/}
     </View>
   )
 }
@@ -120,10 +118,14 @@ const InvitesList = ({ invites, createMeetup, showMeetup }) => {
         >
           Invites
         </Text>
-        <ReceivedInvitesList received={invites.received} />
+        <ReceivedInvitesList
+          received={invites.received}
+          showMeetup={showMeetup}
+        />
         <Divider style={{ marginVertical: 12, backgroundColor: 'gray' }} />
         <SentInvitesList
           sent={invites.sent}
+          showMeetup={showMeetup}
           handleCreate={createMeetup}
           cancelInvite={cancelInvite}
         />
@@ -167,7 +169,7 @@ const MeetupListItem = ({
   invite
 }) => {
   return (
-    <TouchableWithoutFeedback onPress={() => onMeetupPress(id)}>
+    <TouchableWithoutFeedback onPress={() => onMeetupPress(invite)}>
       <View>
         <Text key={id}>{title + '\n'}</Text>
 
@@ -184,7 +186,7 @@ const MeetupListItem = ({
   )
 }
 
-const ReceivedInvitesList = ({ received }) => {
+const ReceivedInvitesList = ({ received, showMeetup }) => {
   return (
     <InvitesSection
       invites={received}
@@ -199,14 +201,14 @@ const ReceivedInvitesList = ({ received }) => {
             title={`Invite From: ${sender.name}\n${title}`}
             photo={sender.photo}
             action={{ fn: acceptInvite, msg: 'Accept', color: 'green' }}
-            onMeetupPress={acceptInvite}
+            onMeetupPress={showMeetup}
           />
         )
       }}
     />
   )
 }
-const SentInvitesList = ({ sent, cancelInvite, handleCreate }) => {
+const SentInvitesList = ({ sent, cancelInvite, handleCreate, showMeetup }) => {
   return (
     <InvitesSection
       invites={sent}
@@ -224,7 +226,7 @@ const SentInvitesList = ({ sent, cancelInvite, handleCreate }) => {
             title={`To: ${recipient.name}\n${title}`}
             photo={recipient.photo}
             action={{ msg: 'Cancel', fn: cancelInvite, color: 'red' }}
-            onMeetupPress={() => {}}
+            onMeetupPress={showMeetup}
           />
         )
       }}
@@ -250,7 +252,7 @@ const UpcomingInvitesList = ({ upcoming, handleCreate, showMeetup }) => {
             title={`${title}\n${sender.name} & ${recipient.name}'s Meetup!`}
             photo={sender.photo}
             action={{ msg: 'Cancel', fn: cancelMeetup, color: 'red' }}
-            onMeetupPress={() => showMeetup(id)}
+            onMeetupPress={showMeetup}
           />
         )
       }}

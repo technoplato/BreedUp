@@ -6,8 +6,8 @@ export default async invite => {
       await firestore()
         .collection('meetups')
         .doc(invite.id)
-        .delete()
-      return invite
+        .update({ cancelled: true })
+      return { ...invite, cancelled: true }
     } catch (err) {
       throw err
     }

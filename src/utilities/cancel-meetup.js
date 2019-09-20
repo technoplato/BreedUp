@@ -7,15 +7,15 @@ export default async invite => {
         await firestore()
           .collection('meetups')
           .doc(invite.id)
-          .delete()
-        return invite
+          .update({ cancelled: true })
+        return { ...invite, cancelled: true }
       } catch (err) {
         throw err
       }
     } else {
-      throw Error("Cannot delete a Meetup that you aren't a participant in.")
+      throw Error("Cannot cancel a Meetup that you aren't a participant in.")
     }
   } else {
-    throw Error("Cannot delete a Meetup that hasn't been accepted yet.")
+    throw Error("Cannot cancel a Meetup that hasn't been accepted yet.")
   }
 }
