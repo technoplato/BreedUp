@@ -31,13 +31,10 @@ export default class Login extends React.Component {
       .signInWithEmailAndPassword(email, password)
       .then(userRecord => {
         const user = removeFuncs(userRecord.user)
-        console.log(user)
         firestore()
           .collection('users')
           .doc(user.uid)
-          .update({
-            user
-          })
+          .update(user)
       })
       .then(() => this.props.navigation.navigate('Feed'))
       .catch(error => this.setState({ errorMsg: error.message }))
@@ -80,7 +77,6 @@ export default class Login extends React.Component {
       >
         <Text
           onLongPress={() => {
-            console.log('"long press"')
             auth()
               .signInWithEmailAndPassword('halfjew22@gmail.com', 'aaaaaa')
               .then(userRecord => {

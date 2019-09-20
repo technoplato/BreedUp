@@ -31,8 +31,6 @@ export const unfollowUser = userId => {
 }
 
 export const isFollowing = userId => {
-  console.log(userId)
-  console.log(global.user.uid)
   return false
   // return followingRef
   //   .child(global.user.uid)

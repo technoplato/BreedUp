@@ -1,14 +1,14 @@
 import firestore from '@react-native-firebase/firestore'
 
-export default async ({ recipient, accepted, declined }) => {
+export default async ({ id, recipient, accepted, declined }) => {
   if (!accepted && !declined) {
     if (recipient.uid === global.user.uid) {
       try {
         await firestore()
           .collection('meetups')
-          .doc(invite.id)
+          .doc(id)
           .update({ declined: true })
-        return { ...invite, declined: true }
+        return { declined: true }
       } catch (err) {
         throw err
       }

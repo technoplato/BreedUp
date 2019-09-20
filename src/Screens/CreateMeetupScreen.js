@@ -122,7 +122,6 @@ export default class CreateMeetupScreen extends Component {
     const { title, description, location, recipient, date } = this.state
     const event = { title, description, location, recipient, date }
     const saved = await saveMeetup(event)
-    this.props.navigation.state.params.onEventAdded(saved)
     this.props.navigation.goBack()
   }
 }

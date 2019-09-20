@@ -5,6 +5,7 @@ import { Icon } from 'react-native-elements'
 import CreateMeetupScreen from 'screens/CreateMeetupScreen'
 import MeetupsScreen from 'screens/MeetupsScreen'
 import MeetupDetailsScreen from 'screens/MeetupDetailsScreen'
+import ProfileScreen from 'screens/ProfileScreen'
 import SearchAddressScreen from 'screens/SearchAddressScreen'
 import SearchUserScreen from 'screens/SearchUserScreen'
 import PickDateScreen from 'screens/PickDateScreen'
@@ -29,6 +30,14 @@ export default createStackNavigator(
       navigationOptions: ({ navigation }) => ({
         title: navigation.state.params.title
       })
+    },
+    ViewUser: {
+      screen: ProfileScreen,
+      navigationOptions: ({ navigation }) => {
+        const { username } = navigation.state.params
+        const title = !!username ? `${username}'s Profile` : 'Loading...'
+        return { title }
+      }
     },
     SearchAddress: {
       screen: SearchAddressScreen,

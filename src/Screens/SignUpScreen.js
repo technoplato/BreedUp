@@ -95,12 +95,10 @@ export default class SignUpScreen extends React.Component {
       >
         <Text
           onLongPress={() => {
-            console.log('"long press"')
             auth()
               .signInWithEmailAndPassword('halfjew22@gmail.com', 'aaaaaa')
               .then(userRecord => {
                 const user = removeFuncs(userRecord.user)
-                console.log(user)
                 firestore()
                   .collection('users')
                   .doc(user.uid)

@@ -74,6 +74,8 @@ export default class Profile extends React.Component {
 
     const { username, description, photoURL } = user
 
+    this.props.navigation.setParams({ username })
+
     this.setState({
       photoURL,
       username,

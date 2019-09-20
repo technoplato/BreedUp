@@ -1,22 +1,29 @@
 import React, { useEffect } from 'react'
-import { View, Text } from 'react-native'
-import { Button } from 'react-native-elements'
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  Linking,
+  Platform,
+  TouchableWithoutFeedback
+} from 'react-native'
+import { Button, Avatar } from 'react-native-elements'
 import _ from 'lodash'
 
 import Loading from 'components/LargeLoadingIndicator'
 import useMeetup from 'hooks/useMeetup'
 import formatDate from 'utilities/format-date'
 
-import cancelInvite from 'utilities/cancel-invite'
 import declineInvite from 'utilities/decline-invite'
 import acceptInvite from 'utilities/accept-invite'
-import cancelMeetup from 'utilities/cancel-meetup'
 
 const MeetupDetailsScreen = ({
   /* Fancy destructuring. Do you love it? Hate it? I'm not sure yet... */
   navigation: {
     state: { params },
-    setParams
+    setParams,
+    navigate
   }
 }) => {
   const { meetup, loading, error } = useMeetup(params.id)
@@ -29,35 +36,20 @@ const MeetupDetailsScreen = ({
   if (loading) {
     return <Loading />
   } else {
-    return <MeetupDetails meetup={meetup} />
+    return <MeetupDetails meetup={meetup} navigate={navigate} />
   }
 }
 
 const MeetupButtons = ({ meetup }) => {
-  const {
-    sender,
-    recipient,
-    accepted,
-    declined,
-    participantIds,
-    cancelled
-  } = meetup
+  const { sender, recipient, accepted, declined } = meetup
 
   const me = global.user.uid
   const recipientId = recipient.uid
   const senderId = sender.uid
-  const pending = !accepted && !declined && !cancelled
+  const pending = !accepted && !declined
 
   const showAccept = me === recipientId && pending
   const showDecline = me === recipientId && pending
-  const showCancelMeetup = participantIds.includes(me) && !pending
-  const showCancelInvite = senderId === me && pending
-
-  console.log({ participantIds })
-  console.log({ showCancelInvite })
-  console.log({ showCancelMeetup })
-  console.log({ me })
-  console.log({ pending })
 
   return (
     <View>
@@ -67,26 +59,89 @@ const MeetupButtons = ({ meetup }) => {
       {showDecline && (
         <Button onPress={() => declineInvite(meetup)} title="Decline" />
       )}
-      {showCancelMeetup && (
-        <Button onPress={() => cancelMeetup(meetup)} title="Cancel Meetup" />
-      )}
-      {showCancelInvite && (
-        <Button onPress={() => cancelInvite(meetup)} title="Cancel Invite" />
-      )}
     </View>
   )
 }
 
-const MeetupDetails = ({ meetup }) => (
-  <View style={{ padding: 12 }}>
-    <Text>description: {meetup.description}</Text>
-    <Text>address: {meetup.location.address}</Text>
-    <Text>location name: {meetup.location.name}</Text>
-    <Text>creator: {meetup.sender.name}</Text>
-    <Text>date: {formatDate(meetup.date)}</Text>
-    <Text>photo: {meetup.sender.photo}</Text>
-    <MeetupButtons meetup={meetup} />
+const Details = ({ title, info, onPress }) => {
+  if (!!!info) return null
+  return (
+    <TouchableWithoutFeedback
+      onPress={() => {
+        onPress && onPress()
+      }}
+    >
+      <View>
+        <Text style={styles.label}>{title}</Text>
+        <Text style={styles.info}>{info}</Text>
+      </View>
+    </TouchableWithoutFeedback>
+  )
+}
+
+const openMap = meetup => {
+  const uri = Platform.select({
+    ios: meetup.location.uri.ios,
+    android: meetup.location.uri.android
+  })
+  console.log(uri)
+  Linking.openURL(uri)
+}
+
+const MeetupDetails = ({ meetup, navigate }) => (
+  <View style={{ padding: 24 }}>
+    <ScrollView>
+      {meetup.declined && (
+        <Text style={{ alignSelf: 'center', fontWeight: 'bold', fontSize: 20 }}>
+          (DECLINED)
+        </Text>
+      )}
+      <Avatar
+        size="xlarge"
+        rounded
+        containerStyle={{ marginBottom: 12, alignSelf: 'center' }}
+        source={{
+          uri: meetup.sender.photo
+        }}
+      />
+      <Details title={'Description'} info={meetup.description} />
+      <Details
+        onPress={() => openMap(meetup)}
+        title={'Location Name'}
+        info={meetup.location.name}
+      />
+      <Details
+        onPress={() => openMap(meetup)}
+        title={'Address'}
+        info={meetup.location.address}
+      />
+      <Details title={'Date'} info={formatDate(meetup.date)} />
+      <Text style={styles.label}>Participants</Text>
+      {meetup.participants.map(participant => (
+        <Text
+          onPress={() => {
+            navigate('ViewUser', {
+              userId: participant.uid
+            })
+          }}
+          key={participant.uid}
+          style={styles.info}
+        >
+          {participant.name}
+        </Text>
+      ))}
+      <MeetupButtons meetup={meetup} />
+    </ScrollView>
   </View>
 )
+
+const styles = StyleSheet.create({
+  label: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginVertical: 6
+  },
+  info: { fontSize: 18, marginBottom: 8 }
+})
 
 export default MeetupDetailsScreen

@@ -18,7 +18,7 @@ export default uid => {
     values.forEach(meetup => {
       if (meetup.accepted) {
         invites.upcoming[meetup.id] = meetup
-      } else if (meetup.recipient.uid === uid) {
+      } else if (meetup.recipient.uid === uid && !meetup.declined) {
         invites.received[meetup.id] = meetup
       } else if (meetup.sender.uid === uid) {
         invites.sent[meetup.id] = meetup

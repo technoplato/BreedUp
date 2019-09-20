@@ -262,7 +262,6 @@ class SearchModal extends React.Component {
   }
 
   onPressUser = item => {
-    console.log(item)
     Keyboard.dismiss()
   }
 

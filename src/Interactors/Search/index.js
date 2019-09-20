@@ -148,7 +148,6 @@ export const searchNearbyDogs = async (dognamePrefix, km = 15) => {
             return null
           }
 
-          console.log(dogDoc)
           const dogRecord = dogDoc.data()
           const dog = {
             owner: dogRecord.owner,
