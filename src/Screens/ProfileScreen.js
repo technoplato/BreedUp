@@ -12,7 +12,6 @@ import { Button } from 'react-native-elements'
 import Modal from 'react-native-modal'
 
 import firestore from '@react-native-firebase/firestore'
-import auth from '@react-native-firebase/auth'
 
 import uploadImage from 'utilities/upload-image'
 
@@ -35,18 +34,18 @@ export default class Profile extends React.Component {
     const privateProfile =
       this.props.navigation.state.routeName === 'PrivateProfile'
 
-    const currentUid = auth().currentUser.uid
+    const currentUid = global.user.uid
     const profileId = this.props.navigation.getParam(
       'userId',
       privateProfile ? currentUid : ''
     )
 
-    const myProfile = currentUid === profileId
+    const isMe = currentUid === profileId
 
     this.state = {
       uid: profileId,
-      myProfile: myProfile,
-      profileURL: '',
+      isMe: isMe,
+      photo: '',
       username: '',
       description: '',
       modalVisible: false,
@@ -58,7 +57,7 @@ export default class Profile extends React.Component {
       loading: true,
       photoEditModalVisible: false,
       saveComplete: false,
-      isFollowed: false
+      doIFollow: false
     }
 
     this.userRef = firestore()
@@ -85,7 +84,7 @@ export default class Profile extends React.Component {
       modifiedUsername: username,
       modifiedDescription: description,
 
-      isFollowed: iFollow,
+      doIFollow: iFollow,
       loading: false
     })
   }
@@ -150,7 +149,7 @@ export default class Profile extends React.Component {
 
   async onNewProfileImageChosen(newProfileImageUri) {
     this.setState({
-      profileURL: newProfileImageUri
+      photo: newProfileImageUri
     })
 
     const updatedUrl = await uploadImage(
@@ -162,7 +161,7 @@ export default class Profile extends React.Component {
       photo: updatedUrl
     })
 
-    this.setState({ profileURL: updatedUrl })
+    this.setState({ photo: updatedUrl })
   }
 
   showPhotoModal(doShow) {
@@ -192,7 +191,7 @@ export default class Profile extends React.Component {
   onDogPress = dog => {
     this.props.navigation.navigate('ViewDog', {
       dog: dog,
-      currentUser: this.state.myProfile
+      currentUser: this.state.isMe
     })
   }
 
@@ -295,12 +294,12 @@ export default class Profile extends React.Component {
         <View style={styles.header.avatarContainer}>
           <RoundImage
             onPress={() => {
-              this.state.myProfile && this.showPhotoModal(true)
+              this.state.isMe && this.showPhotoModal(true)
             }}
             size={120}
             source={{
               uri:
-                this.state.profileURL ||
+                this.state.photo ||
                 'https://user-images.githubusercontent.com/6922904/43790322-455b8dda-9a40-11e8-800e-09b299ace3b3.png'
             }}
           />
@@ -317,7 +316,7 @@ export default class Profile extends React.Component {
           </View>
 
           <View style={styles.header.buttonContainer}>
-            {this.state.myProfile
+            {this.state.isMe
               ? this.renderEditProfileButton()
               : this.renderFollowButton()}
           </View>
@@ -332,8 +331,8 @@ export default class Profile extends React.Component {
         <DogList
           navigation={this.props.navigation}
           userId={this.state.uid}
-          currentUser={this.state.myProfile}
-          canAddDog={this.state.myProfile}
+          currentUser={this.state.isMe}
+          canAddDog={this.state.isMe}
           onDogPress={this.onDogPress}
         />
       </View>
@@ -367,15 +366,15 @@ export default class Profile extends React.Component {
           borderWidth: 2,
           borderColor: Colors.dogBoneBlue
         }}
-        title={!this.state.isFollowed ? 'Add to Pack' : 'Unfollow'}
+        title={!this.state.doIFollow ? 'Add to Pack' : 'Unfollow'}
         onPress={() => {
-          if (!this.state.isFollowed) {
+          if (!this.state.doIFollow) {
             followUser(this.state.uid).then(followed => {
-              this.setState({ isFollowed: true })
+              this.setState({ doIFollow: true })
             })
           } else {
             unfollowUser(this.state.uid).then(followed => {
-              this.setState({ isFollowed: false })
+              this.setState({ doIFollow: false })
             })
           }
         }}

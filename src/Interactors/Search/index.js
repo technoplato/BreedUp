@@ -6,7 +6,7 @@ import { database } from '../../config'
 // This seems very random but is used to limit search to prefixes of search content
 const HIGH_UNICODE_VAL = '\uf8ff'
 
-const SEARCH_RESULTS_COUNT = 10
+const SEARCH_RESULTS_COUNT = 20
 
 const getAllNearby = async (ref, radius, center) => {
   const query = new GeoFire(ref).query({
@@ -35,27 +35,28 @@ const getAllNearby = async (ref, radius, center) => {
  * Returns array of results.
  */
 export const searchUsers = async usernamePrefix => {
-  if (!usernamePrefix) return []
+  let usersQuery = firestore().collection('users')
 
-  const usersArray = await firestore()
-    .collection('users')
-    .where('lowercaseUsername', '>=', usernamePrefix)
-    .where('lowercaseUsername', '<=', usernamePrefix + HIGH_UNICODE_VAL)
+  if (usernamePrefix) {
+    usersQuery = usersQuery
+      .where('lowercaseUsername', '>=', usernamePrefix)
+      .where('lowercaseUsername', '<=', usernamePrefix + HIGH_UNICODE_VAL)
+  }
+
+  const usersArray = await usersQuery
     .limit(SEARCH_RESULTS_COUNT)
     .get()
     .then(snapshot => {
-      const results = []
-      snapshot.forEach(doc => {
+      return snapshot.docs.map(doc => {
         const userDoc = doc.data()
-        results.push({
+        return {
           description: userDoc.description,
           uid: userDoc.uid,
           username: userDoc.username,
           photo: userDoc.photo,
           dogs: userDoc.dogs
-        })
+        }
       })
-      return results
     })
 
   return normalizeUsers(usersArray)
@@ -101,27 +102,28 @@ export const searchNearbyUsers = async (usernamePrefix, km = 15) => {
  * Returns array of results.
  */
 export const searchDogs = async dogNamePrefix => {
-  if (!dogNamePrefix) return []
+  let dogQuery = firestore().collection('dogs')
 
-  const dogArray = await firestore()
-    .collection('dogs')
-    .where('lowercaseName', '>=', dogNamePrefix)
-    .where('lowercaseName', '<=', dogNamePrefix + HIGH_UNICODE_VAL)
+  if (dogNamePrefix) {
+    dogQuery = dogQuery
+      .where('lowercaseName', '>=', dogNamePrefix)
+      .where('lowercaseName', '<=', dogNamePrefix + HIGH_UNICODE_VAL)
+  }
+
+  const dogArray = await dogQuery
     .limit(SEARCH_RESULTS_COUNT)
     .get()
     .then(snapshot => {
-      const results = []
-      snapshot.forEach(doc => {
+      return snapshot.docs.map(doc => {
         const dogDoc = doc.data()
-        results.push({
+        return {
           owner: dogDoc.owner,
           dog: {
             ...dogDoc,
             owner: null
           }
-        })
+        }
       })
-      return results
     })
 
   return normalizeDogs(dogArray)
@@ -191,7 +193,6 @@ const normalizeDogs = dogs => {
   return dogs
     .filter(d => !!d)
     .map(dog => {
-      console.log(dog)
       return {
         type: 'dog',
         owner: dog.owner,

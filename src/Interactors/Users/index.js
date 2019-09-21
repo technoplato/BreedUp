@@ -24,7 +24,8 @@ export const amIFollowing = userId => {
   return users
     .doc(userId)
     .get()
-    .then(doc => doc.data().followers.includes(global.user.uid))
+    .then(doc => doc.data().followers || [])
+    .then(followers => followers.includes(global.user.uid))
 }
 
 /**

@@ -18,7 +18,9 @@ export default ({ item, onResultPress }) => {
         <View style={{ flexDirection: 'row', marginBottom: 12 }}>
           <RoundImageView size={64} source={{ uri: item.owner.photo }} />
           <View style={{ marginLeft: 12, flexDirection: 'column' }}>
-            <Text>{item.owner.username}</Text>
+            <Text style={{ fontWeight: 'bold', fontSize: 22 }}>
+              {item.owner.username}
+            </Text>
             <Text>{item.owner.description}</Text>
           </View>
         </View>
