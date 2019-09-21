@@ -1,13 +1,7 @@
 import firestore from '@react-native-firebase/firestore'
 import uploadImage from 'utilities/upload-image'
 
-import { getFollowersForUser } from '../Users'
-import {
-  rootRef,
-  postsRef,
-  postImageUploadPath,
-  currentUser
-} from '../../Utils/FirebaseUtils'
+import { postsRef, postImageUploadPath } from '../../Utils/FirebaseUtils'
 
 /**
  * Utility method for creating a post. Also uploads image for post
@@ -15,11 +9,12 @@ import {
 const createPost = async (imageUri, text, dogs) => {
   const { uid, displayName, photoURL } = global.user
 
-  const postImgUrl = await uploadImageForPost(imageUri, uid)
   // Create a reference to where the post is going in order to get a key
   const postDoc = firestore()
     .collection('posts')
     .doc()
+
+  const postImgUrl = await uploadImageForPost(imageUri, uid, postDoc.id)
 
   const post = {
     author: {
@@ -41,8 +36,8 @@ const createPost = async (imageUri, text, dogs) => {
 /**
  * Uploads an image for a post and returns the URL
  */
-const uploadImageForPost = async (postImgUri, authorId) => {
-  return await uploadImage(postImgUri, authorId, postImageUploadPath)
+const uploadImageForPost = async (postImgUri, authorId, postId) => {
+  return await uploadImage(postImgUri, `${authorId}/posts/${postId}`)
 }
 
 /**

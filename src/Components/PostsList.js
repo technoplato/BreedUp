@@ -5,7 +5,7 @@ import firestore from '@react-native-firebase/firestore'
 import PostItem from './PostItem'
 import EmptyPosts from './EmptyPosts'
 import ShowNewPostsButton from './ShowNewPostsButton'
-import isEmpty from 'utilities/is-empty'
+import LargeLoadingIndicator from './LargeLoadingIndicator'
 
 export default class PostsList extends React.PureComponent {
   PAGE_SIZE = 10
@@ -16,7 +16,7 @@ export default class PostsList extends React.PureComponent {
     const { userId } = props
 
     // Staged posts are posts that have been added remotely but not shown yet.
-    this.state = { posts: {}, staged: {} }
+    this.state = { posts: {}, staged: {}, loading: true }
     this.list = React.createRef()
 
     this.postsRef = firestore().collection('posts')
@@ -53,7 +53,9 @@ export default class PostsList extends React.PureComponent {
       .limit(this.PAGE_SIZE)
 
     await new Promise(res =>
-      this.setState({ posts, noOlderPostsAvailable }, () => res())
+      this.setState({ posts, noOlderPostsAvailable, loading: false }, () =>
+        res()
+      )
     )
 
     this.changesUnsubscribe = firestore()
@@ -183,15 +185,17 @@ export default class PostsList extends React.PureComponent {
   )
 
   render() {
-    const { staged, posts } = this.state
+    const { staged, posts, loading } = this.state
 
     return (
       <View style={{ flex: 1 }}>
         <ShowNewPostsButton staged={staged} onPress={this.showNewPosts} />
+        {loading && <LargeLoadingIndicator />}
         <EmptyPosts
           userId={this.props.userId}
           posts={posts}
           navigation={this.props.navigation}
+          loading={loading}
         />
         <FlatList
           viewabilityConfig={{
