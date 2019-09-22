@@ -1,97 +1,143 @@
-import React from 'react'
-import { SafeAreaView, View, FlatList, StyleSheet, Text } from 'react-native'
-import firestore from '@react-native-firebase/firestore'
-import firebase from '@react-native-firebase/app'
+import React, { useState, useEffect } from 'react'
+import {
+  SafeAreaView,
+  View,
+  FlatList,
+  StyleSheet,
+  Text,
+  Dimensions
+} from 'react-native'
 
-const DATA = [
-  {
-    id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
-    title: 'First Item'
-  },
-  {
-    id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
-    title: 'Second Item'
-  },
-  {
-    id: '58694a0f-3da1-471f-bd96-145571e29d72',
-    title: 'Third Item'
-  },
-  {
-    id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28baa',
-    title: 'Fourth Item'
-  },
-  {
-    id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63b',
-    title: 'Fifth Item'
-  },
-  {
-    id: '58694a0f-3da1-471f-bd96-145571e29d72c',
-    title: '6 Item'
-  },
-  {
-    id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28bad',
-    title: '7 Item'
-  },
-  {
-    id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63e',
-    title: '8 Item'
-  },
-  {
-    id: '58694a0f-3da1-471f-bd96-145571e29d72f',
-    title: '9 Item'
-  },
-  {
-    id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28bag',
-    title: '10 Item'
-  },
-  {
-    id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63h',
-    title: '11 Item'
-  },
-  {
-    id: '58694a0f-3da1-471f-bd96-145571e29d72i',
-    title: '12 Item'
-  }
-]
+const useInfiniteScroll = load => {
+  const [isFetching, setIsFetching] = useState(true)
+  const [data, setData] = useState([])
 
-export default class Testing extends React.Component {
-  render() {
-    return (
-      <SafeAreaView style={styles.container}>
-        <FlatList
-          onEndReached={this.onEndReached}
-          data={DATA}
-          renderItem={({ item }) => <Item title={item.title} />}
-          keyExtractor={item => item.id}
-        />
-      </SafeAreaView>
-    )
-  }
+  useEffect(() => {
+    let didCancel = false
+    if (!isFetching) return
 
-  onEndReached = info
+    const loadAsync = async () => {
+      const lastIndex = data.length
+      const lastItem = data.length ? data[lastIndex] : null
+
+      const newData = await load({ lastIndex, lastItem })
+      if (!didCancel) {
+        setData(prevState => [...prevState, ...newData])
+        setIsFetching(false)
+      }
+    }
+
+    loadAsync()
+
+    return () => {
+      didCancel = true
+    }
+  }, [isFetching])
+
+  return [data, isFetching, setIsFetching]
 }
 
-function Item({ title }) {
-  return (
-    <View style={styles.item}>
-      <Text style={styles.title}>{title}</Text>
-    </View>
+const INITIAL_LOAD = 30
+const PAGE_SIZE = 20
+
+export default () => {
+  /**
+   * Right now, I'm mandating that whatever this method is accepts as a
+   * parameter an object containing the objects `lastIndex` and `lastObject`
+   * respectively. I believe this should suffice for effective paging.
+   *
+   * @param lastIndex
+   * @returns {Promise<R>}
+   */
+  const fetchMoreListItems = ({ lastIndex }) => {
+    // Simulate fetch of next 20 items (30 if initial load)
+    return new Promise(resolve => {
+      setTimeout(() => {
+        resolve([
+          ...Array.from(
+            Array(lastIndex === 0 ? INITIAL_LOAD : PAGE_SIZE).keys(),
+            n => {
+              n = n + lastIndex
+              return {
+                number: n.toString(),
+                id: n.toString()
+              }
+            }
+          )
+        ])
+      }, 2000)
+    })
+  }
+
+  const [data, isFetching, setIsFetching] = useInfiniteScroll(
+    fetchMoreListItems
   )
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <View style={styles.blueBox}>
+        <Text style={styles.bigWhiteBoldText}>
+          {`${data.length} Items Loaded`}
+        </Text>
+      </View>
+      <FlatList
+        onEndReachedThreshold={7}
+        onEndReached={() => {
+          if (!isFetching) {
+            setIsFetching(true)
+          }
+        }}
+        data={data}
+        keyExtractor={item => item.id}
+        renderItem={({ item }) => {
+          return <Item item={item} />
+        }}
+      />
+      {isFetching && (
+        <View style={styles.blueBox}>
+          <Text style={styles.bigWhiteBoldText}>(Fetching More)</Text>
+        </View>
+      )}
+    </SafeAreaView>
+  )
+}
+
+class Item extends React.PureComponent {
+  render() {
+    return (
+      <View style={styles.item}>
+        <Text style={styles.title}>{this.props.item.number}</Text>
+      </View>
+    )
+  }
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: 24
+    marginTop: 24,
+    backgroundColor: 'yellow'
   },
   item: {
     backgroundColor: '#f9c2ff',
-    height: 200,
-    padding: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: Dimensions.get('window').height * 0.45,
     marginVertical: 8,
     marginHorizontal: 16
   },
   title: {
-    fontSize: 32
+    fontSize: 48
+  },
+  blueBox: {
+    height: 50,
+    backgroundColor: 'blue',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  bigWhiteBoldText: {
+    color: 'white',
+    fontSize: 32,
+    fontWeight: 'bold'
   }
 })
