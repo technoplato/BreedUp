@@ -136,6 +136,8 @@ export const searchNearbyDogs = async (dognamePrefix, km = 15) => {
     await getCurrentLocation()
   )
 
+  console.log({ nearbyDogLocations })
+
   const nearbyDogPromises = []
   nearbyDogLocations.forEach(dogLocation => {
     nearbyDogPromises.push(

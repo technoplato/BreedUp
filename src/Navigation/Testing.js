@@ -17,7 +17,7 @@ const useInfiniteScroll = load => {
     if (!isFetching) return
 
     const loadAsync = async () => {
-      const lastIndex = data.length
+      const lastIndex = data.length - 1
       const lastItem = data.length ? data[lastIndex] : null
 
       const newData = await load({ lastIndex, lastItem })
@@ -47,7 +47,6 @@ export default () => {
    * respectively. I believe this should suffice for effective paging.
    *
    * @param lastIndex
-   * @returns {Promise<R>}
    */
   const fetchMoreListItems = ({ lastIndex }) => {
     // Simulate fetch of next 20 items (30 if initial load)
@@ -55,7 +54,7 @@ export default () => {
       setTimeout(() => {
         resolve([
           ...Array.from(
-            Array(lastIndex === 0 ? INITIAL_LOAD : PAGE_SIZE).keys(),
+            Array(lastIndex === -1 ? INITIAL_LOAD : PAGE_SIZE).keys(),
             n => {
               n = n + lastIndex
               return {
