@@ -7,8 +7,8 @@ import Testing from './Testing'
 
 const RootNav = createSwitchNavigator({
   Onboarding: Onboarding,
-  Testing: Testing,
-  Main: Main
+  Main: Main,
+  Testing: Testing
 })
 
 export default createAppContainer(RootNav)

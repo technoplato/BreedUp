@@ -2,14 +2,14 @@ import firestore from '@react-native-firebase/firestore'
 import _ from 'lodash'
 import faker from 'faker'
 
-export default count => {
+export default (count, uid) => {
   _.times(count, () => {
     firestore()
       .collection('test-posts')
       .add({
         author: {
           photo: faker.image.avatar(),
-          uid: faker.random.number().toString(),
+          uid: uid ? uid : faker.random.number().toString(),
           username: faker.name.lastName()
         },
         commentCount: 0,
@@ -19,7 +19,7 @@ export default count => {
         likeCount: 0,
         likes: [],
         postPhoto: faker.image.cats(),
-        text: faker.lorem.sentence(),
+        text: uid ? `Created by ${uid}` : faker.lorem.sentence(),
         viewCount: 0
       })
   })

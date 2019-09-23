@@ -8,7 +8,7 @@ export default () => {
   const { authUser, initialising, user, loading } = useGlobalUser()
 
   if (user) {
-    NavigatorService.navigate('Feed')
+    NavigatorService.navigate('Testing')
   } else if (!authUser && !initialising && !loading) {
     NavigatorService.navigate('SignUp')
   }

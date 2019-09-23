@@ -7,38 +7,120 @@ import {
   Text,
   Dimensions
 } from 'react-native'
-import moment from 'moment'
 
 import firestore from '@react-native-firebase/firestore'
-import { useCollectionDataOnce } from 'react-firebase-hooks/firestore'
+import moment from 'moment'
+import _ from 'lodash'
+
+import ShowNewPostsButton from 'components/ShowNewPostsButton'
 import generatePosts from 'utilities/generate-posts'
+import useScrollToTop from 'hooks/use-scroll-to-top'
+import prunePost from 'utilities/prune-post'
 
 const INITIAL_LOAD = 20
 const PAGE_SIZE = 15
 
 const useInfiniteScroll = uid => {
+  const [listRef, setDoScroll] = useScrollToTop()
+
   const [isFetching, setIsFetching] = useState(true)
-  const [posts, setPosts] = useState([])
+  const [posts, setPosts] = useState({})
+  const [staged, setStagedPosts] = useState({})
+  const [showStaged, doShowStaged] = useState(false)
+  const [oldest, setOldest] = useState(new Date().getTime())
   const [allOlderPostsFetched, setAllOlderPostsFetched] = useState(false)
 
-  const lastIndex = posts.length - 1
-  const lastItem = posts.length ? posts[lastIndex] : null
-  const oldestPostTime = lastItem ? lastItem.created : new Date().getTime()
-  const pageSize = lastIndex === -1 ? INITIAL_LOAD : PAGE_SIZE
+  const pageSize = Object.keys(posts).length === 0 ? INITIAL_LOAD : PAGE_SIZE
 
+  // This effect is triggered when the oldest post in the list changes
+  // It is responsible for staging new posts, modifying existing posts,
+  // and deleting posts that are deleted.
   useEffect(() => {
-    const handleChanges = snapshot => {}
+    if (Object.keys(posts).length === 0) return
+
+    const handleChanges = snapshot => {
+      const changes = {}
+
+      let doScroll = false
+      snapshot.docChanges().forEach(({ type, doc }) => {
+        const post = doc.data()
+        _.setWith(changes, `[${type}][${post.id}]`, post, Object)
+      })
+
+      setPosts(previousPosts => {
+        const copy = { ...previousPosts }
+
+        Object.entries(changes)
+          .map(([type, list]) => {
+            return { type, list: Object.values(list) }
+          })
+          .filter(({ list }) => {
+            return !_.isEmpty(list)
+          })
+          .forEach(({ type, list }) => {
+            switch (type) {
+              case 'added':
+                list.forEach(post => {
+                  if (!copy[post.id]) {
+                    if (post.author.uid === global.user.uid) {
+                      doScroll = true
+                      copy[post.id] = prunePost(post)
+                    } else {
+                      stagePost(post)
+                    }
+                  }
+                })
+                break
+
+              case 'modified':
+                list.forEach(post => {
+                  copy[post.id] = prunePost(post)
+                })
+                break
+
+              case 'removed':
+                list.forEach(post => {
+                  delete copy[post.id]
+                })
+                break
+
+              default:
+                throw `Unexpected type ${type}`
+            }
+          })
+
+        return copy
+      })
+
+      setDoScroll(doScroll)
+    }
+
+    const stagePost = post => {
+      const stagedCopy = { ...staged }
+      stagedCopy[post.id] = post
+      setStagedPosts(oldStaged => {
+        const copy = { ...oldStaged }
+        copy[post.id] = post
+        return copy
+      })
+    }
 
     const query = firestore()
-      .collection('posts')
+      .collection('test-posts')
       .orderBy('created', 'desc')
-      .startAt(oldestPostTime)
-      .limit(pageSize)
+      .endAt(oldest)
     uid && query.where('author.uid', '==', uid)
 
     const unsubscribe = query.onSnapshot(handleChanges)
-  }, [oldestPostTime])
 
+    return () => {
+      console.log('Unsubscribing')
+      unsubscribe()
+    }
+  }, [oldest])
+
+  // Fetch new posts (created more distantly in the past)
+  // Triggers when the end of the list is reached
   useEffect(() => {
     if (!isFetching || allOlderPostsFetched) return
     const loadAsync = async () => {
@@ -47,7 +129,7 @@ const useInfiniteScroll = uid => {
       let query = firestore()
         .collection('test-posts')
         .orderBy('created', 'desc')
-        .startAfter(oldestPostTime)
+        .startAfter(oldest)
         .limit(pageSize)
       uid && query.where('author.uid', '==', uid)
 
@@ -55,25 +137,58 @@ const useInfiniteScroll = uid => {
         .get()
         .then(snap => snap.docs.map(doc => doc.data()))
 
-      if (olderPosts.length < pageSize) {
+      const length = olderPosts.length
+
+      if (length < pageSize) {
         setAllOlderPostsFetched(true)
       }
 
-      setPosts(recentPosts => [...recentPosts, ...olderPosts])
+      const updatedPosts = { ...posts }
+      olderPosts.forEach(post => (updatedPosts[post.id] = post))
+      setPosts(updatedPosts)
+
+      const oldestCreated = length ? olderPosts[length - 1].created : 0
+      setOldest(oldestCreated)
 
       setIsFetching(false)
     }
     loadAsync()
   }, [isFetching])
 
-  return [posts, isFetching, setIsFetching, allOlderPostsFetched]
+  // Show staged posts
+  useEffect(() => {
+    if (!showStaged) return
+
+    setPosts(oldPosts => {
+      const copy = { ...oldPosts }
+      Object.values(staged).forEach(post => (copy[post.id] = post))
+      return copy
+    })
+
+    setStagedPosts({})
+    doShowStaged(false)
+  }, [showStaged])
+
+  return [
+    Object.values(posts).sort((p1, p2) => (p1.created <= p2.created ? 1 : -1)),
+    isFetching,
+    setIsFetching,
+    allOlderPostsFetched,
+    listRef,
+    staged,
+    doShowStaged
+  ]
 }
+
 export default () => {
   const [
     posts,
     isFetching,
     setIsFetching,
-    allOlderPostsFetched
+    allOlderPostsFetched,
+    listRef,
+    staged,
+    doShowStaged
   ] = useInfiniteScroll()
 
   // generatePosts(3)
@@ -81,10 +196,22 @@ export default () => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.blueBox}>
-        <Text style={styles.bigWhiteBoldText}>
+        <Text
+          onLongPress={() => {
+            // fake add one of their posts
+            generatePosts(1, 'Boppb')
+          }}
+          onPress={() => {
+            // fake add one of my posts
+            generatePosts(1, global.user.uid)
+          }}
+          style={styles.bigWhiteBoldText}
+        >
           {`${posts.length} Items Loaded`}
         </Text>
       </View>
+      <ShowNewPostsButton staged={staged} onPress={() => doShowStaged(true)} />
+
       <FlatList
         onEndReachedThreshold={4}
         onEndReached={() => {
@@ -92,6 +219,7 @@ export default () => {
             setIsFetching(true)
           }
         }}
+        ref={listRef}
         data={posts}
         keyExtractor={item => {
           return item.id
@@ -100,12 +228,9 @@ export default () => {
           return <Item item={item} />
         }}
       />
-
       {allOlderPostsFetched && (
         <View style={styles.blueBox}>
-          <Text style={styles.bigWhiteBoldText}>
-            (No Older Posts Available)
-          </Text>
+          <Text style={styles.bigWhiteBoldText}>(No Older Posts)</Text>
         </View>
       )}
       {isFetching && (
@@ -122,6 +247,7 @@ class Item extends React.PureComponent {
     return (
       <View style={styles.item}>
         <Text style={styles.title}>{this.props.item.text}</Text>
+        <Text style={styles.title}>{'ID: ' + this.props.item.id}</Text>
         <Text style={styles.title}>
           {moment(this.props.item.created).fromNow()}
         </Text>
@@ -148,7 +274,7 @@ const styles = StyleSheet.create({
     fontSize: 24
   },
   blueBox: {
-    height: 50,
+    paddingVertical: 24,
     backgroundColor: 'blue',
     justifyContent: 'center',
     alignItems: 'center'
