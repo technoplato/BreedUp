@@ -18,7 +18,6 @@ export default updater => {
     setError(null)
     setOld({ ...obj })
     const toUpdate = { ..._.set(obj, field, newVal) }
-    console.log('L18 toUpdate ===', toUpdate)
     setObject(toUpdate)
     setGo(true)
   }
