@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useMemo, useCallback } from 'react'
 import {
   SafeAreaView,
   View,
@@ -20,9 +20,18 @@ import prunePost from 'utilities/prune-post'
 const INITIAL_LOAD = 20
 const PAGE_SIZE = 15
 
+const testListRef = listRef => {
+  const props = _.get(listRef.current, 'props', {})
+  console.log('L25 listRef.props ===', props)
+
+  if (listRef.current) {
+    listRef.current.props.data = props.data.slice(0, 2)
+  }
+  console.log('L28 props ===', props)
+}
+
 const useInfiniteScroll = uid => {
   const [listRef, setDoScroll] = useScrollToTop()
-
   const [isFetching, setIsFetching] = useState(true)
   const [posts, setPosts] = useState({})
   const [staged, setStagedPosts] = useState({})
@@ -242,18 +251,57 @@ export default () => {
   )
 }
 
-class Item extends React.PureComponent {
-  render() {
+import useUpdatingTimestamp from 'hooks/use-updating-timestamp'
+
+const Item = ({ item }) => {
+  const { text, created } = item
+
+  const formattedTime = useUpdatingTimestamp(created)
+
+  // You can use any of the following here, it's completely a preference
+  //     1) "useMemo" with implicit view return
+  //     useMemo (() => (        <view stuff>), [dependencies])
+  //
+  //     2) "useMemo" with explicit view return <~~ I happen to prefer this one
+  //        I like it because, as you see below, you can log stuff!
+  //     useMemo (() => { return (view stuff)}, [dependencies])
+  //
+  //     2) "useCallback" with implicit view return
+  //     useCallback(            <view stuff>,  [dependencies])
+
+  // return useMemo(
+  //   () => (
+  //     <View style={styles.item}>
+  //       <Text style={styles.title}>{item.text}</Text>
+  //       <Text style={styles.subtitle}>{'By: ' + item.author.username}</Text>
+  //       <Text style={styles.title}>{'ID: ' + item.id}</Text>
+  //       <Text style={styles.title}>{formattedTime}</Text>
+  //     </View>
+  //   ),
+  //   [text, formattedTime]
+  // )
+
+  // return useCallback(
+  //   <View style={styles.item}>
+  //     <Text style={styles.title}>{item.text}</Text>
+  //     <Text style={styles.subtitle}>{'By: ' + item.author.username}</Text>
+  //     <Text style={styles.title}>{'ID: ' + item.id}</Text>
+  //     <Text style={styles.title}>{formattedTime}</Text>
+  //   </View>,
+  //   [text, formattedTime]
+  // )
+
+  return useMemo(() => {
+    console.log('L295 "Rendering item: " + text ===', 'Rendering item: ' + text)
     return (
       <View style={styles.item}>
-        <Text style={styles.title}>{this.props.item.text}</Text>
-        <Text style={styles.title}>{'ID: ' + this.props.item.id}</Text>
-        <Text style={styles.title}>
-          {moment(this.props.item.created).fromNow()}
-        </Text>
+        <Text style={styles.title}>{item.text}</Text>
+        <Text style={styles.subtitle}>{'By: ' + item.author.username}</Text>
+        <Text style={styles.subtitle}>{'ID: ' + item.id}</Text>
+        <Text style={styles.subtitle}>{formattedTime}</Text>
       </View>
     )
-  }
+  }, [text, formattedTime])
 }
 
 const styles = StyleSheet.create({
@@ -273,6 +321,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24
   },
+  subtitle: { fontSize: 14 },
   blueBox: {
     paddingVertical: 24,
     backgroundColor: 'blue',
