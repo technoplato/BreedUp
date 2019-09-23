@@ -1,34 +1,45 @@
 import { useState, useEffect } from 'react'
 import _ from 'lodash'
 
-export default (item, field, updater) => {
-  console.log('L5 item ===', item)
-  const [object, setObject] = useState({ ...item })
-  const [old, setOld] = useState({ ...object })
+export default updater => {
+  const [object, setObject] = useState(null)
+  const [old, setOld] = useState(null)
+  const [go, setGo] = useState(null)
+  const [field, setField] = useState(null)
   const [error, setError] = useState(null)
+
   const value = _.get(object, field, null)
 
-  function toggle(field, newVal) {
+  function toggle(obj, field, newVal) {
+    if (!newVal) {
+      newVal = !_.get(obj, field, false)
+    }
+    setField(field)
     setError(null)
-    setOld({ ...object })
-    const toUpdate = { ..._.set(object, field, newVal) }
+    setOld({ ...obj })
+    const toUpdate = { ..._.set(obj, field, newVal) }
+    console.log('L18 toUpdate ===', toUpdate)
     setObject(toUpdate)
+    setGo(true)
   }
 
   useEffect(() => {
-    if (value === null || object === null || error) return
+    if (!go) return
 
     const doAsyncUpdate = async () => {
       try {
         await updater(old, object)
+        setOld({ ...object })
       } catch (error) {
         setError(error)
         setObject({ ...old })
+      } finally {
+        setGo(false)
       }
     }
 
     doAsyncUpdate()
-  }, [value])
+  }, [go])
 
   return [toggle, value, error]
 }

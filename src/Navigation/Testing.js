@@ -27,7 +27,6 @@ const testListRef = listRef => {
   if (listRef.current) {
     listRef.current.props.data = props.data.slice(0, 2)
   }
-  console.log('L28 props ===', props)
 }
 
 const useInfiniteScroll = uid => {
@@ -48,7 +47,6 @@ const useInfiniteScroll = uid => {
     if (Object.keys(posts).length === 0) return
 
     const handleChanges = snapshot => {
-      console.log('L51 handleChanges ===')
       const changes = {}
 
       let doScroll = false
@@ -84,7 +82,6 @@ const useInfiniteScroll = uid => {
 
               case 'modified':
                 list.forEach(post => {
-                  console.log('L87 prunePost(post) ===', prunePost(post))
                   copy[post.id] = prunePost(post)
                 })
                 break
@@ -258,6 +255,7 @@ import useOptimisticToggle from 'hooks/use-optimistic-toggle'
 
 const toggleLike = (oldPost, updatedPost) => {
   const { liked, disliked } = updatedPost
+
   const update = {}
   update.likes = liked
     ? firestore.FieldValue.arrayUnion(global.user.uid)
@@ -266,8 +264,6 @@ const toggleLike = (oldPost, updatedPost) => {
   if (disliked) {
     update.dislikes = firestore.FieldValue.arrayRemove(global.user.uid)
   }
-
-  console.log('L270 update ===', update)
 
   return firestore()
     .collection('test-posts')
@@ -286,8 +282,6 @@ const toggleDislike = (oldPost, updatedPost) => {
     update.likes = firestore.FieldValue.arrayRemove(global.user.uid)
   }
 
-  console.log('L287 update ===', update)
-
   return firestore()
     .collection('test-posts')
     .doc(oldPost.id)
@@ -296,22 +290,15 @@ const toggleDislike = (oldPost, updatedPost) => {
 
 const Item = props => {
   const item = props.item
-  const { text, created } = item
+  const { text, created, liked: l, disliked: dl } = item
 
-  const [optimisticLikeToggle, liked, e1] = useOptimisticToggle(
-    item,
-    'liked',
-    toggleLike
-  )
+  const [optimisticLikeToggle, liked, e1] = useOptimisticToggle(toggleLike)
   const [optimisticDislikeToggle, disliked, e2] = useOptimisticToggle(
-    item,
-    'disliked',
     toggleDislike
   )
   const formattedTime = useUpdatingTimestamp(created)
 
   return useMemo(() => {
-    console.log('L293 item ===', item)
     return (
       <View style={styles.item}>
         {e1 || (e2 && <Text style={styles.title}>{'Error: ' + e1 || e2}</Text>)}
@@ -319,24 +306,24 @@ const Item = props => {
         <Text style={styles.subtitle}>{'By: ' + item.author.username}</Text>
         <Text
           onPress={() => {
-            optimisticLikeToggle('liked', !liked)
+            optimisticDislikeToggle(item, 'disliked')
           }}
-          style={styles.subtitle}
+          style={styles.favored}
         >
-          {'Liked: ' + liked}
+          {'Disliked: ' + item.disliked}
         </Text>
         <Text
           onPress={() => {
-            optimisticDislikeToggle('disliked', !disliked)
+            optimisticLikeToggle(item, 'liked')
           }}
-          style={styles.subtitle}
+          style={styles.favored}
         >
-          {'Disliked: ' + disliked}
+          {'Liked: ' + item.liked}
         </Text>
         <Text style={styles.subtitle}>{formattedTime}</Text>
       </View>
     )
-  }, [text, liked, disliked, formattedTime, e1, e2])
+  }, [text, liked, disliked, formattedTime, e1, e2, l, dl])
 }
 
 // You can use any of the following here, it's completely a preference
@@ -388,6 +375,12 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 24
+  },
+  favored: {
+    fontSize: 28,
+    padding: 4,
+    borderWidth: 2,
+    borderColor: 'orange'
   },
   subtitle: { fontSize: 14 },
   blueBox: {
