@@ -14,8 +14,7 @@ export default createdAt => {
     formattedTime = `${delta}s ago`
   } else if (minuteOrMore && !hourOrMore) {
     const minutes = Math.floor(delta / 60)
-    const seconds = delta % 60
-    formattedTime = `${minutes}m ${seconds}s ago`
+    formattedTime = `${minutes}m ago`
   } else {
     formattedTime = moment(createdAt).fromNow()
   }
