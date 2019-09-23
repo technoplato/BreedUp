@@ -9,6 +9,9 @@ import AddDogScreen from 'screens/AddDogScreen'
 import DogDetailsScreen from 'screens/DogDetailsScreen'
 import ChatHomeScreen from 'screens/ChatHomeScreen/ChatHomeScreen'
 import ChatScreen from 'screens/ChatScreen/ChatScreen'
+import CommentsScreen from 'screens/CommentsScreen'
+
+import NavigatorService from '../services/navigator'
 
 export default createStackNavigator({
   PrivateProfile: {
@@ -24,12 +27,30 @@ export default createStackNavigator({
             onPress={() => navigation.navigate('ProfileChatHome')}
           />
           <Icon
-            onPress={() => auth().signOut()}
+            onPress={() =>
+              auth()
+                .signOut()
+                .then(() => NavigatorService.navigate('Login'))
+            }
             containerStyle={{ marginRight: 12 }}
             name="input"
             color="#000"
           />
         </View>
+      )
+    })
+  },
+  Comments: {
+    screen: CommentsScreen,
+    navigationOptions: ({ navigation }) => ({
+      title: `${navigation.state.params.post.author.username}'s Post`,
+      headerLeft: (
+        <Icon
+          containerStyle={{ marginLeft: 12 }}
+          name="arrow-back"
+          color="#000"
+          onPress={() => navigation.goBack()}
+        />
       )
     })
   },

@@ -7,7 +7,8 @@ import { postsRef, postImageUploadPath } from '../../Utils/FirebaseUtils'
  * Utility method for creating a post. Also uploads image for post
  */
 const createPost = async (imageUri, text, dogs) => {
-  const { uid, displayName, photoURL } = global.user
+  const { uid, username, photo } = global.user
+  console.log({ username })
 
   // Create a reference to where the post is going in order to get a key
   const postDoc = firestore()
@@ -18,8 +19,8 @@ const createPost = async (imageUri, text, dogs) => {
 
   const post = {
     author: {
-      username: displayName,
-      photo: photoURL,
+      username: username,
+      photo: photo,
       uid: uid
     },
     dogs: dogs,

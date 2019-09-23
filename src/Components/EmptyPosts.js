@@ -3,8 +3,7 @@ import { TouchableWithoutFeedback, Text, View } from 'react-native'
 import isEmpty from 'utilities/is-empty'
 
 export default ({ navigation, posts, userId, loading }) => {
-  const show =
-    (!loading && (isEmpty(posts) && !!!userId)) || userId === global.user.uid
+  const show = !loading && isEmpty(posts) && userId === global.user.uid
   if (show) {
     return (
       <TouchableWithoutFeedback

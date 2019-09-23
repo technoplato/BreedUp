@@ -257,7 +257,7 @@ class ChatScreen extends React.Component {
       lastMessageDate: new Date()
     }
 
-    const { uid, displayName, photoURL } = global.user
+    const { uid, username, photo } = global.user
     const that = this
 
     firebase
@@ -293,7 +293,7 @@ class ChatScreen extends React.Component {
             created,
             recipientID: friend.uid,
             recipientPhoto: friend.photo,
-            senderUsername: displayName,
+            senderUsername: username,
             senderID: uid,
             senderPhoto: photo
           }
@@ -348,7 +348,7 @@ class ChatScreen extends React.Component {
     if (!this.state.channel.id) {
       this.createOne2OneChannel()
     } else {
-      const { uid, displayName, photoURL } = global.user
+      const { uid, username, photo } = global.user
 
       const created = Date.now()
       this.state.channel.participants.forEach(friend => {
@@ -358,9 +358,9 @@ class ChatScreen extends React.Component {
           recipientFirstName: friend.username,
           recipientID: friend.uid,
           recipientPhoto: friend.photo,
-          senderUsername: displayName,
+          senderUsername: username,
           senderID: uid,
-          senderPhoto: photoURL
+          senderPhoto: photo
           // url: this.state.downloadUrl
         }
 

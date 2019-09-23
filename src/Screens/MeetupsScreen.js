@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import {
   ScrollView,
   View,
@@ -7,12 +7,13 @@ import {
 } from 'react-native'
 import { Text, Divider, Button, Avatar } from 'react-native-elements'
 import firestore from '@react-native-firebase/firestore'
-import isEmpty from 'utilities/is-empty'
+
+import useMeetups from 'hooks/useMeetups'
 
 import acceptInvite from 'utilities/accept-invite'
+import isEmpty from 'utilities/is-empty'
 
 import LargeLoadingIndicator from 'components/LargeLoadingIndicator'
-import useMeetups from 'hooks/useMeetups'
 
 const MeetupsScreen = ({ navigation }) => {
   const { invites, loading } = useMeetups(global.user.uid)
@@ -28,67 +29,6 @@ const MeetupsScreen = ({ navigation }) => {
     <View style={{ flex: 1 }}>
       {loading && <LargeLoadingIndicator />}
       <Button
-        onLongPress={() => {
-          const ISENTIT = {
-            accepted: false,
-            created: Date.now(),
-            description: 'A',
-            id: Date.now().toString(),
-            location: {
-              address: '1000 Kevstin Dr, Kissimmee, FL 34744, USA',
-              coords: {
-                name:
-                  'Affinity Dental Group, Kevstin Drive, Kissimmee, FL, USA',
-                lat: 28.3006442,
-                lng: -81.3951572
-              },
-              uri: {
-                android:
-                  'geo:28.3006442,-81.3951572?q=Affinity Dental Group, Kevstin Drive, Kissimmee, FL, USA',
-                ios:
-                  'maps:28.3006442,-81.3951572?q=Affinity Dental Group, Kevstin Drive, Kissimmee, FL, USA'
-              }
-            },
-            participantIds: ['r40337XTxTMxRdXtcoNfbeHuOnu2', 'NOTME'],
-
-            participants: [
-              {
-                image:
-                  'https://firebasestorage.googleapis.com/v0/b/breed-up.appspot.com/o/r40337XTxTMxRdXtcoNfbeHuOnu2%2Fprofile_img?alt=media&token=8e5cef6a-0d40-4839-a28f-10a6fbf9a9a9',
-                name: 'NOT ME',
-                uid: 'r40337XTxTMxRdXtcoNfbeHuOnu2'
-              },
-              {
-                description: 'My cool new description',
-                photo:
-                  'https://firebasestorage.googleapis.com/v0/b/breed-up.appspot.com/o/r40337XTxTMxRdXtcoNfbeHuOnu2%2Fprofile_img?alt=media&token=8e5cef6a-0d40-4839-a28f-10a6fbf9a9a9',
-                uid: 'NOTME',
-                name: 'halfjew23'
-              }
-            ],
-
-            sender: {
-              description: 'NOT MINE cool new description',
-              photo:
-                'https://firebasestorage.googleapis.com/v0/b/breed-up.appspot.com/o/r40337XTxTMxRdXtcoNfbeHuOnu2%2Fprofile_img?alt=media&token=8e5cef6a-0d40-4839-a28f-10a6fbf9a9a9',
-              uid: 'NOTME',
-              name: 'NOTME'
-            },
-
-            recipient: {
-              image:
-                'https://firebasestorage.googleapis.com/v0/b/breed-up.appspot.com/o/r40337XTxTMxRdXtcoNfbeHuOnu2%2Fprofile_img?alt=media&token=8e5cef6a-0d40-4839-a28f-10a6fbf9a9a9',
-              name: 'halfjew23',
-              uid: 'r40337XTxTMxRdXtcoNfbeHuOnu2'
-            },
-            title: Date.now()
-          }
-
-          firestore()
-            .collection('meetups')
-            .doc(ISENTIT.id)
-            .set(ISENTIT)
-        }}
         title="Create Meetup"
         buttonStyle={{
           backgroundColor: 'black'

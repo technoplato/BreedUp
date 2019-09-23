@@ -1,26 +1,38 @@
-import React, { Component } from 'react'
+import React from 'react'
 import RootStack from '../Navigation/AppNavigation'
 import moment from 'moment'
+import useGlobalUser from 'hooks/use-global-user'
+import NavigatorService from '../services/navigator'
 
-class App extends Component {
-  render() {
-    // Updates moment relative time, not sure where to call this
-    // https://momentjs.com/docs/#/customization/relative-time/
-    moment.updateLocale('en', {
-      relativeTime: {
-        ss: '%ds',
-        s: '%ds',
-        m: '%dm',
-        mm: '%dm',
-        h: '%dh',
-        hh: '%dh',
-        d: '%dd',
-        dd: '%dd'
-      }
-    })
+export default () => {
+  const { authUser, initialising, user, loading } = useGlobalUser()
 
-    return <RootStack />
+  if (user) {
+    NavigatorService.navigate('Feed')
+  } else if (!authUser && !initialising && !loading) {
+    NavigatorService.navigate('SignUp')
   }
-}
 
-export default App
+  // Updates moment relative time, not sure where to call this
+  // https://momentjs.com/docs/#/customization/relative-time/
+  moment.updateLocale('en', {
+    relativeTime: {
+      ss: '%ds',
+      s: '%ds',
+      m: '%dm',
+      mm: '%dm',
+      h: '%dh',
+      hh: '%dh',
+      d: '%dd',
+      dd: '%dd'
+    }
+  })
+
+  return (
+    <RootStack
+      ref={navigatorRef => {
+        NavigatorService.setContainer(navigatorRef)
+      }}
+    />
+  )
+}

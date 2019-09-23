@@ -8,7 +8,6 @@ import firestore from '@react-native-firebase/firestore'
 
 import styles from './LoginStyles'
 import { Images } from '../Themes'
-import removeFuncs from 'utilities/remove-functions-from-object'
 
 export default class Login extends React.Component {
   state = { email: '', password: '', errorMsg: null }
@@ -28,12 +27,8 @@ export default class Login extends React.Component {
 
     auth()
       .signInWithEmailAndPassword(email, password)
-      .then(userRecord => {
-        const user = removeFuncs(userRecord.user, true)
-        firestore()
-          .collection('users')
-          .doc(user.uid)
-          .update(user)
+      .then(user => {
+        console.log(user)
       })
       .catch(error => this.setState({ errorMsg: error.message }))
   }
@@ -77,23 +72,6 @@ export default class Login extends React.Component {
           onLongPress={() => {
             auth()
               .signInWithEmailAndPassword('halfjew22@gmail.com', 'aaaaaa')
-              .then(userRecord => {
-                const user = removeFuncs(userRecord.user)
-                console.log(user)
-                firestore()
-                  .collection('users')
-                  .doc(user.uid)
-                  .set(
-                    {
-                      ...user,
-                      username: user.displayName,
-                      lowercaseUsername: user.displayName.toLocaleLowerCase(),
-                      photo: user.photoURL
-                    },
-                    { merge: true }
-                  )
-              })
-              .then(() => this.props.navigation.navigate('Feed'))
               .catch(error => this.setState({ errorMsg: error.message }))
           }}
           style={styles.headerText}

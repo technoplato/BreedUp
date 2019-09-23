@@ -9,7 +9,7 @@ export const addComment = async (oldPost, text) => {
   const newCommentDoc = postDoc.collection('comments').doc()
 
   const newComment = {
-    author: currentUser().displayName,
+    author: currentUser().username,
     time_posted: new Date().getTime(),
     text: text,
     id: newCommentDoc.id

@@ -63,7 +63,7 @@ const MeetupButtons = ({ meetup }) => {
   )
 }
 
-const Details = ({ title, info, onPress }) => {
+const Details = ({ title, info, onPress, clickable }) => {
   if (!!!info) return null
   return (
     <TouchableWithoutFeedback
@@ -73,7 +73,7 @@ const Details = ({ title, info, onPress }) => {
     >
       <View>
         <Text style={styles.label}>{title}</Text>
-        <Text style={styles.info}>{info}</Text>
+        <Text style={[styles.info, clickable && styles.clickable]}>{info}</Text>
       </View>
     </TouchableWithoutFeedback>
   )
@@ -106,11 +106,13 @@ const MeetupDetails = ({ meetup, navigate }) => (
       />
       <Details title={'Description'} info={meetup.description} />
       <Details
+        clickable
         onPress={() => openMap(meetup)}
         title={'Location Name'}
         info={meetup.location.name}
       />
       <Details
+        clickable
         onPress={() => openMap(meetup)}
         title={'Address'}
         info={meetup.location.address}
@@ -140,6 +142,10 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     marginVertical: 6
+  },
+  clickable: {
+    color: 'blue',
+    textDecorationLine: 'underline'
   },
   info: { fontSize: 18, marginBottom: 8 }
 })

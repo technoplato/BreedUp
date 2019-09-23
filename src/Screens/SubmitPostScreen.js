@@ -41,29 +41,34 @@ export default class SubmitPostScreen extends React.Component {
           <View
             style={{
               width: '100%',
+              justifyContent: 'center',
               flexDirection: 'row',
               padding: 16,
-              marginTop: 24
+              marginTop: 48
             }}
           >
-            <Image style={{ height: 100, width: 100 }} source={{ uri: uri }} />
-            <TextInput
-              ref={input => {
-                this.input = input
-              }}
-              style={{ marginLeft: 12, flex: 1, height: 100 }}
-              placeholder="Write a caption..."
-              multiline
-              returnKeyType="done"
-              onSubmitEditing={Keyboard.dismiss}
-              onChangeText={text => this.setState({ postText: text })}
-            />
+            <Image style={{ height: 200, width: 200 }} source={{ uri: uri }} />
           </View>
+
+          <TextInput
+            ref={input => {
+              this.input = input
+            }}
+            style={{
+              marginLeft: 12,
+              height: 80
+            }}
+            placeholder="Write a caption..."
+            multiline
+            returnKeyType="done"
+            onSubmitEditing={Keyboard.dismiss}
+            onChangeText={text => this.setState({ postText: text })}
+          />
           {this.pendingDogs()}
           {this.dogListToAdd()}
           <View style={{ flex: 1, justifyContent: 'flex-end' }}>
             <Button
-              style={{ marginBottom: 24 }}
+              style={{ marginBottom: 42 }}
               title="Submit"
               loading={this.state.saving}
               disabled={this.state.saving}

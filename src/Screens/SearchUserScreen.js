@@ -86,6 +86,10 @@ export default class SearchUserScreen extends React.Component {
     localSearch: false
   }
 
+  componentDidMount() {
+    this.performSearch('')
+  }
+
   render() {
     return (
       <View style={styles.screen}>

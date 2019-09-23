@@ -7,91 +7,107 @@ import {
   Text,
   Dimensions
 } from 'react-native'
+import moment from 'moment'
 
-const useInfiniteScroll = load => {
+import firestore from '@react-native-firebase/firestore'
+import { useCollectionDataOnce } from 'react-firebase-hooks/firestore'
+import generatePosts from 'utilities/generate-posts'
+
+const INITIAL_LOAD = 20
+const PAGE_SIZE = 15
+
+const useInfiniteScroll = uid => {
   const [isFetching, setIsFetching] = useState(true)
-  const [data, setData] = useState([])
+  const [posts, setPosts] = useState([])
+  const [allOlderPostsFetched, setAllOlderPostsFetched] = useState(false)
+
+  const lastIndex = posts.length - 1
+  const lastItem = posts.length ? posts[lastIndex] : null
+  const oldestPostTime = lastItem ? lastItem.created : new Date().getTime()
+  const pageSize = lastIndex === -1 ? INITIAL_LOAD : PAGE_SIZE
 
   useEffect(() => {
-    let didCancel = false
-    if (!isFetching) return
+    const handleChanges = snapshot => {}
 
+    const query = firestore()
+      .collection('posts')
+      .orderBy('created', 'desc')
+      .startAt(oldestPostTime)
+      .limit(pageSize)
+    uid && query.where('author.uid', '==', uid)
+
+    const unsubscribe = query.onSnapshot(handleChanges)
+  }, [oldestPostTime])
+
+  useEffect(() => {
+    if (!isFetching || allOlderPostsFetched) return
     const loadAsync = async () => {
-      const lastIndex = data.length - 1
-      const lastItem = data.length ? data[lastIndex] : null
+      setIsFetching(true)
 
-      const newData = await load({ lastIndex, lastItem })
-      if (!didCancel) {
-        setData(prevState => [...prevState, ...newData])
-        setIsFetching(false)
+      let query = firestore()
+        .collection('test-posts')
+        .orderBy('created', 'desc')
+        .startAfter(oldestPostTime)
+        .limit(pageSize)
+      uid && query.where('author.uid', '==', uid)
+
+      const olderPosts = await query
+        .get()
+        .then(snap => snap.docs.map(doc => doc.data()))
+
+      if (olderPosts.length < pageSize) {
+        setAllOlderPostsFetched(true)
       }
-    }
 
+      setPosts(recentPosts => [...recentPosts, ...olderPosts])
+
+      setIsFetching(false)
+    }
     loadAsync()
-
-    return () => {
-      didCancel = true
-    }
   }, [isFetching])
 
-  return [data, isFetching, setIsFetching]
+  return [posts, isFetching, setIsFetching, allOlderPostsFetched]
 }
-
-const INITIAL_LOAD = 30
-const PAGE_SIZE = 20
-
 export default () => {
-  /**
-   * Right now, I'm mandating that whatever this method is accepts as a
-   * parameter an object containing the objects `lastIndex` and `lastObject`
-   * respectively. I believe this should suffice for effective paging.
-   *
-   * @param lastIndex
-   */
-  const fetchMoreListItems = ({ lastIndex }) => {
-    // Simulate fetch of next 20 items (30 if initial load)
-    return new Promise(resolve => {
-      setTimeout(() => {
-        resolve([
-          ...Array.from(
-            Array(lastIndex === -1 ? INITIAL_LOAD : PAGE_SIZE).keys(),
-            n => {
-              n = n + lastIndex
-              return {
-                number: n.toString(),
-                id: n.toString()
-              }
-            }
-          )
-        ])
-      }, 2000)
-    })
-  }
+  const [
+    posts,
+    isFetching,
+    setIsFetching,
+    allOlderPostsFetched
+  ] = useInfiniteScroll()
 
-  const [data, isFetching, setIsFetching] = useInfiniteScroll(
-    fetchMoreListItems
-  )
+  // generatePosts(3)
 
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.blueBox}>
         <Text style={styles.bigWhiteBoldText}>
-          {`${data.length} Items Loaded`}
+          {`${posts.length} Items Loaded`}
         </Text>
       </View>
       <FlatList
-        onEndReachedThreshold={7}
+        onEndReachedThreshold={4}
         onEndReached={() => {
-          if (!isFetching) {
+          if (!isFetching && !allOlderPostsFetched) {
             setIsFetching(true)
           }
         }}
-        data={data}
-        keyExtractor={item => item.id}
+        data={posts}
+        keyExtractor={item => {
+          return item.id
+        }}
         renderItem={({ item }) => {
           return <Item item={item} />
         }}
       />
+
+      {allOlderPostsFetched && (
+        <View style={styles.blueBox}>
+          <Text style={styles.bigWhiteBoldText}>
+            (No Older Posts Available)
+          </Text>
+        </View>
+      )}
       {isFetching && (
         <View style={styles.blueBox}>
           <Text style={styles.bigWhiteBoldText}>(Fetching More)</Text>
@@ -105,7 +121,10 @@ class Item extends React.PureComponent {
   render() {
     return (
       <View style={styles.item}>
-        <Text style={styles.title}>{this.props.item.number}</Text>
+        <Text style={styles.title}>{this.props.item.text}</Text>
+        <Text style={styles.title}>
+          {moment(this.props.item.created).fromNow()}
+        </Text>
       </View>
     )
   }
@@ -126,7 +145,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 16
   },
   title: {
-    fontSize: 48
+    fontSize: 24
   },
   blueBox: {
     height: 50,
@@ -136,7 +155,7 @@ const styles = StyleSheet.create({
   },
   bigWhiteBoldText: {
     color: 'white',
-    fontSize: 32,
+    fontSize: 26,
     fontWeight: 'bold'
   }
 })

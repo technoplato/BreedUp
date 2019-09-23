@@ -38,8 +38,8 @@ exports.onUserUpdate = functions.firestore
 const updateAuth = user => {
   return auth
     .updateUser(user.uid, {
-      displayName: user.username,
-      photoURL: user.photo
+      username: user.username,
+      photo: user.photo
     })
     .then(function(user) {
       // See the UserRecord reference doc for the contents of user.

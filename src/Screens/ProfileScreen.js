@@ -66,10 +66,16 @@ export default class Profile extends React.Component {
   }
 
   async componentDidMount() {
-    const [user, iFollow] = await Promise.all([
-      this.loadUserProfile(),
-      this.amIFollowing()
-    ])
+    let user, iFollow
+    if (!this.state.isMe) {
+      ;[user, iFollow] = await Promise.all([
+        this.loadUserProfile(),
+        this.amIFollowing()
+      ])
+    } else {
+      user = global.user
+      iFollow = false
+    }
 
     const { username, description, photo } = user
 
@@ -217,7 +223,7 @@ export default class Profile extends React.Component {
         {this.photoEditModal()}
         {this.modal()}
         {this.header()}
-        {this.dogList()}
+        {/*{this.dogList()}*/}
         {this.postsList()}
         {this.state.loading && this.renderLoading()}
       </View>

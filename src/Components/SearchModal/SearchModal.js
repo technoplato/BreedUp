@@ -218,8 +218,8 @@ class SearchModal extends React.Component {
     const data = {
       // user1 should be called sender
       user1: global.user.uid,
-      user1name: global.user.displayName,
-      user1imageUrl: global.user.photoURL,
+      user1name: global.user.username,
+      user1imageUrl: global.user.photo,
       // user2 should be called recipient
       user2: item.id,
       created_at: firebase.firestore.FieldValue.serverTimestamp()

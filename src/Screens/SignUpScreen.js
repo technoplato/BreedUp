@@ -36,6 +36,7 @@ export default class SignUpScreen extends React.Component {
         .createUserWithEmailAndPassword(email, password)
         .then(userRecord => {
           const user = removeFuncs(userRecord.user, true)
+          console.log({ user })
           firestore()
             .collection('users')
             .doc(user.uid)
@@ -103,9 +104,9 @@ export default class SignUpScreen extends React.Component {
                   .set(
                     {
                       ...user,
-                      username: user.displayName,
-                      lowercaseUsername: user.displayName.toLocaleLowerCase(),
-                      photo: user.photoURL
+                      username: user.username,
+                      lowercaseUsername: user.username.toLocaleLowerCase(),
+                      photo: user.photo
                     },
                     { merge: true }
                   )

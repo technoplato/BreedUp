@@ -58,11 +58,13 @@ export default class PostsList extends React.PureComponent {
       )
     )
 
-    this.changesUnsubscribe = firestore()
+    const query = firestore()
       .collection('posts')
       .orderBy('created', 'desc')
       .endAt(oldestPostTime)
-      .onSnapshot(this.onPostsUpdated)
+    this.props.userId && query.where('author.uid', '==', this.props.userId)
+
+    this.changesUnsubscribe = query.onSnapshot(this.onPostsUpdated)
   }
 
   componentWillUnmount() {
@@ -84,6 +86,7 @@ export default class PostsList extends React.PureComponent {
   }
 
   onPostsUpdated = postsCollection => {
+    if (!postsCollection) return
     let doScrollToTop = false
     const posts = { ...this.state.posts }
     postsCollection.docChanges().forEach(({ type, doc }) => {

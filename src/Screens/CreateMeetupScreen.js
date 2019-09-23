@@ -2,13 +2,13 @@ import React, { Component } from 'react'
 import { View } from 'react-native'
 import { KeyboardAwareView } from 'react-native-keyboard-aware-view'
 import { SafeAreaView } from 'react-navigation'
-import { Button, Input } from 'react-native-elements'
+import { Button, Input, Text } from 'react-native-elements'
 import firestore from '@react-native-firebase/firestore'
 import formatUtcToLocalDate from 'utilities/format-date'
 
 const InviteUserButton = ({ recipient, handlePress }) => {
   const text = recipient
-    ? `Inviting: ${recipient.username} (click to change)`
+    ? `Inviting: ${recipient.name} (click to change)`
     : 'Click to search for a User.'
   return (
     <Button
@@ -46,7 +46,8 @@ export default class CreateMeetupScreen extends Component {
     title: '',
     description: '',
     location: null,
-    recipient: null
+    recipient: null,
+    error: null
   }
 
   render() {
@@ -76,7 +77,7 @@ export default class CreateMeetupScreen extends Component {
             handlePress={() =>
               this.props.navigation.navigate('SearchUser', {
                 onUserChosen: recipient => {
-                  this.setState({ recipient })
+                  this.setState({ recipient, error: null })
                 }
               })
             }
@@ -87,7 +88,7 @@ export default class CreateMeetupScreen extends Component {
             handlePress={() =>
               this.props.navigation.navigate('SearchAddress', {
                 onLocationChosen: location => {
-                  this.setState({ location })
+                  this.setState({ location, error: null })
                 }
               })
             }
@@ -98,17 +99,32 @@ export default class CreateMeetupScreen extends Component {
             handlePress={() =>
               this.props.navigation.navigate('PickTime', {
                 onDateChosen: date => {
-                  this.setState({ date })
+                  this.setState({ date, error: null })
                 }
               })
             }
           />
 
+          {this.state.error && (
+            <View
+              style={{
+                paddingTop: 12,
+                alignItems: 'center',
+                justifyContent: 'center'
+              }}
+            >
+              <Text style={{ color: 'red', fontSize: 22 }} h4>
+                {this.state.error}
+              </Text>
+            </View>
+          )}
+
           <View
             style={{
               flex: 1,
               justifyContent: 'flex-end',
-              flexDirection: 'column'
+              flexDirection: 'column',
+              paddingBottom: 32
             }}
           >
             <Button title="Create Meetup!" onPress={this.addEvent} />
@@ -118,23 +134,42 @@ export default class CreateMeetupScreen extends Component {
     )
   }
 
-  addEvent = async () => {
+  checkErrors = () => {
     const { title, description, location, recipient, date } = this.state
-    const event = { title, description, location, recipient, date }
-    const saved = await saveMeetup(event)
-    this.props.navigation.goBack()
+    const state = { title, description, location, recipient, date }
+    Object.entries(state).forEach(([key, value]) => {
+      if (!value) {
+        this.setState({
+          error: `Please enter a ${key.charAt(0).toUpperCase() + key.slice(1)}`
+        })
+        return false
+      }
+    })
+
+    return true
+  }
+
+  addEvent = async () => {
+    if (!this.checkErrors()) {
+      return
+    } else {
+      const { title, description, location, recipient, date } = this.state
+      const event = { title, description, location, recipient, date }
+      const saved = await saveMeetup(event)
+      this.props.navigation.goBack()
+    }
   }
 }
 
 const saveMeetup = async info => {
-  const { displayName, uid, photoURL } = global.user
+  const { username, uid, photo } = global.user
   const meetupDoc = firestore()
     .collection('meetups')
     .doc()
   const sender = {
-    name: displayName,
+    name: username,
     uid,
-    photo: photoURL
+    photo: photo
   }
 
   const meetup = {
