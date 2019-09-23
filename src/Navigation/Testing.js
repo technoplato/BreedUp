@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react'
+import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react'
 import {
   SafeAreaView,
   View,
@@ -48,6 +48,7 @@ const useInfiniteScroll = uid => {
     if (Object.keys(posts).length === 0) return
 
     const handleChanges = snapshot => {
+      console.log('L51 handleChanges ===')
       const changes = {}
 
       let doScroll = false
@@ -83,6 +84,7 @@ const useInfiniteScroll = uid => {
 
               case 'modified':
                 list.forEach(post => {
+                  console.log('L87 prunePost(post) ===', prunePost(post))
                   copy[post.id] = prunePost(post)
                 })
                 break
@@ -144,7 +146,7 @@ const useInfiniteScroll = uid => {
 
       const olderPosts = await query
         .get()
-        .then(snap => snap.docs.map(doc => doc.data()))
+        .then(snap => snap.docs.map(doc => prunePost(doc.data())))
 
       const length = olderPosts.length
 
@@ -252,57 +254,123 @@ export default () => {
 }
 
 import useUpdatingTimestamp from 'hooks/use-updating-timestamp'
+import useOptimisticToggle from 'hooks/use-optimistic-toggle'
 
-const Item = ({ item }) => {
+const toggleLike = (oldPost, updatedPost) => {
+  const { liked, disliked } = updatedPost
+  const update = {}
+  update.likes = liked
+    ? firestore.FieldValue.arrayUnion(global.user.uid)
+    : firestore.FieldValue.arrayRemove(global.user.uid)
+
+  if (disliked) {
+    update.dislikes = firestore.FieldValue.arrayRemove(global.user.uid)
+  }
+
+  console.log('L270 update ===', update)
+
+  return firestore()
+    .collection('test-posts')
+    .doc(oldPost.id)
+    .update(update)
+}
+
+const toggleDislike = (oldPost, updatedPost) => {
+  const { liked, disliked } = updatedPost
+  const update = {}
+  update.dislikes = disliked
+    ? firestore.FieldValue.arrayUnion(global.user.uid)
+    : firestore.FieldValue.arrayRemove(global.user.uid)
+
+  if (liked) {
+    update.likes = firestore.FieldValue.arrayRemove(global.user.uid)
+  }
+
+  console.log('L287 update ===', update)
+
+  return firestore()
+    .collection('test-posts')
+    .doc(oldPost.id)
+    .update(update)
+}
+
+const Item = props => {
+  const item = props.item
   const { text, created } = item
 
+  const [optimisticLikeToggle, liked, e1] = useOptimisticToggle(
+    item,
+    'liked',
+    toggleLike
+  )
+  const [optimisticDislikeToggle, disliked, e2] = useOptimisticToggle(
+    item,
+    'disliked',
+    toggleDislike
+  )
   const formattedTime = useUpdatingTimestamp(created)
 
-  // You can use any of the following here, it's completely a preference
-  //     1) "useMemo" with implicit view return
-  //     useMemo (() => (        <view stuff>), [dependencies])
-  //
-  //     2) "useMemo" with explicit view return <~~ I happen to prefer this one
-  //        I like it because, as you see below, you can log stuff!
-  //     useMemo (() => { return (view stuff)}, [dependencies])
-  //
-  //     2) "useCallback" with implicit view return
-  //     useCallback(            <view stuff>,  [dependencies])
-
-  // return useMemo(
-  //   () => (
-  //     <View style={styles.item}>
-  //       <Text style={styles.title}>{item.text}</Text>
-  //       <Text style={styles.subtitle}>{'By: ' + item.author.username}</Text>
-  //       <Text style={styles.title}>{'ID: ' + item.id}</Text>
-  //       <Text style={styles.title}>{formattedTime}</Text>
-  //     </View>
-  //   ),
-  //   [text, formattedTime]
-  // )
-
-  // return useCallback(
-  //   <View style={styles.item}>
-  //     <Text style={styles.title}>{item.text}</Text>
-  //     <Text style={styles.subtitle}>{'By: ' + item.author.username}</Text>
-  //     <Text style={styles.title}>{'ID: ' + item.id}</Text>
-  //     <Text style={styles.title}>{formattedTime}</Text>
-  //   </View>,
-  //   [text, formattedTime]
-  // )
-
   return useMemo(() => {
-    console.log('L295 "Rendering item: " + text ===', 'Rendering item: ' + text)
+    console.log('L293 item ===', item)
     return (
       <View style={styles.item}>
+        {e1 || (e2 && <Text style={styles.title}>{'Error: ' + e1 || e2}</Text>)}
         <Text style={styles.title}>{item.text}</Text>
         <Text style={styles.subtitle}>{'By: ' + item.author.username}</Text>
-        <Text style={styles.subtitle}>{'ID: ' + item.id}</Text>
+        <Text
+          onPress={() => {
+            optimisticLikeToggle('liked', !liked)
+          }}
+          style={styles.subtitle}
+        >
+          {'Liked: ' + liked}
+        </Text>
+        <Text
+          onPress={() => {
+            optimisticDislikeToggle('disliked', !disliked)
+          }}
+          style={styles.subtitle}
+        >
+          {'Disliked: ' + disliked}
+        </Text>
         <Text style={styles.subtitle}>{formattedTime}</Text>
       </View>
     )
-  }, [text, formattedTime])
+  }, [text, liked, disliked, formattedTime, e1, e2])
 }
+
+// You can use any of the following here, it's completely a preference
+//     1) "useMemo" with implicit view return
+//     useMemo (() => (        <view stuff>), [dependencies])
+//
+//     2) "useMemo" with explicit view return <~~ I happen to prefer this one
+//        I like it because, as you see below, you can log stuff!
+//     useMemo (() => { return (view stuff)}, [dependencies])
+//
+//     2) "useCallback" with implicit view return
+//     useCallback(            <view stuff>,  [dependencies])
+
+// return useMemo(
+//   () => (
+//     <View style={styles.item}>
+//       <Text style={styles.title}>{item.text}</Text>
+//       <Text style={styles.subtitle}>{'By: ' + item.author.username}</Text>
+//       <Text style={styles.title}>{'ID: ' + item.id}</Text>
+//       <Text style={styles.title}>{formattedTime}</Text>
+//     </View>
+//   ),
+//   [text, formattedTime]
+// )
+
+// return useCallback(
+//   <View style={styles.item}>
+//     <Text style={styles.title}>{item.text}</Text>
+//     <Text style={styles.subtitle}>{'By: ' + item.author.username}</Text>
+//     <Text style={styles.title}>{'ID: ' + item.id}</Text>
+//     <Text style={styles.title}>{formattedTime}</Text>
+//   </View>,
+//   [text, formattedTime]
+// )
 
 const styles = StyleSheet.create({
   container: {
