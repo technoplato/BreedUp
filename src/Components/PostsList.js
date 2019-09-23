@@ -158,6 +158,7 @@ export default class PostsList extends React.PureComponent {
     const likes = isLiked
       ? firestore.FieldValue.arrayUnion(this.props.userId)
       : firestore.FieldValue.arrayRemove(this.props.userId)
+    // TODO move this to cloud functions
     const likeCount = firestore.FieldValue.increment(isLiked ? 1 : -1)
     try {
       await this.postsRef.doc(postId).update({

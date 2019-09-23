@@ -16,6 +16,7 @@ export default (count, uid) => {
       id: faker.random.number().toString(),
       likeCount: 0,
       likes: [],
+      dislikes: [],
       postPhoto: faker.image.cats(),
       text: uid ? `Created by ${uid}` : faker.lorem.sentence(),
       viewCount: 0
