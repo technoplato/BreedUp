@@ -31,17 +31,26 @@ function navigate(routeName, params) {
   )
 }
 
-function getCurrentRoute() {
-  if (!_container || !_container.state.nav) {
-    return null
+function getActiveRouteName(navigationState) {
+  if (!navigationState) {
+    return null;
   }
+  const route = navigationState.routes[navigationState.index];
+  // dive into nested navigators
+  if (route.routes) {
+    return getActiveRouteName(route);
+  }
+  return route.routeName;
+}
 
-  return _container.state.nav.routes[_container.state.nav.index] || null
+function getCurrentRoute() {
+  if (!_container) return null
+  return getActiveRouteName( _container.state.nav)
 }
 
 export default {
   setContainer,
   navigate,
   reset,
-  getCurrentRoute
+  getCurrentRoute,
 }

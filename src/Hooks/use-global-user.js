@@ -2,32 +2,32 @@ import { useEffect, useState } from 'react'
 import auth from '@react-native-firebase/auth'
 import firestore from '@react-native-firebase/firestore'
 import { useAuthState } from 'react-firebase-hooks/auth'
+import { useDocumentData } from 'react-firebase-hooks/firestore'
 
 export default () => {
   const [authUser, initialising] = useAuthState(auth())
-  const [user, setUser] = useState(null)
-  global.user = user
-  const [loading, setLoading] = useState(false)
+  const [loggedIn, setLoggedIn] = useState(null)
   const uid = authUser ? authUser.uid : null
+  let [fetchedUser, loading, error] = useDocumentData(
+    firestore().doc(`users/${uid}`)
+  )
+
+  fetchedUser = !!authUser ? fetchedUser : null
+  global.user = fetchedUser
 
   useEffect(() => {
-    if (!uid) {
-      setUser(null)
-      return
+    if (!loading) {
+      setLoggedIn(!!authUser && !!fetchedUser)
     }
+  }, [loading, uid])
 
-    setLoading(true)
-    const loadUser = async () => {
-      const user = await firestore()
-        .doc(`users/${uid}`)
-        .get()
-        .then(snap => snap.data())
-      setLoading(false)
-      setUser(user)
-    }
+  console.log('L24 {authUser, loggedIn, uid, fetchedUser, loading} ===', {
+    authUser,
+    loggedIn,
+    uid,
+    fetchedUser,
+    loading
+  })
 
-    loadUser()
-  }, [uid])
-
-  return { authUser, initialising, user, loading }
+  return { loggedIn: loggedIn && !!authUser, loading }
 }

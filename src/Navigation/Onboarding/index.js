@@ -1,8 +1,8 @@
 import { createSwitchNavigator } from 'react-navigation'
 
-import Loading from '../../Screens/LoadingScreen'
-import Login from '../../Screens/LoginScreen'
-import SignUpScreen from '../../Screens/SignUpScreen'
+import Loading from 'components/LargeLoadingIndicator'
+import Login from 'screens/LoginScreen'
+import SignUpScreen from 'screens/SignUpScreen'
 
 const OnboardingScreens = createSwitchNavigator(
   {

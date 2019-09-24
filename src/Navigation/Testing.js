@@ -74,7 +74,7 @@ const useInfiniteScroll = uid => {
                       doScroll = true
                       copy[post.id] = prunePost(post)
                     } else {
-                      stagePost(post)
+                      stagePost(prunePost(post))
                     }
                   }
                 })
@@ -261,6 +261,7 @@ const toggleLike = (oldPost, updatedPost) => {
     ? firestore.FieldValue.arrayUnion(global.user.uid)
     : firestore.FieldValue.arrayRemove(global.user.uid)
 
+  // TODO is this a bugf? Should we also check that liked is true before clearing the value?
   if (disliked) {
     update.dislikes = firestore.FieldValue.arrayRemove(global.user.uid)
   }
@@ -278,6 +279,7 @@ const toggleDislike = (oldPost, updatedPost) => {
     ? firestore.FieldValue.arrayUnion(global.user.uid)
     : firestore.FieldValue.arrayRemove(global.user.uid)
 
+  // TODO is this a bugf? Should we also check that disliked is true?
   if (liked) {
     update.likes = firestore.FieldValue.arrayRemove(global.user.uid)
   }
@@ -296,6 +298,7 @@ const Item = props => {
   const [optimisticDislikeToggle, disliked, e2] = useOptimisticToggle(
     toggleDislike
   )
+
   const formattedTime = useUpdatingTimestamp(created)
 
   return useMemo(() => {
@@ -328,14 +331,14 @@ const Item = props => {
 
 // You can use any of the following here, it's completely a preference
 //     1) "useMemo" with implicit view return
-//     useMemo (() => (        <view stuff>), [dependencies])
+//     useMemo (() => (         <view stuff>),  [dependencies])
 //
-//     2) "useMemo" with explicit view return <~~ I happen to prefer this one
+//     2) "useMemo" with explicit view return <~ I happen to prefer this one
 //        I like it because, as you see below, you can log stuff!
-//     useMemo (() => { return (view stuff)}, [dependencies])
+//     useMemo (() => { return (<view stuff>)}, [dependencies])
 //
 //     2) "useCallback" with implicit view return
-//     useCallback(            <view stuff>,  [dependencies])
+//     useCallback(             <view stuff>,   [dependencies])
 
 // return useMemo(
 //   () => (

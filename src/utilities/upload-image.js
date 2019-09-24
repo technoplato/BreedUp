@@ -1,7 +1,7 @@
 import storage from '@react-native-firebase/storage'
 import ImageResizer from 'react-native-image-resizer'
 
-const IMAGE_SIZE = 1000
+const IMAGE_SIZE = 1500
 const QUALITY = 100
 
 /**

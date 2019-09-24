@@ -5644,6 +5644,11 @@ react-native-google-places-autocomplete@1.3.9:
     prop-types "^15.5.10"
     qs "^5.2.0"
 
+react-native-image-crop-picker@0.25.2:
+  version "0.25.2"
+  resolved "https://registry.yarnpkg.com/react-native-image-crop-picker/-/react-native-image-crop-picker-0.25.2.tgz#241e598e6bd601248c319483c19508f9bc9a203e"
+  integrity sha512-LZX9gJb5q1q6Oo1jXj1FyNEEDkvfynZMeE3M9jhFjJdvknMf/eui7GlmSokzQ4A1MLxKmcLSVDGw2L1HTBAO6A==
+
 react-native-image-picker@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/react-native-image-picker/-/react-native-image-picker-1.0.2.tgz#8b0ffe89d7dd97bef1f7e317f313f90549b126b3"

@@ -223,7 +223,7 @@ export default class Profile extends React.Component {
         {this.photoEditModal()}
         {this.modal()}
         {this.header()}
-        {/*{this.dogList()}*/}
+        {this.dogList()}
         {this.postsList()}
         {this.state.loading && this.renderLoading()}
       </View>

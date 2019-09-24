@@ -84,7 +84,6 @@ const openMap = meetup => {
     ios: meetup.location.uri.ios,
     android: meetup.location.uri.android
   })
-  console.log(uri)
   Linking.openURL(uri)
 }
 
@@ -127,7 +126,7 @@ const MeetupDetails = ({ meetup, navigate }) => (
             })
           }}
           key={participant.uid}
-          style={styles.info}
+          style={[styles.info, styles.clickable]}
         >
           {participant.name}
         </Text>
