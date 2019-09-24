@@ -1,132 +1,72 @@
-import React from 'react'
+import React, { useState, useCallback, useMemo } from 'react'
 import { View, Text, FlatList } from 'react-native'
-import _ from 'lodash'
 
 import DogListItem from '../DogListItem'
 import RoundPlus from '../RoundPlus'
 import styles from './DogListStyles'
 
-import { fetchDogsForUser } from '../../Interactors/Dog'
-import LargeLoadingIndicator from '../LargeLoadingIndicator'
+import Loading from '../LargeLoadingIndicator'
+import { useCollectionData } from 'react-firebase-hooks/firestore'
+import firestore from '@react-native-firebase/firestore'
 
-export default class DogList extends React.Component {
-  constructor(props) {
-    super(props)
+export default ({ userId: ownerId, canAddDog, navigation, onDogPress }) => {
+  const [isMe] = useState(ownerId === global.user.uid)
+  const [dogs, loading] = useCollectionData(
+    firestore()
+      .collection('dogs')
+      .where('owner.uid', '==', ownerId)
+  )
 
-    this.state = {
-      loading: true,
-      dogs: []
-    }
-
-    this.loadDogs()
-  }
-
-  loadDogs = async () => {
-    const { userId } = this.props
-    const fetchedDogs = await fetchDogsForUser(userId)
-
-    this.setState({ loading: false, dogs: fetchedDogs })
-  }
-
-  addDogToList = dog => {
-    const dogs = this.state.dogs
-    dogs.push(dog)
-    this.setState({ dogs: _.uniq(dogs) })
-  }
-
-  renderItem = ({ item }) => {
-    return (
-      <DogListItem
-        size={64}
-        onDogPress={this.props.onDogPress}
-        onAddDogPress={this.onAddDogPress}
-        item={item}
-      />
-    )
-  }
-
-  /**
-   * Renders the 'Add Dog' button.
-   *
-   * NOTE: Only renders button for current user. There is an option to
-   * disable the ability for the current user to add a dog using the
-   * `canAddDog` prop.
-   */
-  renderAddButton = () => {
-    return (
-      this.props.currentUser &&
-      this.props.canAddDog && (
-        <RoundPlus onPress={this.onAddDogPress} size={64} />
-      )
-    )
-  }
-
-  /**
-   * Navigates to the screen where a user can add their dog.
-   *
-   * Only possible if viewing current user's dog list.
-   */
-  onAddDogPress = () => {
-    this.props.navigation.navigate('AddDog', {
-      userId: this.props.userId,
-      onNewDogAdded: this.onNewDogAdded
+  const onAddDogPress = useCallback(() => {
+    navigation.navigate('AddDog', {
+      userId: ownerId
     })
+  }, [ownerId])
+
+  const addButton = useMemo(() => {
+    if (!isMe || !canAddDog) return null
+    return <RoundPlus onPress={onAddDogPress} size={64} />
+  }, [ownerId])
+
+  if (loading) {
+    return <Loading />
   }
 
-  onNewDogAdded = dog => {
-    this.addDogToList(dog)
-  }
+  return (
+    <View
+      style={{
+        flex: 1,
+        height: 44 * 1.1,
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingLeft: 24,
+        backgroundColor: 'white'
+      }}
+    >
+      {addButton}
 
-  onDogUpdated = (oldDog, updatedDog) => {
-    const dogs = this.state.dogs
-    const index = dogs.indexOf(oldDog)
-    dogs.splice(index, 1, updatedDog)
-    this.setState({ dogs: dogs })
-  }
-
-  /**
-   * Renders list of user's dogs.
-   *
-   * NOTE: If this is the current user's profile, an 'Add Dog' button will be visible.
-   */
-  renderList = () => {
-    return (
-      <View
-        style={{
-          flex: 1,
-          height: 44 * 1.1,
-          flexDirection: 'row',
-          alignItems: 'center',
-          paddingLeft: 24,
-          backgroundColor: 'white'
-        }}
-      >
-        {this.renderAddButton()}
-        {this.state.dogs.length > 0 ? (
-          <FlatList
-            horizontal
-            style={styles.container}
-            data={this.state.dogs}
-            extraData={this.state}
-            renderItem={this.renderItem}
-            keyExtractor={this.keyExtractor}
-          />
-        ) : (
-          <Text style={{ marginLeft: 12, fontSize: 26, fontStyle: 'italic' }}>
-            No dogs added yet
-          </Text>
-        )}
-      </View>
-    )
-  }
-
-  renderLoading = () => {
-    return <LargeLoadingIndicator />
-  }
-
-  render() {
-    return this.state.loading ? this.renderLoading() : this.renderList()
-  }
-
-  keyExtractor = (item, index) => item.id || index.toString()
+      {dogs.length > 0 ? (
+        <FlatList
+          horizontal
+          style={styles.container}
+          data={dogs}
+          renderItem={({ item }) => {
+            return (
+              <DogListItem
+                size={64}
+                onDogPress={onDogPress}
+                onAddDogPress={onAddDogPress}
+                item={item}
+              />
+            )
+          }}
+          keyExtractor={(item, index) => item.id || index.toString()}
+        />
+      ) : (
+        <Text style={{ marginLeft: 12, fontSize: 26, fontStyle: 'italic' }}>
+          No dogs added yet
+        </Text>
+      )}
+    </View>
+  )
 }

@@ -22,6 +22,7 @@ import SearchModal from '../../Components/SearchModal/SearchModal'
 import CreateGroupModal from '../../Components/CreateGroupModal/CreateGroupModal'
 import styles from './styles'
 import TextButton from 'react-native-button'
+import Back from 'components/Back'
 
 const REQUEST_NONE = 0
 const REQUEST_TO_HIM = 1
@@ -30,16 +31,7 @@ const REQUEST_TO_ME = 2
 class ChatHomeScreen extends React.Component {
   static navigationOptions = ({ navigation }) => ({
     title: 'Chats',
-    headerLeft: (
-      <Icon2
-        containerStyle={{ marginLeft: 12 }}
-        name="arrow-back"
-        color="#000"
-        onPress={() => {
-          navigation.goBack(null)
-        }}
-      />
-    ),
+    headerLeft: <Back />,
     headerRight: (
       <TouchableOpacity
         style={AppStyles.styleSet.menuBtn.container}

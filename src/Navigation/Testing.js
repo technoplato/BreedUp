@@ -22,7 +22,6 @@ const PAGE_SIZE = 15
 
 const testListRef = listRef => {
   const props = _.get(listRef.current, 'props', {})
-  console.log('L25 listRef.props ===', props)
 
   if (listRef.current) {
     listRef.current.props.data = props.data.slice(0, 2)
@@ -122,7 +121,6 @@ const useInfiniteScroll = uid => {
     const unsubscribe = query.onSnapshot(handleChanges)
 
     return () => {
-      console.log('Unsubscribing')
       unsubscribe()
     }
   }, [oldest])

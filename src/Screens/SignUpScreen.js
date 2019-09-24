@@ -36,7 +36,6 @@ export default class SignUpScreen extends React.Component {
         .createUserWithEmailAndPassword(email, password)
         .then(userRecord => {
           const user = removeFuncs(userRecord.user, true)
-          console.log({ user })
           firestore()
             .collection('users')
             .doc(user.uid)

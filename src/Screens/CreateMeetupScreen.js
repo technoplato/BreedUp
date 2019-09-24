@@ -150,12 +150,10 @@ export default class CreateMeetupScreen extends Component {
   }
 
   addEvent = async () => {
-    if (!this.checkErrors()) {
-      return
-    } else {
+    if (this.checkErrors()) {
       const { title, description, location, recipient, date } = this.state
       const event = { title, description, location, recipient, date }
-      const saved = await saveMeetup(event)
+      await saveMeetup(event)
       this.props.navigation.goBack()
     }
   }

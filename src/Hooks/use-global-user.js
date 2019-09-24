@@ -21,13 +21,5 @@ export default () => {
     }
   }, [loading, uid])
 
-  console.log('L24 {authUser, loggedIn, uid, fetchedUser, loading} ===', {
-    authUser,
-    loggedIn,
-    uid,
-    fetchedUser,
-    loading
-  })
-
   return { loggedIn: loggedIn && !!authUser, loading }
 }

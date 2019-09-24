@@ -20,6 +20,7 @@ import ChatIconView from '../../Components/ChatIconView/ChatIconView'
 import AppStyles from '../../AppStyles'
 import styles from './styles'
 import { Icon } from 'react-native-elements'
+import Back from '../../Components/Back'
 
 class ChatScreen extends React.Component {
   static navigationOptions = ({ navigation }) => {
@@ -38,14 +39,7 @@ class ChatScreen extends React.Component {
     }
     const options = {
       title,
-      headerLeft: (
-        <Icon
-          containerStyle={{ marginLeft: 12 }}
-          name="arrow-back"
-          color="#000"
-          onPress={() => navigation.goBack()}
-        />
-      )
+      headerLeft: <Back />
     }
 
     if (!isOne2OneChannel) {

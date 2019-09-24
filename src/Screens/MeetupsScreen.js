@@ -116,7 +116,8 @@ const MeetupListItem = ({
         />
         <Text
           style={{
-            paddingLeft: 12
+            paddingLeft: 12,
+            width: 270
           }}
           key={id}
         >

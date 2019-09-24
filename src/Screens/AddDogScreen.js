@@ -1,160 +1,118 @@
-import React from 'react'
-import {
-  Text,
-  TextInput,
-  TouchableWithoutFeedback,
-  TouchableHighlight,
-  Keyboard,
-  KeyboardAvoidingView,
-  View,
-  Alert,
-  Image
-} from 'react-native'
-import { Button } from 'react-native-elements'
+import React, { useState } from 'react'
+import { Text, Keyboard, View, Alert } from 'react-native'
+import { Button, Input, Avatar } from 'react-native-elements'
+import { KeyboardAwareView } from 'react-native-keyboard-aware-view'
+import { SafeAreaView } from 'react-navigation'
 
 import styles from '../Styles/AddDogStyles'
 import { addDog } from '../Interactors/Dog'
 
 import CameraModal from '../../lib/InstagramCameraModal'
 
-export default class AddDogScreen extends React.Component {
-  state = {}
-  constructor(props) {
-    super(props)
-
-    const ownerId = this.props.navigation.getParam('userId', 'NO-ID')
-
-    this.state = {
-      ownerId: ownerId,
-      name: '',
-      breed: '',
-      imageUri: '',
-      loading: false,
-      photoEditModalVisible: false
-    }
-
-    this.showPhotoModal = this.showPhotoModal.bind(this)
-    this.onNewDogImageUri = this.onNewDogImageUri.bind(this)
+export default ({ navigation }) => {
+  const ownerId = navigation.state.params.userId
+  if (!ownerId) {
+    throw 'No User ID Provided. How in the world do you expect me to add a dog?'
   }
 
-  onPressAddDog = async () => {
+  const [name, setName] = useState('')
+  const [breed, setBreed] = useState('')
+  const [photo, setPhoto] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [modalVisible, showPhotoModal] = useState()
+
+  const onPressAddDog = async () => {
     Keyboard.dismiss()
 
     // Show loading
-    this.setState({
-      loading: true
-    })
+    setLoading(true)
 
-    // Verify input
-    const { ownerId, name, breed, imageUri } = this.state
-
-    if (imageUri === '') {
+    if (photo === '') {
       Alert.alert('Please provide a picture for your dog')
-      this.setState({
-        loading: false
-      })
+      setLoading(false)
     } else if (name === '') {
       Alert.alert('Please enter a name for your dog')
-      this.setState({
-        loading: false
-      })
+      setLoading(false)
     } else if (breed === '') {
       Alert.alert('Please enter a breed for your dog')
-      this.setState({
-        loading: false
-      })
+      setLoading(false)
     } else {
-      // Let addDog interactor do its thing and then go back
-      const dog = await addDog(ownerId, name, breed, imageUri)
-      this.props.navigation.state.params.onNewDogAdded(dog)
-      this.props.navigation.goBack()
+      await addDog(ownerId, name, breed, photo)
+      navigation.goBack()
     }
   }
 
-  render() {
-    const { imageUri } = this.state
-    const image = imageUri ? (
-      <Image
-        source={{ uri: this.state.imageUri }}
-        style={{ height: 144, width: 144, alignSelf: 'center' }}
-      />
-    ) : (
-      <Text
+  return (
+    <SafeAreaView style={{ flex: 1 }}>
+      <KeyboardAwareView
         style={{
-          backgroundColor: 'grey',
-          padding: 12,
-          width: 220,
-          alignSelf: 'center',
-          fontSize: 32
+          flex: 1,
+          padding: 10
         }}
-        onPress={() => this.showPhotoModal(true)}
       >
-        Click to take a picture of your dog
-      </Text>
-    )
+        <CameraModal
+          onPictureApproved={setPhoto}
+          isModalVisible={modalVisible}
+          cancel={() => showPhotoModal(false)}
+        />
 
-    return (
-      <KeyboardAvoidingView
-        behavior="padding"
-        keyboardVerticalOffset={64}
-        style={styles.container}
-      >
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <View style={styles.container}>
-            {this.photoEditModal()}
+        {photo ? (
+          <Avatar
+            size="xlarge"
+            rounded
+            showEditButton
+            source={{ uri: photo }}
+            icon={{ name: 'pets', type: 'material' }}
+            onPress={() => showPhotoModal(true)}
+            activeOpacity={0.7}
+            containerStyle={{ alignSelf: 'center' }}
+          />
+        ) : (
+          <Avatar
+            size="xlarge"
+            rounded
+            showEditButton
+            icon={{ name: 'pets', type: 'material' }}
+            onPress={() => showPhotoModal(true)}
+            activeOpacity={0.7}
+            containerStyle={{ alignSelf: 'center' }}
+          />
+        )}
 
-            <TouchableHighlight
-              onPress={() => {
-                this.showPhotoModal(true)
-              }}
-            >
-              {image}
-            </TouchableHighlight>
+        <Input
+          containerStyle={{ marginTop: 16 }}
+          onChangeText={setName}
+          value={name}
+          label={'Name'}
+          placeholder="Enter dog's name"
+        />
 
-            <TextInput
-              style={styles.input}
-              placeholder="Enter dog's name"
-              value={this.state.name}
-              onChangeText={name => this.setState({ name })}
-            />
-            <TextInput
-              style={styles.input}
-              placeholder="Enter dog's breed"
-              value={this.state.breed}
-              onChangeText={breed => this.setState({ breed })}
-            />
+        <Input
+          containerStyle={{ marginTop: 16 }}
+          onChangeText={setBreed}
+          value={breed}
+          label={'Breed'}
+          placeholder="Enter dog's breed"
+        />
 
-            <Button
-              style={styles.button}
-              loading={this.state.loading}
-              disabled={this.state.loading}
-              height={42}
-              title="Add Dog"
-              onPress={this.onPressAddDog}
-            />
-          </View>
-        </TouchableWithoutFeedback>
-      </KeyboardAvoidingView>
-    )
-  }
-
-  photoEditModal() {
-    return (
-      <CameraModal
-        onPictureApproved={this.onNewDogImageUri}
-        isModalVisible={this.state.photoEditModalVisible}
-        cancel={() => this.showPhotoModal(false)}
-      />
-    )
-  }
-
-  showPhotoModal(doShow) {
-    this.setState({
-      photoEditModalVisible: doShow
-    })
-  }
-
-  onNewDogImageUri(newImageUri) {
-    this.setState({ imageUri: newImageUri })
-  }
+        <View
+          style={{
+            flex: 1,
+            justifyContent: 'flex-end',
+            flexDirection: 'column',
+            paddingBottom: 32
+          }}
+        >
+          <Button
+            style={styles.button}
+            loading={loading}
+            disabled={loading}
+            height={42}
+            title="Add Dog"
+            onPress={onPressAddDog}
+          />
+        </View>
+      </KeyboardAwareView>
+    </SafeAreaView>
+  )
 }

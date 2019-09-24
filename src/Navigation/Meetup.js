@@ -9,6 +9,7 @@ import ProfileScreen from 'screens/ProfileScreen'
 import SearchAddressScreen from 'screens/SearchAddressScreen'
 import SearchUserScreen from 'screens/SearchUserScreen'
 import PickDateScreen from 'screens/PickDateScreen'
+import Back from '../Components/Back'
 
 export default createStackNavigator(
   {
@@ -59,15 +60,8 @@ export default createStackNavigator(
     }
   },
   {
-    defaultNavigationOptions: ({ navigation }) => ({
-      headerLeft: (
-        <Icon
-          containerStyle={{ marginLeft: 12 }}
-          name="arrow-back"
-          color="#000"
-          onPress={() => navigation.goBack()}
-        />
-      )
-    })
+    defaultNavigationOptions: {
+      headerLeft: <Back />
+    }
   }
 )

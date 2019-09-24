@@ -33,24 +33,24 @@ function navigate(routeName, params) {
 
 function getActiveRouteName(navigationState) {
   if (!navigationState) {
-    return null;
+    return null
   }
-  const route = navigationState.routes[navigationState.index];
+  const route = navigationState.routes[navigationState.index]
   // dive into nested navigators
   if (route.routes) {
-    return getActiveRouteName(route);
+    return getActiveRouteName(route)
   }
-  return route.routeName;
+  return route.routeName
 }
 
 function getCurrentRoute() {
   if (!_container) return null
-  return getActiveRouteName( _container.state.nav)
+  return getActiveRouteName(_container.state.nav)
 }
 
 export default {
   setContainer,
   navigate,
   reset,
-  getCurrentRoute,
+  getCurrentRoute
 }
