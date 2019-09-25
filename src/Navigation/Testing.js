@@ -187,17 +187,19 @@ const useInfiniteScroll = uid => {
 }
 
 export default () => {
-  const [
-    posts,
-    isFetching,
-    setIsFetching,
-    allOlderPostsFetched,
-    listRef,
-    staged,
-    doShowStaged
-  ] = useInfiniteScroll()
+  // const [
+  //   posts,
+  //   isFetching,
+  //   setIsFetching,
+  //   allOlderPostsFetched,
+  //   listRef,
+  //   staged,
+  //   doShowStaged
+  // ] = useInfiniteScroll()
 
   // generatePosts(3)
+
+  console.log('L202 "Test log" ===', 'Test log')
 
   return (
     <SafeAreaView style={styles.container}>
@@ -206,10 +208,10 @@ export default () => {
           flex: 1,
           justifyContent: 'center',
           alignItems: 'center',
-          backgroundColor: 'purple'
+          backgroundColor: 'cornflowerblue'
         }}
       >
-        <Text>Update you</Text>
+        <Text style={{ fontSize: 42 }}>Update us</Text>
       </View>
       {/*<View style={styles.blueBox}>*/}
       {/*  <Text*/}
