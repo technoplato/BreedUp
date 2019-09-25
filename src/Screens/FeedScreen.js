@@ -35,6 +35,19 @@ export default class FeedScreen extends React.Component {
     )
   })
 
+  render() {
+    return (
+      <View style={styles.container}>
+        <PostsList navigation={this.props.navigation} />
+      </View>
+    )
+  }
+}
+
+/*
+
+
+
   async componentDidMount() {
     // this.handleInitialNotification()
     // this.listenForNotificationTokenRefresh()
@@ -127,11 +140,4 @@ export default class FeedScreen extends React.Component {
       })
   }
 
-  render() {
-    return (
-      <View style={styles.container}>
-        <PostsList navigation={this.props.navigation} />
-      </View>
-    )
-  }
-}
+ */

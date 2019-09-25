@@ -6,4 +6,4 @@ YellowBox.ignoreWarnings([
   'Warning: componentWillMount',
   'Warning: Cannot update during an existing'
 ])
-AppRegistry.registerComponent('BreedUp', () => Testing)
+AppRegistry.registerComponent('BreedUp', () => App)

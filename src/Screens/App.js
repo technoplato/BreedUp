@@ -13,7 +13,7 @@ export default () => {
 
   if (!loading && routesToRespond.includes(currentRoute)) {
     if (!!loggedIn) {
-      NavigatorService.navigate('Testing')
+      NavigatorService.navigate('Feed')
     } else {
       NavigatorService.navigate('SignUp')
     }
