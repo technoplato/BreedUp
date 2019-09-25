@@ -201,49 +201,59 @@ export default () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.blueBox}>
-        <Text
-          onLongPress={() => {
-            // fake add one of their posts
-            generatePosts(1, 'Boppb')
-          }}
-          onPress={() => {
-            // fake add one of my posts
-            generatePosts(1, global.user.uid)
-          }}
-          style={styles.bigWhiteBoldText}
-        >
-          {`${posts.length} Items Loaded`}
-        </Text>
+      <View
+        style={{
+          flex: 1,
+          justifyContent: 'center',
+          alignItems: 'center',
+          backgroundColor: 'purple'
+        }}
+      >
+        <Text>Update you</Text>
       </View>
-      <ShowNewPostsButton staged={staged} onPress={() => doShowStaged(true)} />
+      {/*<View style={styles.blueBox}>*/}
+      {/*  <Text*/}
+      {/*    onLongPress={() => {*/}
+      {/*      // fake add one of their posts*/}
+      {/*      generatePosts(1, 'Boppb')*/}
+      {/*    }}*/}
+      {/*    onPress={() => {*/}
+      {/*      // fake add one of my posts*/}
+      {/*      generatePosts(1, global.user.uid)*/}
+      {/*    }}*/}
+      {/*    style={styles.bigWhiteBoldText}*/}
+      {/*  >*/}
+      {/*    {`${posts.length} Items Loaded`}*/}
+      {/*  </Text>*/}
+      {/*</View>*/}
+      {/*<ShowNewPostsButton staged={staged} onPress={() => doShowStaged(true)} />*/}
 
-      <FlatList
-        onEndReachedThreshold={4}
-        onEndReached={() => {
-          if (!isFetching && !allOlderPostsFetched) {
-            setIsFetching(true)
-          }
-        }}
-        ref={listRef}
-        data={posts}
-        keyExtractor={item => {
-          return item.id
-        }}
-        renderItem={({ item }) => {
-          return <Item item={item} />
-        }}
-      />
-      {allOlderPostsFetched && (
-        <View style={styles.blueBox}>
-          <Text style={styles.bigWhiteBoldText}>(No Older Posts)</Text>
-        </View>
-      )}
-      {isFetching && (
-        <View style={styles.blueBox}>
-          <Text style={styles.bigWhiteBoldText}>(Fetching More)</Text>
-        </View>
-      )}
+      {/*<FlatList*/}
+      {/*  onEndReachedThreshold={4}*/}
+      {/*  onEndReached={() => {*/}
+      {/*    if (!isFetching && !allOlderPostsFetched) {*/}
+      {/*      setIsFetching(true)*/}
+      {/*    }*/}
+      {/*  }}*/}
+      {/*  ref={listRef}*/}
+      {/*  data={posts}*/}
+      {/*  keyExtractor={item => {*/}
+      {/*    return item.id*/}
+      {/*  }}*/}
+      {/*  renderItem={({ item }) => {*/}
+      {/*    return <Item item={item} />*/}
+      {/*  }}*/}
+      {/*/>*/}
+      {/*{allOlderPostsFetched && (*/}
+      {/*  <View style={styles.blueBox}>*/}
+      {/*    <Text style={styles.bigWhiteBoldText}>(No Older Posts)</Text>*/}
+      {/*  </View>*/}
+      {/*)}*/}
+      {/*{isFetching && (*/}
+      {/*  <View style={styles.blueBox}>*/}
+      {/*    <Text style={styles.bigWhiteBoldText}>(Fetching More)</Text>*/}
+      {/*  </View>*/}
+      {/*)}*/}
     </SafeAreaView>
   )
 }
@@ -367,7 +377,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'yellow'
   },
   item: {
-    backgroundColor: '#f9c2ff',
+    backgroundColor: 'green',
     alignItems: 'center',
     justifyContent: 'center',
     height: Dimensions.get('window').height * 0.45,
@@ -386,7 +396,7 @@ const styles = StyleSheet.create({
   subtitle: { fontSize: 14 },
   blueBox: {
     paddingVertical: 24,
-    backgroundColor: 'blue',
+    backgroundColor: 'red',
     justifyContent: 'center',
     alignItems: 'center'
   },
