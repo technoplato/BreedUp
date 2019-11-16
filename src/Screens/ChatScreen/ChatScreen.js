@@ -19,7 +19,6 @@ import Autolink from 'react-native-autolink'
 import ChatIconView from '../../Components/ChatIconView/ChatIconView'
 import AppStyles from '../../AppStyles'
 import styles from './styles'
-import { Icon } from 'react-native-elements'
 import Back from '../../Components/Back'
 
 class ChatScreen extends React.Component {

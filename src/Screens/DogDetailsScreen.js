@@ -7,8 +7,8 @@ import {
   TouchableWithoutFeedback,
   StyleSheet
 } from 'react-native'
-import { Avatar, Button, Input } from 'react-native-elements'
-import { KeyboardAwareView } from 'react-native-keyboard-aware-view'
+import { Avatar, Button, CheckBox, Input } from 'react-native-elements'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { SafeAreaView } from 'react-navigation'
 
 import CameraModal from '../../lib/InstagramCameraModal'
@@ -20,6 +20,9 @@ export default ({ navigation }) => {
 
   const [name, setName] = useState(staleDog.name)
   const [breed, setBreed] = useState(staleDog.breed)
+  const [age, setAge] = useState(staleDog.age)
+  const [neuteredSpayed, setNeuteredSpayed] = useState(staleDog.neuteredSpayed)
+  const [bio, setBio] = useState(staleDog.bio)
   const [photo, setPhoto] = useState(staleDog.imageUri)
 
   const [loading, setLoading] = useState(false)
@@ -34,6 +37,12 @@ export default ({ navigation }) => {
     } else if (breed === '') {
       Alert.alert('Please enter a breed for your dog')
       setLoading(false)
+    } else if (age === -1) {
+      Alert.alert('Please enter an age for your dog')
+      setLoading(false)
+    } else if (bio === '') {
+      Alert.alert('Please enter a bio for your dog')
+      setLoading(false)
     } else {
       setLoading(true)
 
@@ -42,6 +51,9 @@ export default ({ navigation }) => {
         name,
         lowercaseName: name.toLocaleLowerCase(),
         breed,
+        age,
+        neuteredSpayed,
+        bio,
         imageUri: photo
       }
 
@@ -52,7 +64,7 @@ export default ({ navigation }) => {
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <KeyboardAwareView
+      <KeyboardAwareScrollView
         style={{
           flex: 1,
           padding: 10
@@ -93,6 +105,28 @@ export default ({ navigation }) => {
               placeholder="Enter dog's breed"
             />
 
+            <Input
+              containerStyle={{ marginTop: 16 }}
+              onChangeText={setAge}
+              value={age}
+              label={'Age'}
+              placeholder="Enter dog's age"
+            />
+
+            <CheckBox
+              title="Neutered / Spayed?"
+              checked={neuteredSpayed}
+              onPress={() => setNeuteredSpayed(!neuteredSpayed)}
+            />
+
+            <Input
+              containerStyle={{ marginTop: 16 }}
+              onChangeText={setBio}
+              value={bio}
+              label={'Bio'}
+              placeholder="Enter dog's bio"
+            />
+
             <View
               style={{
                 flex: 1,
@@ -117,7 +151,7 @@ export default ({ navigation }) => {
             <Details title={'Breed'} info={breed} />
           </View>
         )}
-      </KeyboardAwareView>
+      </KeyboardAwareScrollView>
     </SafeAreaView>
   )
 }

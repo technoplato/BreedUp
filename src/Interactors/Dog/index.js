@@ -3,7 +3,15 @@ import uploadImage from 'utilities/upload-image'
 
 import { deleteImage } from '../../Utils/FirebaseUtils'
 
-export const addDog = async (ownerId, name, breed, imageUri) => {
+export const addDog = async (
+  ownerId,
+  name,
+  breed,
+  imageUri,
+  age,
+  neuteredSpayed,
+  bio
+) => {
   const userRef = firestore()
     .collection('users')
     .doc(ownerId)
@@ -25,6 +33,9 @@ export const addDog = async (ownerId, name, breed, imageUri) => {
     imageUri: newImageUri,
     breed: breed,
     id: newDogRef.id,
+    age,
+    neuteredSpayed,
+    bio,
     owner
   }
 
@@ -45,20 +56,6 @@ export const updateDog = async (oldDog, newDog) => {
     .collection('dogs')
     .doc(newDog.id)
     .set(newDog)
-}
-
-export const fetchDogsForUser = async ownerId => {
-  return await firestore()
-    .collection('dogs')
-    .where('owner.uid', '==', ownerId)
-    .get()
-    .then(snap => {
-      const dogs = []
-      snap.forEach(dogDoc => {
-        dogs.push(dogDoc.data())
-      })
-      return dogs
-    })
 }
 
 const updateDogImage = async newDog => {
