@@ -1,6 +1,7 @@
 // leave off @2x/@3x
 const images = {
   blackDog: require('../Images/black-dog.png'),
+  iconFeed: require('../Images/Icons/dog-food-bowl.png'),
   iconProfile: require('../Images/Icons/profile_icon.png'),
   iconHome: require('../Images/Icons/home_icon.png'),
   iconAdd: require('../Images/Icons/add_icon.png'),

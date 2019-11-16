@@ -5,6 +5,7 @@ import {
   FlatList,
   StyleSheet,
   Text,
+  TextInput,
   Dimensions
 } from 'react-native'
 
@@ -21,15 +22,24 @@ const INITIAL_LOAD = 20
 const PAGE_SIZE = 15
 
 const testListRef = listRef => {
-  const props = _.get(listRef.current, 'props', {})
+  let props = _.get(listRef.current, 'props', {})
+  if (props) {
+    delete props.data
+  }
 
   if (listRef.current) {
-    listRef.current.props.data = props.data.slice(0, 2)
+    listRef.current.setNativeProps({
+      onEndReached: () => {
+        console.log('L31 "end reached" ===', 'end reached')
+      }
+    })
+    let props = _.get(listRef.current, 'props', {})
   }
 }
 
 const useInfiniteScroll = uid => {
   const [listRef, setDoScroll] = useScrollToTop()
+  testListRef(listRef)
   const [isFetching, setIsFetching] = useState(true)
   const [posts, setPosts] = useState({})
   const [staged, setStagedPosts] = useState({})
@@ -69,7 +79,7 @@ const useInfiniteScroll = uid => {
               case 'added':
                 list.forEach(post => {
                   if (!copy[post.id]) {
-                    if (post.author.uid === global.user.uid) {
+                    if (post.author.uid === 'r40337XTxTMxRdXtcoNfbeHuOnu2') {
                       doScroll = true
                       copy[post.id] = prunePost(post)
                     } else {
@@ -186,79 +196,152 @@ const useInfiniteScroll = uid => {
   ]
 }
 
-export default () => {
-  // const [
-  //   posts,
-  //   isFetching,
-  //   setIsFetching,
-  //   allOlderPostsFetched,
-  //   listRef,
-  //   staged,
-  //   doShowStaged
-  // ] = useInfiniteScroll()
-
-  // generatePosts(3)
-
-  console.log('L202 "Test log" ===', 'Test log')
-
-  return (
-    <SafeAreaView style={styles.container}>
-      <View
-        style={{
-          flex: 1,
-          justifyContent: 'center',
-          alignItems: 'center',
-          backgroundColor: 'cornflowerblue'
-        }}
-      >
-        <Text style={{ fontSize: 42 }}>Update us</Text>
-      </View>
-      {/*<View style={styles.blueBox}>*/}
-      {/*  <Text*/}
-      {/*    onLongPress={() => {*/}
-      {/*      // fake add one of their posts*/}
-      {/*      generatePosts(1, 'Boppb')*/}
-      {/*    }}*/}
-      {/*    onPress={() => {*/}
-      {/*      // fake add one of my posts*/}
-      {/*      generatePosts(1, global.user.uid)*/}
-      {/*    }}*/}
-      {/*    style={styles.bigWhiteBoldText}*/}
-      {/*  >*/}
-      {/*    {`${posts.length} Items Loaded`}*/}
-      {/*  </Text>*/}
-      {/*</View>*/}
-      {/*<ShowNewPostsButton staged={staged} onPress={() => doShowStaged(true)} />*/}
-
-      {/*<FlatList*/}
-      {/*  onEndReachedThreshold={4}*/}
-      {/*  onEndReached={() => {*/}
-      {/*    if (!isFetching && !allOlderPostsFetched) {*/}
-      {/*      setIsFetching(true)*/}
-      {/*    }*/}
-      {/*  }}*/}
-      {/*  ref={listRef}*/}
-      {/*  data={posts}*/}
-      {/*  keyExtractor={item => {*/}
-      {/*    return item.id*/}
-      {/*  }}*/}
-      {/*  renderItem={({ item }) => {*/}
-      {/*    return <Item item={item} />*/}
-      {/*  }}*/}
-      {/*/>*/}
-      {/*{allOlderPostsFetched && (*/}
-      {/*  <View style={styles.blueBox}>*/}
-      {/*    <Text style={styles.bigWhiteBoldText}>(No Older Posts)</Text>*/}
-      {/*  </View>*/}
-      {/*)}*/}
-      {/*{isFetching && (*/}
-      {/*  <View style={styles.blueBox}>*/}
-      {/*    <Text style={styles.bigWhiteBoldText}>(Fetching More)</Text>*/}
-      {/*  </View>*/}
-      {/*)}*/}
-    </SafeAreaView>
+const useThing = () => {
+  const inputRef = useRef(null)
+  console.log(
+    'L201 inputRef.current.props ===',
+    inputRef.current && inputRef.current
   )
+  if (inputRef.current) {
+    setInterval(
+      () => {
+        inputRef.current.setNativeProps({
+          text: 'fuck shit ass: ' + Date.now()
+        })
+      },
+
+      1500
+    )
+  }
+
+  useEffect(() => {
+    console.log('L219 "changed ref" ===', 'changed ref')
+  }, [inputRef.current])
+
+  return inputRef
 }
+
+export default class Testing extends React.Component {
+  componentDidMount() {
+    let tick = 0
+    console.log('L227 this.list.nativeProps ===', this.list)
+    // this.list.onEndReached = info => {
+    //   console.log('L231 on Scroll info ===', info)
+    // }
+    // this.list.setNativeProps({
+    //   onEndReached: info => {
+    //     // NEVER CALLED 😢
+    //     console.log('L231 on Scroll info ===', info)
+    //   },
+    //
+    //   onScroll: info => {
+    //     // NEVER CALLED 😢
+    //     console.log('L250 info ===', info)
+    //   },
+    //
+    //   // Background DOES flash red on load...
+    //   style: { backgroundColor: 'red' }
+    // })
+    setInterval(() => {
+      this.list.setNativeProps({
+        onEndReached: info => {
+          console.log('L231 on Scroll info ===', info)
+        },
+
+        style: { backgroundColor: tick++ & 2 ? 'white' : 'black' }
+      })
+    }, 1000)
+  }
+
+  render() {
+    return (
+      <View style={styles.container}>
+        <FlatList
+          ref={component => (this.list = component)}
+          style={{ backgroundColor: 'black' }}
+          data={[{ key: 'a' }, { key: 'b' }]}
+          renderItem={({ item }) => <Text>{item.key}</Text>}
+        />
+      </View>
+    )
+  }
+}
+
+// export default () => {
+//   const [
+//     posts,
+//     isFetching,
+//     setIsFetching,
+//     allOlderPostsFetched,
+//     listRef,
+//     staged,
+//     doShowStaged
+//   ] = useInfiniteScroll()
+//
+//   // generatePosts(3)
+//
+//   const inputRef = useThing()
+//
+//   return (
+//     <SafeAreaView style={styles.container}>
+//       {/*<View style={styles.blueBox}>*/}
+//       {/*  <Text*/}
+//       {/*    onLongPress={() => {*/}
+//       {/*      // fake add one of their posts*/}
+//       {/*      generatePosts(1, 'Boppb')*/}
+//       {/*    }}*/}
+//       {/*    onPress={() => {*/}
+//       {/*      // fake add one of my posts*/}
+//       {/*      generatePosts(1, 'r40337XTxTMxRdXtcoNfbeHuOnu2')*/}
+//       {/*    }}*/}
+//       {/*    style={styles.bigWhiteBoldText}*/}
+//       {/*  >*/}
+//       {/*    {`${posts.length} Items Loaded`}*/}
+//       {/*  </Text>*/}
+//       {/*</View>*/}
+//       {/*<ShowNewPostsButton staged={staged} onPress={() => doShowStaged(true)} />*/}
+//       <TextInput
+//         onChangeText={text => {
+//           console.log('L249 text ===', text)
+//         }}
+//         ref={inputRef}
+//         style={{
+//           height: 50,
+//           width: 200,
+//           marginHorizontal: 20,
+//           borderWidth: 1,
+//           borderColor: '#ccc'
+//         }}
+//       />
+//       {/*<FlatList*/}
+//       {/*  onEndReachedThreshold={4}*/}
+//       {/*  // onEndReached={() => {*/}
+//       {/*  //   if (!isFetching && !allOlderPostsFetched) {*/}
+//       {/*  //     setIsFetching(true)*/}
+//       {/*  //   }*/}
+//       {/*  // }}*/}
+//       {/*  ref={listRef}*/}
+//       {/*  data={posts}*/}
+//       {/*  keyExtractor={item => {*/}
+//       {/*    return item.id*/}
+//       {/*  }}*/}
+//       {/*  renderItem={({ item }) => {*/}
+//       {/*    return <Item item={item} />*/}
+//       {/*  }}*/}
+//       {/*/>*/}
+//       {allOlderPostsFetched && (
+//         <View style={styles.blueBox}>
+//           <Text style={styles.bigWhiteBoldText}>(No Older Posts)</Text>
+//         </View>
+//       )}
+//       {isFetching && (
+//         <View style={styles.blueBox}>
+//           <Text style={styles.bigWhiteBoldText}>(Fetching More)</Text>
+//         </View>
+//       )}
+//     </SafeAreaView>
+//   )
+// }
 
 import useUpdatingTimestamp from 'hooks/use-updating-timestamp'
 import useOptimisticToggle from 'hooks/use-optimistic-toggle'
@@ -268,12 +351,14 @@ const toggleLike = (oldPost, updatedPost) => {
 
   const update = {}
   update.likes = liked
-    ? firestore.FieldValue.arrayUnion(global.user.uid)
-    : firestore.FieldValue.arrayRemove(global.user.uid)
+    ? firestore.FieldValue.arrayUnion('r40337XTxTMxRdXtcoNfbeHuOnu2')
+    : firestore.FieldValue.arrayRemove('r40337XTxTMxRdXtcoNfbeHuOnu2')
 
   // TODO is this a bugf? Should we also check that liked is true before clearing the value?
   if (disliked) {
-    update.dislikes = firestore.FieldValue.arrayRemove(global.user.uid)
+    update.dislikes = firestore.FieldValue.arrayRemove(
+      'r40337XTxTMxRdXtcoNfbeHuOnu2'
+    )
   }
 
   return firestore()
@@ -286,12 +371,14 @@ const toggleDislike = (oldPost, updatedPost) => {
   const { liked, disliked } = updatedPost
   const update = {}
   update.dislikes = disliked
-    ? firestore.FieldValue.arrayUnion(global.user.uid)
-    : firestore.FieldValue.arrayRemove(global.user.uid)
+    ? firestore.FieldValue.arrayUnion('r40337XTxTMxRdXtcoNfbeHuOnu2')
+    : firestore.FieldValue.arrayRemove('r40337XTxTMxRdXtcoNfbeHuOnu2')
 
   // TODO is this a bugf? Should we also check that disliked is true?
   if (liked) {
-    update.likes = firestore.FieldValue.arrayRemove(global.user.uid)
+    update.likes = firestore.FieldValue.arrayRemove(
+      'r40337XTxTMxRdXtcoNfbeHuOnu2'
+    )
   }
 
   return firestore()

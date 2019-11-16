@@ -47,8 +47,8 @@ export default class PostItem extends React.Component {
       <Card containerStyle={styles.cardContainer}>
         <View>
           {this.renderCardHeader()}
-          {this.renderText()}
           {this.renderImage()}
+          {this.renderText()}
           {this.renderButtons()}
           {this.renderComments()}
         </View>

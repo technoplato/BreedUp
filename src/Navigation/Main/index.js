@@ -12,7 +12,12 @@ import { Images } from '../../Themes'
 
 const TabNavigation = createBottomTabNavigator(
   {
-    Feed: FeedStack,
+    Feed: {
+      screen: FeedStack,
+      navigationOptions: {
+        title: ''
+      }
+    },
     Search: SearchStack,
     Post: {
       screen: AddPost,
@@ -31,7 +36,7 @@ const TabNavigation = createBottomTabNavigator(
         let iconSource
         switch (routeName) {
           case 'Feed':
-            iconSource = Images.iconHome
+            iconSource = Images.iconFeed
             break
           case 'Search':
             iconSource = Images.iconSearch

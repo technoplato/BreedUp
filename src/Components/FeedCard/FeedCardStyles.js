@@ -22,6 +22,7 @@ export default StyleSheet.create({
   text: {
     paddingRight: 12,
     paddingBottom: 12,
+    paddingTop: 12,
     paddingLeft: 12
   },
   image: {
