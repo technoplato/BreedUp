@@ -7,7 +7,7 @@ const back = ({ navigation }) => (
     containerStyle={{ marginLeft: 12 }}
     name="arrow-back"
     color="#000"
-    onPress={() => navigation.goBack()}
+    onPress={() => navigation.goBack(null)}
   />
 )
 

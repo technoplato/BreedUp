@@ -1,26 +1,36 @@
 import React from 'react'
 import { createStackNavigator } from 'react-navigation-stack'
 
-import Search from 'screens/SearchScreen'
 import Profile from 'screens/ProfileScreen'
 import AddDogScreen from 'screens/AddDogScreen'
 import DogDetailsScreen from 'screens/DogDetailsScreen'
-import Back from '../Components/Back'
+import ChatHomeScreen from 'screens/ChatHomeScreen/ChatHomeScreen'
+import ChatScreen from 'screens/ChatScreen/ChatScreen'
+import CommentsScreen from 'screens/CommentsScreen'
+import Back from 'components/Back'
 
 export default createStackNavigator(
   {
-    Search: {
-      screen: Search,
-      navigationOptions: {
-        headerLeft: null
-      }
-    },
     PublicProfile: {
       screen: Profile,
+      navigationOptions: ({ navigation }) => {
+        console.log('L17 navigation.state.params ===', navigation.state.params)
+        return {
+          title: `${navigation.state.params.username}'s Profile`
+        }
+      }
+    },
+    Comments: {
+      screen: CommentsScreen,
       navigationOptions: ({ navigation }) => ({
-        headerVisible: 'false',
-        title: `${navigation.state.params.username}'s Profile`
+        title: `${navigation.state.params.post.author.username}'s Post`
       })
+    },
+    ProfileChatHome: {
+      screen: ChatHomeScreen
+    },
+    Chat: {
+      screen: ChatScreen
     },
     AddDog: {
       screen: AddDogScreen,

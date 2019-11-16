@@ -107,7 +107,7 @@ export default ({ navigation }) => {
           <Input
             containerStyle={{ marginTop: 16 }}
             onChangeText={setAge}
-            value={age}
+            value={age === -1 ? '' : age + ''}
             label={'Age'}
             placeholder="Enter dog's age"
           />

@@ -149,6 +149,9 @@ export default ({ navigation }) => {
           <View>
             <Details title={'Name'} info={name} />
             <Details title={'Breed'} info={breed} />
+            <Details title={'Age'} info={age} />
+            <Details title={'Neutered / Spayed'} info={neuteredSpayed} />
+            <Details title={'Bio'} info={bio} />
           </View>
         )}
       </KeyboardAwareScrollView>
@@ -158,6 +161,9 @@ export default ({ navigation }) => {
 
 const Details = ({ title, info, onPress, clickable }) => {
   if (!!!info) return null
+  if (typeof info === 'boolean') {
+    info = info ? 'Yes' : 'No'
+  }
   return (
     <TouchableWithoutFeedback
       onPress={() => {

@@ -5,7 +5,9 @@ import FeedScreen from 'screens/FeedScreen'
 import ChatHomeScreen from 'screens/ChatHomeScreen/ChatHomeScreen'
 import ChatScreen from 'screens/ChatScreen/ChatScreen'
 import CommentsScreen from 'screens/CommentsScreen'
-import ProfileScreen from 'screens/ProfileScreen'
+import PublicProfileStack from './PublicProfile'
+import DogDetailsScreen from 'screens/DogDetailsScreen'
+
 import Back from 'components/Back'
 
 export default createStackNavigator({
@@ -26,11 +28,19 @@ export default createStackNavigator({
     })
   },
   PublicProfile: {
-    screen: ProfileScreen,
-    navigationOptions: ({ navigation }) => ({
-      headerVisible: 'false',
-      title: `${navigation.state.params.username}'s Profile`,
-      headerLeft: <Back />
-    })
+    screen: PublicProfileStack,
+    navigationOptions: {
+      header: null
+    }
+  },
+  ViewDog: {
+    screen: DogDetailsScreen,
+    navigationOptions: ({ navigation }) => {
+      const { dog } = navigation.state.params
+      const title = `${dog.name} the ${dog.breed}!`
+      return {
+        title
+      }
+    }
   }
 })

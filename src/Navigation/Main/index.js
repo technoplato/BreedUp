@@ -5,7 +5,7 @@ import { Image } from 'react-native'
 import FeedStack from '../Feed'
 import SearchStack from '../Search'
 import AddPost from '../Post'
-import ProfileStack from '../Profile'
+import ProfileStack from '../PrivateProfile'
 import MeetupStack from '../Meetup'
 
 import { Images } from '../../Themes'
