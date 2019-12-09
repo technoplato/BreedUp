@@ -1,15 +1,13 @@
 import React from 'react'
-import { View, Text, Image, TouchableOpacity } from 'react-native'
+import { View, Image } from 'react-native'
 import { Icon } from 'react-native-elements'
 
 import styles from '../Styles/FeedScreenStyles'
-import firebase from '@react-native-firebase/app'
 import '@react-native-firebase/database'
 import '@react-native-firebase/firestore'
 import '@react-native-firebase/auth'
 import PostsList from '../Components/PostsList'
 import { Images } from '../Themes'
-import AppStyles from '../AppStyles'
 
 export default class FeedScreen extends React.Component {
   static navigationOptions = ({ navigation }) => ({
@@ -44,7 +42,10 @@ export default class FeedScreen extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <PostsList navigation={this.props.navigation} />
+        <PostsList
+          navigation={this.props.navigation}
+          userId={global.user.uid}
+        />
       </View>
     )
   }

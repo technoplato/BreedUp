@@ -206,7 +206,8 @@ export default class Profile extends React.Component {
       <View style={styles.postList.list}>
         <PostsList
           navigation={this.props.navigation}
-          userId={this.state.uid}
+          userId={global.user.uid}
+          byUser={this.state.uid}
           onAvatarPressed={this.onAvatarPressed}
         />
       </View>

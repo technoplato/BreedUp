@@ -13,20 +13,18 @@ export default class PostsList extends React.PureComponent {
   constructor(props) {
     super(props)
 
-    const { userId } = props
+    const { byUser } = props
 
     // Staged posts are posts that have been added remotely but not shown yet.
     this.state = { posts: {}, staged: {}, loading: true }
     this.list = React.createRef()
 
     this.postsRef = firestore().collection('posts')
-    if (userId) {
-      this.postsRef = firestore()
-        .collection('posts')
-        .where('author.uid', '==', userId)
+    this.next = this.postsRef.orderBy('created', 'desc').limit(this.PAGE_SIZE)
+    if (byUser) {
+      this.next = this.next.where('author.uid', '==', byUser)
     }
 
-    this.next = this.postsRef.orderBy('created', 'desc').limit(this.PAGE_SIZE)
     this.changesUnsubscribe = () => {}
     this.loadMorePosts()
   }
@@ -62,7 +60,7 @@ export default class PostsList extends React.PureComponent {
       .collection('posts')
       .orderBy('created', 'desc')
       .endAt(oldestPostTime)
-    this.props.userId && query.where('author.uid', '==', this.props.userId)
+    this.props.byUser && query.where('author.uid', '==', this.props.byUser)
 
     this.changesUnsubscribe = query.onSnapshot(this.onPostsUpdated)
   }
@@ -93,10 +91,10 @@ export default class PostsList extends React.PureComponent {
       const post = doc.data()
       if (type === 'added') {
         if (!posts[post.id]) {
-          if (post.author.uid === global.user.uid) {
+          if (post.author.uid === this.props.byUser) {
             posts[post.id] = this.prunePost(post)
             doScrollToTop = true
-          } else {
+          } else if (!this.props.byUser) {
             this.stagePost(post)
           }
         }
@@ -149,7 +147,13 @@ export default class PostsList extends React.PureComponent {
   setLocalPostLikeStatus = (postId, isLiked) => {
     this.setState(state => {
       const posts = { ...state.posts }
-      posts[postId].liked = isLiked
+      let post = { ...posts[postId] }
+      post = {
+        ...post,
+        likeCount: post.likeCount + (isLiked ? 1 : -1),
+        liked: isLiked
+      }
+      posts[postId] = post
       return { posts }
     })
   }
@@ -172,21 +176,23 @@ export default class PostsList extends React.PureComponent {
     }
   }
 
-  _renderItem = ({ item }) => (
-    <PostItem
-      item={item}
-      id={item.id}
-      onPressLike={this.handleLikePressed}
-      liked={item.liked}
-      title={item.title}
-      likeCount={item.likeCount}
-      viewCount={item.viewCount}
-      navigation={this.props.navigation}
-      onAvatarPressed={this.onAvatarPressed}
-      onCommentPressed={this.onCommentPressed}
-      onSharePressed={this.onSharePressed}
-    />
-  )
+  _renderItem = ({ item }) => {
+    return (
+      <PostItem
+        item={item}
+        id={item.id}
+        liked={item.liked}
+        title={item.title}
+        likeCount={item.likeCount}
+        viewCount={item.viewCount}
+        navigation={this.props.navigation}
+        onAvatarPressed={this.onAvatarPressed}
+        onPressLike={this.handleLikePressed}
+        onCommentPressed={this.onCommentPressed}
+        onSharePressed={this.onSharePressed}
+      />
+    )
+  }
 
   render() {
     const { staged, posts, loading } = this.state
@@ -240,7 +246,7 @@ export default class PostsList extends React.PureComponent {
       })
   }
 
-  onEndReached = distance => {
+  onEndReached = _ => {
     this.loadMorePosts()
   }
 

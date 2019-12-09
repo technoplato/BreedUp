@@ -152,7 +152,7 @@ export default class PostItem extends React.Component {
         <Button
           buttonStyle={styles.button}
           textStyle={styles.buttonText}
-          title="Like"
+          title={`${this.props.likeCount}`}
           titleStyle={{ color: likeColor }}
           icon={{ name: 'thumb-up', color: likeColor }}
           onPress={this._onPressLike}
