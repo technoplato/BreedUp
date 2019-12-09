@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text } from 'react-native'
+import { View, Text, Image, TouchableOpacity } from 'react-native'
 import { Icon } from 'react-native-elements'
 
 import styles from '../Styles/FeedScreenStyles'
@@ -8,6 +8,8 @@ import '@react-native-firebase/database'
 import '@react-native-firebase/firestore'
 import '@react-native-firebase/auth'
 import PostsList from '../Components/PostsList'
+import { Images } from '../Themes'
+import AppStyles from '../AppStyles'
 
 export default class FeedScreen extends React.Component {
   static navigationOptions = ({ navigation }) => ({
@@ -20,11 +22,15 @@ export default class FeedScreen extends React.Component {
           backgroundColor: 'white',
           flexDirection: 'row',
           height: 80,
-          paddingTop: 24 /* only for IOS to give StatusBar Space */
+          paddingTop: 24
         }}
       >
         <View style={{ width: 24, height: 24 }} />
-        <Text style={{ fontSize: 32 }}>FEED</Text>
+
+        <Image
+          style={{ height: 64, width: 64, marginTop: 12 }}
+          source={Images.iconFeed}
+        />
         <Icon
           containerStyle={{ marginRight: 12 }}
           name="chat"

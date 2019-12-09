@@ -15,7 +15,7 @@ const TabNavigation = createBottomTabNavigator(
     Feed: {
       screen: FeedStack,
       navigationOptions: {
-        title: ''
+        title: 'Feed'
       }
     },
     Search: SearchStack,
