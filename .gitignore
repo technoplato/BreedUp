@@ -58,3 +58,5 @@ buck-out/
 
 # Debugging React / React Native
 .vscode/.react/
+
+cli/serviceAccountKey.json
